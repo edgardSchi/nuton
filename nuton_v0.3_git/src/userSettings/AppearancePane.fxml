@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="397.0" prefWidth="435.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Separator layoutY="33.0" prefWidth="434.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
+      <Label layoutX="14.0" layoutY="6.0" text="Aussehen">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Label>
+      <VBox layoutX="14.0" layoutY="54.0" prefHeight="185.0" prefWidth="407.0">
+         <children>
+            <HBox prefHeight="28.0" prefWidth="407.0">
+               <children>
+                  <Label text="Theme">
+                     <font>
+                        <Font size="18.0" />
+                     </font>
+                  </Label>
+                  <ComboBox fx:id="themeBox" prefWidth="150.0">
+                     <HBox.margin>
+                        <Insets left="25.0" />
+                     </HBox.margin>
+                  </ComboBox>
+               </children>
+            </HBox>
+            <HBox prefHeight="42.0" prefWidth="407.0">
+               <children>
+                  <Label text="Farbe der Punkte">
+                     <font>
+                        <Font size="18.0" />
+                     </font>
+                  </Label>
+                  <ColorPicker fx:id="colorPicker" prefHeight="25.0" prefWidth="150.0">
+                     <HBox.margin>
+                        <Insets left="25.0" />
+                     </HBox.margin>
+                  </ColorPicker>
+               </children>
+               <VBox.margin>
+                  <Insets top="25.0" />
+               </VBox.margin>
+            </HBox>
+         </children>
+      </VBox>
+      <Button fx:id="applyBtn" layoutX="310.0" layoutY="349.0" mnemonicParsing="false" prefHeight="28.0" prefWidth="110.0" text="Anwenden" AnchorPane.bottomAnchor="20.0" AnchorPane.rightAnchor="14.0" />
+   </children>
+</AnchorPane>
