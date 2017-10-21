@@ -22,8 +22,7 @@ public class Main extends Application {
 	@FXML private Canvas canvas;
 	private ThemeLoader themeLoader;
 	
-	private final String VERSION = "v0.3";
-	//Toolbar, Farbe für Punkte
+	private final String VERSION = "v0.3.1";
 	
 	@Override
 	public void start(Stage primaryStage) {
