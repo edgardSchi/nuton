@@ -41,7 +41,6 @@ public class FfmpegHandler {
 				for (int i = 0; i < files.length; i++) {
 					files[i].delete();
 				}
-				String[] command = {ffmpegPath + "/ffmpeg", "-i ", "\"" + videoPath + "\"", "\"" + outputPath + "/" + outputName + "." + propReader.getPrefVideoFormat() + "\""}; 
 				System.out.println("\"" + videoPath + "\"");
 				ProcessBuilder pb = new ProcessBuilder("cmd", "/c", ffmpegPath + "/ffmpeg -i \"" + videoPath + "\" \"" + outputPath +"/" + outputName + "." + propReader.getPrefVideoFormat() + "\"");
 				pb.redirectErrorStream(true);
