@@ -25,17 +25,17 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
-import javafx.scene.paint.Color;
 import javafx.util.Duration;
+import states.StateManager;
 import toolBar.ToolBarManager;
 import userSettings.ProgramSettingsController;
 
 public class MainController implements Initializable{
 	
 	@FXML private MediaView mv;
-	private static MediaPlayer player;
+	private MediaPlayer player;
 	private Media media;
-	private static SettingsController settingsController;
+	private SettingsController settingsController;
 	@FXML private MenuItem openFileMenu;
 	@FXML private MenuItem einstellungenItem;
 	@FXML private MenuItem ffmpegMenu;
@@ -46,55 +46,34 @@ public class MainController implements Initializable{
 	@FXML public Button startBtn;
 	@FXML public Button restartBtn;
 	@FXML public Button fertigBtn;
-	private boolean readyToEich;
-	private boolean readyToSetPoints;
-	private boolean fertig;
 	@FXML private Button saveSettingsBtn;
-	@FXML private ListView listX;
-	@FXML private ListView listY;
+	@FXML private ListView<Integer> listX;
+	@FXML private ListView<Integer> listY;
 	@FXML private ToolBar toolBar;
 	private GraphicsContext gc;
-	private ArrayList<Point> points;
-	private DiagramsController diaController;
+	//private ArrayList<Point> points;
 	
-	public static double SCHRITTWEITE = 1000;
-	private static double EICHUNG = 100;
+	private double SCHRITTWEITE = 1000;
+	private double EICHUNG = 100;
 	private double LAENGEPIXEL = 0;
-	private static double mediaLength = 0;
-
-
-
-	private int initPoints = 0;
-	private double yFix = 0;
-	private double xFix = 0;
+	private double mediaLength = 0;
 	
-	private Scene rootScene;
-	private static PixelManager pManager;
+	private PixelManager pManager;
 	private MainEventHandler eventHandler;
+	private StateManager stateManager;
 	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		
-//		String path = new File("src/media/Cs(03).mp4").getAbsolutePath();
-//		media = new Media(new File(path).toURI().toString());		
-//		player = new MediaPlayer(media);
-//		player.setAutoPlay(true);
-//		player.setMute(true);
-//		mv.setMediaPlayer(player);
-		
 		eventHandler = new MainEventHandler(this);
 		setSettingsController(new SettingsController(this));
 		
-		points = new ArrayList<Point>();
+		//points = new ArrayList<Point>();
 		pManager = new PixelManager(getSettingsController());
 		
-		diaController = new DiagramsController(pManager);
 
 		gc = canvas.getGraphicsContext2D();
 		
-		readyToEich = false;
-		readyToSetPoints = false;
-		fertig = false;
 		
 		openFileMenu.setOnAction(eventHandler.openFileDialog());
 		
@@ -109,11 +88,13 @@ public class MainController implements Initializable{
 //		TestToolBarItem item = new TestToolBarItem();
 //		toolBarM.addItem(item);
 //		toolBarM.addItem(fButton);
+		stateManager = new StateManager(this);
 		
 		einstellungenItem.setOnAction(new EventHandler<ActionEvent>() {
 
 			@Override
 			public void handle(ActionEvent event) {
+				@SuppressWarnings("unused")
 				ProgramSettingsController pSettings = new ProgramSettingsController();
 			}
 			
@@ -151,116 +132,13 @@ public class MainController implements Initializable{
 		
 		
 		
-		canvas.setOnMouseClicked(new EventHandler<MouseEvent>() {
-			
-			int clickCounter = 0;
-			double x1 = 0;
-			double y1 = 0;
-			double x2 = 0;
-			double y2 = 0;		
+		canvas.setOnMouseClicked(new EventHandler<MouseEvent>() {	
 			
 			
 			@Override
 			public void handle(MouseEvent e) {
-				if (readyToEich == true && clickCounter < 2 && fertig == false) {
-					gc.setFill(Color.rgb(255, 119, 0, 0.80));
-					gc.fillRect(e.getX() - 10, e.getY() - 10, 20, 20);
-					
-					if (clickCounter == 0) {
-						x1 = e.getX();
-						y1 = e.getY();
-					}
-					
-					if (clickCounter == 1) {
-						x2 = e.getX();
-						y2 = e.getY();
-					}
-					
-					System.out.println("X1: " + x1);
-					System.out.println("Y1: " + y1);
-					System.out.println("X2: " + x2);
-					System.out.println("Y2: " + y2);
-					
-					clickCounter++;
-					
-					if (clickCounter == 2) {
-						gc.setStroke(Color.RED);
-						gc.strokeLine(x1, y1, x2, y2);
-						
-						Alert alert = new Alert(AlertType.CONFIRMATION);
-						alert.setTitle("Bestätigen");
-						alert.setHeaderText("Diese Distanz speichern?");
-						alert.showAndWait().ifPresent(rs -> {
-							if (rs == ButtonType.OK) {
-								LAENGEPIXEL = pManager.getDistance(x1, y1, x2, y2);
-								pManager.setLaengePixel(LAENGEPIXEL);
-								System.out.println(LAENGEPIXEL);			
-								pManager.setEichung(EICHUNG);
-								readyToEich = false;
-								gc.clearRect(0, 0, canvas.getWidth(), canvas.getWidth());
-								readyToSetPoints = true;
-								clickCounter = 0;
-							} 
-							if (rs == ButtonType.CANCEL) {
-								gc.clearRect(0, 0, canvas.getWidth(), canvas.getWidth());
-								x1 = 0;
-								y1 = 0;
-								x2 = 0;
-								y2 = 0;
-								clickCounter = 0;
-							}
-						});
-					}
-				}
 				
-				if (readyToSetPoints == true && fertig == false) {
-					if (initPoints == 1) {
-						gc.setFill(Color.rgb(255, 119, 0, 0.80));						
-						if (getSettingsController().yFixed() == true && yFix == 0) {
-							//gc.fillRect(e.getX() - 10, e.getY() - 10, 20, 20);
-							yFix = e.getY();
-							Point p = new Point((int)e.getX(), (int)e.getY(), slider.getValue(), points.size());
-							points.add(p);
-							p.drawPoint(gc);
-							listX.getItems().add(p.getX());
-							listY.getItems().add(p.getY());
-							System.out.println(p.getId());
-						} else if (getSettingsController().yFixed() == true) {
-							Point p = new Point((int)e.getX(), (int)yFix, slider.getValue(), points.size());
-							points.add(p);
-							p.drawPoint(gc);
-							listX.getItems().add(p.getX());
-							listY.getItems().add(p.getY());
-						} else if (getSettingsController().xFixed() == true && xFix == 0) {
-							xFix = e.getX();
-							Point p = new Point((int)e.getX(), (int)e.getY(), slider.getValue(), points.size());
-							points.add(p);
-							p.drawPoint(gc);
-							listX.getItems().add(p.getX());
-							listY.getItems().add(p.getY());
-						} else if (getSettingsController().xFixed() == true) {
-							Point p = new Point((int)xFix, (int)e.getY(), slider.getValue(), points.size());
-							points.add(p);
-							p.drawPoint(gc);
-							listX.getItems().add(p.getX());
-							listY.getItems().add(p.getY());
-						} else {
-							Point p = new Point((int)e.getX(), (int)e.getY(), slider.getValue(), points.size());
-							points.add(p);
-							p.drawPoint(gc);
-							listX.getItems().add(p.getX());
-							listY.getItems().add(p.getY());
-						}
-						slider.setValue(slider.getValue() + SCHRITTWEITE);
-						
-						
-					} else if (initPoints == 0) {
-						slider.setValue(0);
-						slider.setDisable(true);
-						initPoints = 1;
-					}
-					
-				}
+				stateManager.onClick(e);
 				
 			}
 		});
@@ -272,54 +150,27 @@ public class MainController implements Initializable{
 		fertigBtn.setOnAction(new EventHandler<ActionEvent>() {
 
 			@Override
-			public void handle(ActionEvent arg0) {
-				if (points.size() < 3) {
-					Alert alert = new Alert(AlertType.ERROR);
-					alert.setHeaderText("Bitte wählen Sie mindestens zwei Punke aus.");
-					alert.showAndWait().ifPresent(rs -> {
-						if (rs == ButtonType.OK) {
-							alert.close();
-						}
-					});
-				} else {
-					fertig = true;
-					pManager.setPoints(points);
-					pManager.calcDistances();
-					pManager.calcMeter(points);
-					diaController.setPoints(points);
-					diaController.makeDiagram();
-					diaController.show();
-				}
+			public void handle(ActionEvent event) {
+				stateManager.fertigBtnClick();
 			}
-			
+
 		});
 		
 	}
 	
 	
-	public void eichungsReady(boolean s) {
-		readyToEich = s;
-	}
-	
 	void reset() {
-		points.clear();
+		//points.clear();
 		SCHRITTWEITE = 1000;
 		EICHUNG = 100;
 		LAENGEPIXEL = 0;
-		readyToEich = false;
-		readyToSetPoints = false;
 		listX.getItems().clear();
 		listY.getItems().clear();
 		slider.setValue(0);
 		slider.setDisable(false);
 		gc.clearRect(0, 0, canvas.getWidth(), canvas.getWidth());
 		startBtn.setDisable(false);
-		initPoints = 0;
-		yFix = 0;
-		xFix = 0;
 		pManager.reset();
-		diaController.reset();
-		fertig = false;
 	}
 
 
@@ -339,7 +190,7 @@ public class MainController implements Initializable{
 
 
 	public void setPlayer(MediaPlayer player) {
-		MainController.player = player;
+		this.player = player;
 	}
 
 
@@ -358,8 +209,8 @@ public class MainController implements Initializable{
 	}
 
 
-	public static void setSettingsController(SettingsController settingsController) {
-		MainController.settingsController = settingsController;
+	public void setSettingsController(SettingsController settingsController) {
+		this.settingsController = settingsController;
 	}
 	
 	public Slider getSlider() {
@@ -407,22 +258,22 @@ public class MainController implements Initializable{
 	}
 
 
-	public static void setSCHRITTWEITE(double sCHRITTWEITE) {
-		SCHRITTWEITE = sCHRITTWEITE;
+	public void setSCHRITTWEITE(double sCHRITTWEITE) {
+		this.SCHRITTWEITE = sCHRITTWEITE;
 	}
 
 
-	public static double getEICHUNG() {
+	public double getEICHUNG() {
 		return EICHUNG;
 	}
 
 
-	public static void setEICHUNG(double eICHUNG) {
+	public void setEICHUNG(double eICHUNG) {
 		EICHUNG = eICHUNG;
 	}
 
 
-	public static double getMediaLength() {
+	public double getMediaLength() {
 		return mediaLength;
 	}
 
@@ -442,29 +293,32 @@ public class MainController implements Initializable{
 	}
 
 
-	public ArrayList<Point> getPoints() {
-		return points;
-	}
-	
-	
-	
-	
-
-//	public void resizeMedia() {
-//		centerPane.widthProperty().addListener(new ChangeListener<Number>() {
-//		    @Override public void changed(ObservableValue<? extends Number> observableValue, Number oldSceneWidth, Number newSceneWidth) {
-//		        System.out.println("Width: " + centerPane.getWidth());
-//		        double oldWidth = mv.getFitWidth();
-//		        if (newSceneWidth.doubleValue() > oldSceneWidth.doubleValue()) {
-//		        	//mv.fitWidthProperty().set(oldWidth + (newSceneWidth.doubleValue() - oldSceneWidth.doubleValue()));
-//		        }		        
-//		    }
-//		});
-////		centerPane.heightProperty().addListener(new ChangeListener<Number>() {
-////		    @Override public void changed(ObservableValue<? extends Number> observableValue, Number oldSceneHeight, Number newSceneHeight) {
-////		        System.out.println("Height: " + newSceneHeight);
-////		    }
-////		});
+//	public ArrayList<Point> getPoints() {
+//		return points;
 //	}
+	
+	public StateManager getStateManager() {
+		return stateManager;
+	}
+
+
+	public PixelManager getPManager() {
+		return pManager;
+	}
+
+
+	public GraphicsContext getGc() {
+		return gc;
+	}
+
+
+	public ListView<Integer> getListX() {
+		return listX;
+	}
+
+
+	public ListView<Integer> getListY() {
+		return listY;
+	}
 	
 }

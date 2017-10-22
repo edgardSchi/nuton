@@ -15,7 +15,7 @@ public class BackwardButton extends ToolBarItem {
 	public BackwardButton(MainEventHandler eventHandler) {
 		controller = eventHandler.getMainController();
 		setIcon(new Image("file:icons/backwardIcon.png"));
-		points = controller.getPoints();
+		//points = controller.getPoints();
 	}
 	
 	@Override

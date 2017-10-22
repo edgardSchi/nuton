@@ -17,6 +17,7 @@ import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+import states.StateManager;
 import userSettings.ThemeLoader;
 
 public class SettingsController {
@@ -180,8 +181,8 @@ public class SettingsController {
 				System.out.println(achsenBox.getSelectionModel().getSelectedItem());		
 				saveSettings();
 				stage.close();
-				mainController.eichungsReady(true);
-				mainController.SCHRITTWEITE = SCHRITTWEITE;
+				mainController.getStateManager().setState(StateManager.CALIBRATION);
+				mainController.setSCHRITTWEITE(SCHRITTWEITE);
 				mainController.setEICHUNG(LAENGENEINHEIT);
 				mainController.restartBtn.setDisable(false);
 				mainController.fertigBtn.setDisable(false);

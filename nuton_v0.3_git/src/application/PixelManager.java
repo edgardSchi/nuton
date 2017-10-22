@@ -1,7 +1,5 @@
 package application;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.ArrayList;
 
 public class PixelManager {

@@ -20,13 +20,14 @@ import javafx.stage.Stage;
 
 public class DiagramsController {
 
-	private LineChart vDiagram;
-	@FXML private LineChart aDiagram;
+	private MainController mainController;
+	private LineChart<NumberAxis, NumberAxis> vDiagram;
+	@FXML private LineChart<NumberAxis, NumberAxis> aDiagram;
 	public static Stage stage;
 	private ArrayList<Point> points;
 	private PixelManager pManager;
 	@FXML private AnchorPane anchorPane;
-	@FXML private ComboBox diagramBox;
+	@FXML private ComboBox<String> diagramBox;
 	@FXML ArrayList<Double> velo;
 	private Exporter exporter;
 	@FXML private Button exportButton;
@@ -35,8 +36,9 @@ public class DiagramsController {
 	private NumberAxis yAxis;
 
 	@SuppressWarnings({ "unchecked", "static-access" })
-	DiagramsController(PixelManager pManager) {
+	public DiagramsController(MainController mainController, PixelManager pManager) {
 		try {
+			this.mainController = mainController;
 			this.pManager = pManager;
 			FXMLLoader loader;
 			loader = new FXMLLoader(getClass().getResource("Diagrams.fxml"));
@@ -125,12 +127,11 @@ public class DiagramsController {
 			System.out.println("Punkt: " + p.toString());
 		}
 		yAxis.setLabel("s[m]");
-		xAxis.setUpperBound(MainController.getMediaLength());
-		xAxis.setTickUnit(MainController.SCHRITTWEITE);
+		xAxis.setUpperBound(mainController.getMediaLength());
+		xAxis.setTickUnit(mainController.getSCHRITTWEITE());
 		vDiagram.getData().add(series);
 	}
 	
-	@SuppressWarnings("unchecked")
 	public void show() {
 		if (pManager.yRichtung() == true) {
 			diagramBox.getItems().clear();

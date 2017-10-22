@@ -31,5 +31,11 @@ public class DefaultState extends State{
 		// TODO Auto-generated method stub
 		
 	}
+
+	@Override
+	public void fertigBtnClick() {
+		// TODO Auto-generated method stub
+		
+	}
 	
 }
