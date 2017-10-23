@@ -42,6 +42,10 @@ public class Point {
 		gc.fillRect(x - SEITENLAENGE/2, y - SEITENLAENGE/2, SEITENLAENGE, SEITENLAENGE);
 	}
 	
+	public void removePoint(GraphicsContext gc) {
+		gc.clearRect(x - SEITENLAENGE/2, y - SEITENLAENGE/2, SEITENLAENGE, SEITENLAENGE);
+	}
+	
 	public double getTime() {
 		return time;
 	}

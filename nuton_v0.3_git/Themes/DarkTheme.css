@@ -58,8 +58,16 @@
 	-fx-tick-label-fill: #E0E0E0;
 }
 
-#toolbar {
-	-fx-background-color: #363636; 
+.tool-bar {
+	-fx-padding: 1;
+	-fx-border-color: #424242;
+	-fx-background-color: #101010;
+}
+
+.tool-bar .seperator *.line {
+	-fx-border-style: solid;
+	-fx-border-width: 0px;
+	-fx-background-color: #E0E0E0;
 }
 
 .list-view {

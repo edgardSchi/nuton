@@ -42,6 +42,7 @@ public class TranslationState extends State {
 		this.listY = mainController.getListY();
 		this.fertigBtn = mainController.getFertigBtn();
 		fertigBtn.setDisable(false);
+		
 	}
 
 	@Override
@@ -52,6 +53,7 @@ public class TranslationState extends State {
 
 	@Override
 	public void onClick(MouseEvent e) {
+		System.out.println("TRANSLATE STATE");
 				slider.setDisable(true);
 				gc.setFill(Color.rgb(255, 119, 0, 0.80));						
 				if (mainController.getSettingsController().yFixed() == true && yFix == 0) {
@@ -134,6 +136,11 @@ public class TranslationState extends State {
 			diaController.makeDiagram();
 			diaController.show();
 		}
+	}
+
+	@Override
+	public ArrayList<Point> getPoints() {
+		return points;
 	}
 
 }

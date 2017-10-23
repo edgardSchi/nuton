@@ -3,6 +3,7 @@ package states;
 import java.util.ArrayList;
 
 import application.MainController;
+import application.Point;
 import javafx.scene.input.MouseEvent;
 
 public class StateManager {
@@ -23,7 +24,7 @@ public class StateManager {
 	}
 	
 	private void initStates() {
-		states.add(new DefaultState(this));
+		states.add(new DefaultState(mainController));
 		states.add(new CalibrateState(mainController, mainController.getPManager()));
 		states.add(new TranslationState(mainController, mainController.getPManager()));
 	}
@@ -54,5 +55,9 @@ public class StateManager {
 	
 	public void fertigBtnClick() {
 		states.get(currentState).fertigBtnClick();
+	}
+	
+	public ArrayList<Point> getPoints() {
+		return states.get(currentState).getPoints();
 	}
 }

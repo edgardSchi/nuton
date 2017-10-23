@@ -2,6 +2,7 @@ package application;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import ffmpeg.FfmpegHandler;
 import javafx.application.Platform;
@@ -214,7 +215,22 @@ public class MainEventHandler {
 		return event;
 	}
 	
+	public void backwardButton() {
+		ArrayList<Point> points = mainController.getStateManager().getPoints();
+		if (points != null) {
+			double time = points.get(points.size()-1).getTime();
+			if (time == mainController.getSlider().getValue() - mainController.getSCHRITTWEITE() && mainController.getSlider().getValue() - mainController.getSCHRITTWEITE() >= 0) {
+				points.get(points.size()-1).removePoint(mainController.getGc());
+				points.remove(points.size()-1);
+				mainController.getSlider().setValue(mainController.getSlider().getValue() - mainController.getSCHRITTWEITE());
+			}
+		} else if (mainController.getSlider().getValue() - mainController.getSCHRITTWEITE() >= 0){
+			mainController.getSlider().setValue(mainController.getSlider().getValue() - mainController.getSCHRITTWEITE());
+		}
+	}
+	
 	public MainController getMainController() {
 		return mainController;
 	}
+
 }

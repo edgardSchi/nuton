@@ -12,16 +12,17 @@ public abstract class ToolBarItem {
 	private Button button;
 	private int size = 25;
 	protected MainController mainController;
-	protected static MainEventHandler eventHandler;
+	protected MainEventHandler eventHandler;
+	protected ToolBarManager tbm;
 	
-	public ToolBarItem(MainEventHandler eventHandler) {
+	public ToolBarItem(ToolBarManager tbm) {
 		button = new Button();
 		button.setPrefWidth(size);
 		button.setPrefHeight(size);
 		button.setMaxSize(size, size);
 		button.setMinSize(size, size);
-		this.mainController = mainController;
 		eventHandler = new MainEventHandler(mainController);
+		this.tbm = tbm;
 		button.setOnAction(new EventHandler<ActionEvent>() {
 
 			@Override

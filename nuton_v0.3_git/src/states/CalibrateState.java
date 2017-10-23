@@ -1,11 +1,13 @@
 package states;
 
+import java.util.ArrayList;
+
 import application.MainController;
 import application.PixelManager;
+import application.Point;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
-import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
@@ -15,7 +17,6 @@ public class CalibrateState extends State {
 	private MainController mainController;
 	private PixelManager pManager;
 	private GraphicsContext gc;
-	private Button fertigBtn;
 	private int clickCounter = 0;
 	private double x1;
 	private double x2;
@@ -26,6 +27,7 @@ public class CalibrateState extends State {
 		this.mainController = mainController;
 		this.pManager = pManager;
 		this.gc = mainController.getGc();
+		mainController.getFertigBtn().setDisable(true);
 	}
 	
 	@Override
@@ -35,6 +37,7 @@ public class CalibrateState extends State {
 
 	@Override
 	public void onClick(MouseEvent e) {
+		System.out.println("CALIBRATE STATE");
 		//gc.setFill(Color.rgb(255, 119, 0, 0.80));
 		gc.fillRect(e.getX() - 10, e.getY() - 10, 20, 20);
 		
@@ -100,6 +103,11 @@ public class CalibrateState extends State {
 	public void fertigBtnClick() {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public ArrayList<Point> getPoints() {
+		return null;
 	}
 
 	

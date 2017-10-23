@@ -3,6 +3,7 @@ package userSettings;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.ArrayList;
 import java.util.Optional;
 
 import javafx.fxml.FXML;
@@ -38,8 +39,8 @@ public class ProgramSettingsController extends Dialog<ButtonType> {
 	private AnchorPane ff;
 	private @FXML Button applyBtn;
 	private @FXML Button cancelBtn;
-	private FfmpegPane ffmpegPane;
-	private AppearancePane appPane;
+	private SettingsPane ffmpegPane;
+	private SettingsPane appPane;
 	
 	//ffmpeg Pane
 	private @FXML TextField pathField;
@@ -48,6 +49,9 @@ public class ProgramSettingsController extends Dialog<ButtonType> {
 	//private @FXML Button applyBtn;
 	private PropertiesWriter propWriter;
 	
+	private int currentPane = 0;
+	private ArrayList<SettingsPane> panes;
+	
 	public ProgramSettingsController() {
 		try {
 			propWriter = new PropertiesWriter();
@@ -55,12 +59,15 @@ public class ProgramSettingsController extends Dialog<ButtonType> {
 			loader = new FXMLLoader(getClass().getResource("ProgramSettings.fxml"));
 			loader.setController(this);
 			loader.load();
+			panes = new ArrayList<SettingsPane>();
 			Stage stage = (Stage) getDialogPane().getScene().getWindow();
 			stage.getIcons().add(new Image(ProgramSettingsController.class.getResourceAsStream("Nuton_logo.png")));
 			ffmpegPane = new FfmpegPane(propWriter);
 			ffmpegPane.anchorPane(centerPane);
+			panes.add(ffmpegPane);
 			appPane = new AppearancePane(propWriter);
 			appPane.anchorPane(centerPane);
+			panes.add(appPane);
 			centerPane.getChildren().setAll(ffmpegPane.getPane());
 			
 			setTitle("Einstellungen");
@@ -73,7 +80,9 @@ public class ProgramSettingsController extends Dialog<ButtonType> {
 			
 			Optional<ButtonType> result = showAndWait();
 		    if (result.get() == ButtonType.OK) {
-		        System.out.println("OK");
+		    	for(SettingsPane p : panes) {
+		    		p.confirmSettings();
+		    	}
 		        propWriter.confirm();
 		    } else {
 		    	 propWriter.reset();
@@ -131,14 +140,14 @@ public class ProgramSettingsController extends Dialog<ButtonType> {
 		treeView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> updateSelectedItem(newValue));
 	}
 	
-	private void updateSelectedItem(Object newValue) {      
+	private void updateSelectedItem(Object newValue) { 
 		if (treeView.getSelectionModel().isSelected(0)) {
-			ffmpegPane = new FfmpegPane(propWriter);
 			centerPane.getChildren().setAll(ffmpegPane.getPane());
+			currentPane = 0;
 			System.out.println("ffmpeg");
 		} else if (treeView.getSelectionModel().isSelected(1)) {
-			appPane = new AppearancePane(propWriter);
 			centerPane.getChildren().setAll(appPane.getPane());
+			currentPane = 1;
 			System.out.println("Aussehen");
 		}
 		System.out.println("Click");

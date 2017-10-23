@@ -1,11 +1,15 @@
 package states;
 
+import java.util.ArrayList;
+
+import application.MainController;
+import application.Point;
 import javafx.scene.input.MouseEvent;
 
 public class DefaultState extends State{
 	
-	public DefaultState(StateManager sm) {
-		
+	public DefaultState(MainController mainController) {
+		mainController.getFertigBtn().setDisable(true);
 	}
 
 	@Override
@@ -16,8 +20,7 @@ public class DefaultState extends State{
 
 	@Override
 	public void onClick(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
+		System.out.println("DEFAULT STATE");
 	}
 
 	@Override
@@ -36,6 +39,12 @@ public class DefaultState extends State{
 	public void fertigBtnClick() {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public ArrayList<Point> getPoints() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 }

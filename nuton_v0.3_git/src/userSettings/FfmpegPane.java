@@ -17,7 +17,7 @@ import javafx.stage.FileChooser;
 import properties.PropertiesReader;
 import properties.PropertiesWriter;
 
-public class FfmpegPane {
+public class FfmpegPane extends SettingsPane {
 
 	private AnchorPane pane;
 	private @FXML TextField pathField;
@@ -32,11 +32,13 @@ public class FfmpegPane {
 	private PropertiesWriter propWriter;
 	
 	public FfmpegPane(PropertiesWriter propWriter) {
+		super.pane = this.pane;
 		this.propWriter = propWriter;
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("FfmpegPane.fxml"));
 		loader.setController(this);
 		try {
 			pane = loader.load();
+			setPane(pane);
 			propReader = new PropertiesReader();
 			formatBox.getItems().addAll("*.mp4", "*.m4v");
 			formatBox.setValue("*." + propReader.getPrefVideoFormat());
@@ -79,10 +81,7 @@ public class FfmpegPane {
 
 			@Override
 			public void handle(ActionEvent arg0) {
-				propWriter.setFfmpegPath(pathField.getText());
-				propWriter.setPrefVideoFormat(formatBox.getValue());
-				propWriter.sameFfmpegOutput(sameDirBox.isSelected());		
-				propWriter.setFfmpegSameOutputPath(sameDirPathField.getText());
+				confirmSettings();
 			}
 			
 		});
@@ -105,16 +104,13 @@ public class FfmpegPane {
 		});
 	}
 	
-	@SuppressWarnings("static-access")
-	public void anchorPane(AnchorPane aPane) {
-		aPane.setBottomAnchor(pane, 0.0);
-		aPane.setRightAnchor(pane, 0.0);
-		aPane.setLeftAnchor(pane, 0.0);
-		aPane.setTopAnchor(pane, 0.0);
-		//aPane.getChildren().setAll(pane);
-	}
 	
-	public AnchorPane getPane() {
-		return pane;
+
+	
+	public void confirmSettings() {
+		propWriter.setFfmpegPath(pathField.getText());
+		propWriter.setPrefVideoFormat(formatBox.getValue());
+		propWriter.sameFfmpegOutput(sameDirBox.isSelected());		
+		propWriter.setFfmpegSameOutputPath(sameDirPathField.getText());
 	}
 }

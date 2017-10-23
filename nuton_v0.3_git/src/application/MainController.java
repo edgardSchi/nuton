@@ -146,7 +146,6 @@ public class MainController implements Initializable{
 		restartBtn.setOnAction(eventHandler.reset());
 		
 		
-		
 		fertigBtn.setOnAction(new EventHandler<ActionEvent>() {
 
 			@Override

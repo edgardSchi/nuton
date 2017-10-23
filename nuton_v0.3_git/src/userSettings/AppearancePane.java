@@ -15,7 +15,7 @@ import javafx.scene.layout.AnchorPane;
 import properties.PropertiesReader;
 import properties.PropertiesWriter;
 
-public class AppearancePane {
+public class AppearancePane extends SettingsPane {
 	@FXML
 	private AnchorPane pane;
 	private @FXML ComboBox<String> themeBox;
@@ -31,6 +31,7 @@ public class AppearancePane {
 		loader.setController(this);
 		try {
 			pane = loader.load();
+			setPane(pane);
 			propReader = new PropertiesReader();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -38,29 +39,15 @@ public class AppearancePane {
 		}
 		themeLoader = new ThemeLoader();
 		loadThemeBox(themeLoader.getFileNames());
+		colorPicker.setValue(propReader.getPointColor());
 		
 		applyBtn.setOnAction(new EventHandler<ActionEvent>() {
 
 			@Override
 			public void handle(ActionEvent event) {
-				propWriter.setTheme(themeBox.getValue());
-				propWriter.setPointColor(colorPicker.getValue().toString());
-				System.out.println(colorPicker.getValue().toString());
-				Alert alert = new Alert(AlertType.INFORMATION);
-				alert.setHeaderText(null);
-				alert.setContentText("Sie müssen das Programm neu starten, um das neue Theme zu sehen.");
-				alert.show();
+				confirmSettings();
 			}			
 		});
-	}
-	
-	@SuppressWarnings("static-access")
-	public void anchorPane(AnchorPane aPane) {
-		aPane.setBottomAnchor(pane, 0.0);
-		aPane.setRightAnchor(pane, 0.0);
-		aPane.setLeftAnchor(pane, 0.0);
-		aPane.setTopAnchor(pane, 0.0);
-		//aPane.getChildren().setAll(pane);
 	}
 	
 	public AnchorPane getPane() {
@@ -73,5 +60,15 @@ public class AppearancePane {
 			System.out.println(themes[i]);
 		}
 		themeBox.setValue(propReader.getTheme());
+	}
+
+	@Override
+	public void confirmSettings() {
+		propWriter.setTheme(themeBox.getValue());
+		propWriter.setPointColor(colorPicker.getValue().toString());
+//		Alert alert = new Alert(AlertType.INFORMATION);
+//		alert.setHeaderText(null);
+//		alert.setContentText("Sie müssen das Programm neu starten, um das neue Theme zu sehen.");
+//		alert.show();
 	}
 }
