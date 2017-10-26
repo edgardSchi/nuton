@@ -1,1 +1,20 @@
 /* JavaFX CSS - Leave this comment until you have at least create one rule which uses -fx-Property */
+
+/*.tool-bar .toggle-button {
+	-fx-border-color: transparent;
+    -fx-border-width: 0;
+    -fx-background-radius: 0;
+    -fx-background-color: transparent;
+}
+
+.tool-bar .toggle-button:hover {
+    -fx-background-color: rgba(12,12,12,0.10588235408067703);
+}
+
+.tool-bar .toggle-button:pressed {
+    -fx-background-color: rgba(25,25,25,0.12941177189350128);
+}
+
+.tool-bar .toggle-button:selected {
+    -fx-background-color: rgba(50,50,50,0.12941177189350128);
+} */

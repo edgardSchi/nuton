@@ -13,12 +13,15 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
 import javafx.scene.image.Image;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
+import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import properties.PropertiesReader;
@@ -81,6 +84,7 @@ public class MainEventHandler {
 							mainController.getSlider().setMax(mainController.getPlayer().getTotalDuration().toMillis());
 							mainController.setMediaLength(mainController.getPlayer().getTotalDuration().toMillis());
 						
+							System.out.println("Running");
 						}
 						
 					});
@@ -131,6 +135,7 @@ public class MainEventHandler {
 						mainController.getSlider().setMax(mainController.getPlayer().getTotalDuration().toMillis());
 						mainController.setMediaLength(mainController.getPlayer().getTotalDuration().toMillis());
 					
+						System.out.println("Running");
 					}
 					
 				});
@@ -233,4 +238,10 @@ public class MainEventHandler {
 		return mainController;
 	}
 
+	
+	//Toolbarevents
+	public void setPoint(MouseEvent e, ArrayList<Point> points, GraphicsContext gc) {
+		
+	}
+	
 }

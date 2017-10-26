@@ -37,54 +37,57 @@ public class CalibrateState extends State {
 
 	@Override
 	public void onClick(MouseEvent e) {
-		System.out.println("CALIBRATE STATE");
-		//gc.setFill(Color.rgb(255, 119, 0, 0.80));
-		gc.fillRect(e.getX() - 10, e.getY() - 10, 20, 20);
-		
-		if (clickCounter == 0) {
-			x1 = e.getX();
-			y1 = e.getY();
-		}
-		
-		if (clickCounter == 1) {
-			x2 = e.getX();
-			y2 = e.getY();
-		}
-		
-		System.out.println("X1: " + x1);
-		System.out.println("Y1: " + y1);
-		System.out.println("X2: " + x2);
-		System.out.println("Y2: " + y2);
-		
-		clickCounter++;
-		
-		if (clickCounter == 2) {
-			gc.setStroke(Color.RED);
-			gc.strokeLine(x1, y1, x2, y2);
+		if (e.getEventType() == MouseEvent.MOUSE_CLICKED) {
+			System.out.println("CALIBRATE STATE");
+			gc.setFill(Color.rgb(255, 119, 0, 0.80));
+			gc.fillRect(e.getX() - 10, e.getY() - 10, 20, 20);
 			
-			Alert alert = new Alert(AlertType.CONFIRMATION);
-			alert.setTitle("Bestätigen");
-			alert.setHeaderText("Diese Distanz speichern?");
-			alert.showAndWait().ifPresent(rs -> {
-				if (rs == ButtonType.OK) {
-					//LAENGEPIXEL = pManager.getDistance(x1, y1, x2, y2);
-					pManager.setLaengePixel(pManager.getDistance(x1, y1, x2, y2));
-					//System.out.println(LAENGEPIXEL);			
-					pManager.setEichung(mainController.getEICHUNG());
-					gc.clearRect(0, 0, mainController.getCanvas().getWidth(), mainController.getCanvas().getWidth());
-					clickCounter = 0;
-					mainController.getStateManager().setState(StateManager.TRANSLATION);
-				} 
-				if (rs == ButtonType.CANCEL) {
-					gc.clearRect(0, 0,mainController.getCanvas().getWidth(), mainController.getCanvas().getWidth());
-					x1 = 0;
-					y1 = 0;
-					x2 = 0;
-					y2 = 0;
-					clickCounter = 0;
-				}
-			});
+			if (clickCounter == 0) {
+				x1 = e.getX();
+				y1 = e.getY();
+			}
+			
+			if (clickCounter == 1) {
+				x2 = e.getX();
+				y2 = e.getY();
+			}
+			
+			System.out.println("X1: " + x1);
+			System.out.println("Y1: " + y1);
+			System.out.println("X2: " + x2);
+			System.out.println("Y2: " + y2);
+			
+			clickCounter++;
+			
+			if (clickCounter == 2) {
+				gc.setStroke(Color.RED);
+				gc.strokeLine(x1, y1, x2, y2);
+				
+				Alert alert = new Alert(AlertType.CONFIRMATION);
+				alert.setTitle("Bestätigen");
+				alert.setHeaderText("Diese Distanz speichern?");
+				alert.showAndWait().ifPresent(rs -> {
+					if (rs == ButtonType.OK) {
+						//LAENGEPIXEL = pManager.getDistance(x1, y1, x2, y2);
+						pManager.setLaengePixel(pManager.getDistance(x1, y1, x2, y2));
+						//System.out.println(LAENGEPIXEL);			
+						pManager.setEichung(mainController.getEICHUNG());
+						gc.clearRect(0, 0, mainController.getCanvas().getWidth(), mainController.getCanvas().getWidth());
+						clickCounter = 0;
+						mainController.getStateManager().setState(StateManager.TRANSLATION);
+					} 
+					if (rs == ButtonType.CANCEL) {
+						gc.clearRect(0, 0,mainController.getCanvas().getWidth(), mainController.getCanvas().getWidth());
+						x1 = 0;
+						y1 = 0;
+						x2 = 0;
+						y2 = 0;
+						clickCounter = 0;
+					}
+				});
+			}
 		}
+		
 	}
 
 	@Override
@@ -107,6 +110,12 @@ public class CalibrateState extends State {
 
 	@Override
 	public ArrayList<Point> getPoints() {
+		return null;
+	}
+
+	@Override
+	public MainController getMainController() {
+		// TODO Auto-generated method stub
 		return null;
 	}
 

@@ -29,6 +29,7 @@ import javafx.util.Duration;
 import states.StateManager;
 import toolBar.ToolBarManager;
 import userSettings.ProgramSettingsController;
+import waveGenerator.WaveGeneratorController;
 
 public class MainController implements Initializable{
 	
@@ -41,6 +42,7 @@ public class MainController implements Initializable{
 	@FXML private MenuItem ffmpegMenu;
 	@FXML private MenuItem closeMenu;
 	@FXML private MenuItem menuAnleitung;
+	@FXML private MenuItem simWaveMenu;
 	@FXML private Canvas canvas; 
 	@FXML public Slider slider;
 	@FXML public Button startBtn;
@@ -51,6 +53,7 @@ public class MainController implements Initializable{
 	@FXML private ListView<Integer> listY;
 	@FXML private ToolBar toolBar;
 	private GraphicsContext gc;
+	private ToolBarManager tbm;
 	//private ArrayList<Point> points;
 	
 	private double SCHRITTWEITE = 1000;
@@ -83,7 +86,7 @@ public class MainController implements Initializable{
 		
 		closeMenu.setOnAction(eventHandler.closeProgram());
 		
-		ToolBarManager toolBarM = new ToolBarManager(toolBar, this);
+		tbm = new ToolBarManager(toolBar, this);
 //		ForwardButton fButton = new ForwardButton();
 //		TestToolBarItem item = new TestToolBarItem();
 //		toolBarM.addItem(item);
@@ -96,6 +99,15 @@ public class MainController implements Initializable{
 			public void handle(ActionEvent event) {
 				@SuppressWarnings("unused")
 				ProgramSettingsController pSettings = new ProgramSettingsController();
+			}
+			
+		});
+		
+		simWaveMenu.setOnAction(new EventHandler<ActionEvent>() {
+
+			@Override
+			public void handle(ActionEvent arg0) {
+				WaveGeneratorController wave = new WaveGeneratorController();
 			}
 			
 		});
@@ -132,7 +144,7 @@ public class MainController implements Initializable{
 		
 		
 		
-		canvas.setOnMouseClicked(new EventHandler<MouseEvent>() {	
+		canvas.addEventFilter(MouseEvent.ANY, new EventHandler<MouseEvent>() {	
 			
 			
 			@Override
@@ -319,5 +331,8 @@ public class MainController implements Initializable{
 	public ListView<Integer> getListY() {
 		return listY;
 	}
-	
+
+	public ToolBarManager getToolBarManager() {
+		return tbm;
+	}
 }

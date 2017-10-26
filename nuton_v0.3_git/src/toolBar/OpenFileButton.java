@@ -3,7 +3,8 @@ package toolBar;
 import application.MainEventHandler;
 import javafx.scene.image.Image;
 
-public class OpenFileButton extends ToolBarItem{
+public class OpenFileButton extends ToolBarButton{
+	
 	
 	public OpenFileButton(MainEventHandler eventHandler) {
 		setIcon(new Image("file:icons/openFileIcon.png"));
@@ -13,5 +14,7 @@ public class OpenFileButton extends ToolBarItem{
 	@Override
 	public void onClick() {
 	}
+
+
 
 }

@@ -58,6 +58,15 @@
                         <MenuItem fx:id="closeMenu" mnemonicParsing="false" text="Schließen" />
                   </items>
                 </Menu>
+                  <Menu mnemonicParsing="false" text="Bewegung">
+                     <items>
+                        <Menu mnemonicParsing="false" text="Bewegung simulieren">
+                          <items>
+                            <MenuItem fx:id="simWaveMenu" mnemonicParsing="false" text="Welle (Beta)" />
+                          </items>
+                        </Menu>
+                     </items>
+                  </Menu>
                 <Menu mnemonicParsing="false" text="Hilfe">
                   <items>
                         <MenuItem fx:id="menuAnleitung" mnemonicParsing="false" text="Anleitung" />

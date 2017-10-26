@@ -2,8 +2,7 @@ package toolBar;
 
 import javafx.scene.image.Image;
 
-public class BackwardButton extends ToolBarItem {
-
+public class BackwardButton extends ToolBarButton {
 	
 	public BackwardButton(ToolBarManager tbm) {
 		this.tbm = tbm;
@@ -16,6 +15,7 @@ public class BackwardButton extends ToolBarItem {
 		tbm.getEventHandler().backwardButton();
 //		controller.getCanvas().
 	}
+
 
 
 }

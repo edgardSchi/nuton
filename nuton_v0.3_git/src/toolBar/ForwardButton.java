@@ -4,7 +4,7 @@ import application.MainController;
 import application.MainEventHandler;
 import javafx.scene.image.Image;
 
-public class ForwardButton extends ToolBarItem {
+public class ForwardButton extends ToolBarButton {
 
 	private MainController controller;
 	

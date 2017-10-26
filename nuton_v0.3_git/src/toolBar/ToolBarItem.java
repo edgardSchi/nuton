@@ -1,68 +1,45 @@
 package toolBar;
 
-import application.MainController;
-import application.MainEventHandler;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
+import javafx.scene.control.ToggleButton;
 
 public abstract class ToolBarItem {
-	private Button button;
-	private int size = 25;
-	protected MainController mainController;
-	protected MainEventHandler eventHandler;
+	
+	public static final int SIZE = 25;
 	protected ToolBarManager tbm;
+	protected Node node;
 	
-	public ToolBarItem(ToolBarManager tbm) {
-		button = new Button();
-		button.setPrefWidth(size);
-		button.setPrefHeight(size);
-		button.setMaxSize(size, size);
-		button.setMinSize(size, size);
-		eventHandler = new MainEventHandler(mainController);
-		this.tbm = tbm;
-		button.setOnAction(new EventHandler<ActionEvent>() {
-
-			@Override
-			public void handle(ActionEvent arg0) {
-				onClick();
-			}
-			
-		});
-	}
-	
-	public ToolBarItem() {
-		button = new Button();
-		button.setPrefWidth(size);
-		button.setPrefHeight(size);
-		button.setMaxSize(size, size);
-		button.setMinSize(size, size);
-		button.setOnAction(new EventHandler<ActionEvent>() {
-
-			@Override
-			public void handle(ActionEvent arg0) {
-				onClick();
-			}
-			
-		});
-	}
-	
-	public void setIcon(Image icon) {
-		ImageView view = new ImageView(icon);
-		button.setGraphic(view);
-	}
-	
-	public Button getButton() {
-		return button;
-	}
+	public Node getNode() {
+		return node;
+	};
 	
 	public abstract void onClick();
 	
 	
-	public void setEventHandler(EventHandler<ActionEvent> event) {
-		button.setOnAction(event);
+//	public void setEventHandler(EventHandler<ActionEvent> event) {
+//		button.setOnAction(event);
+//	}
+	
+	protected Button createButton() {
+		Button button = new Button();
+		node = button;
+		button.setPrefWidth(SIZE);
+		button.setPrefHeight(SIZE);
+		button.setMaxSize(SIZE, SIZE);
+		button.setMinSize(SIZE, SIZE);
+		return button;
 	}
+	
+	protected ToggleButton createToggleButton() {
+		ToggleButton button = new ToggleButton();
+		node = button;
+		button.setPrefWidth(SIZE);
+		button.setPrefHeight(SIZE);
+		button.setMaxSize(SIZE, SIZE);
+		button.setMinSize(SIZE, SIZE);
+		return button;
+	}
+	
 	
 }

@@ -8,7 +8,10 @@ import javafx.scene.input.MouseEvent;
 
 public class DefaultState extends State{
 	
+	private MainController mainController;
+	
 	public DefaultState(MainController mainController) {
+		this.mainController = mainController;
 		mainController.getFertigBtn().setDisable(true);
 	}
 
@@ -20,7 +23,8 @@ public class DefaultState extends State{
 
 	@Override
 	public void onClick(MouseEvent e) {
-		System.out.println("DEFAULT STATE");
+		//System.out.println("DEFAULT STATE");
+		//mainController.getToolBarManager().pointButtonEvent(this, e);
 	}
 
 	@Override
@@ -45,6 +49,11 @@ public class DefaultState extends State{
 	public ArrayList<Point> getPoints() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public MainController getMainController() {
+		return mainController;
 	}
 	
 }

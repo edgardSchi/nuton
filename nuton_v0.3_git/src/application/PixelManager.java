@@ -105,6 +105,10 @@ public class PixelManager {
 		return velo;
 	}
 	
+	public static void calcRectangleMiddle() {
+		
+	}
+	
 	public boolean yRichtung() {
 		return settingsController.yRichtung();
 	}

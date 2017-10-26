@@ -22,7 +22,7 @@ public class Main extends Application {
 	@FXML private Canvas canvas;
 	private ThemeLoader themeLoader;
 	
-	private final String VERSION = "v0.3.2";
+	private final String VERSION = "v0.3.3";
 	
 	@Override
 	public void start(Stage primaryStage) {

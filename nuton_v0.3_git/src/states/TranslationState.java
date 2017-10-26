@@ -14,7 +14,6 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.ListView;
 import javafx.scene.control.Slider;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.paint.Color;
 
 public class TranslationState extends State {
 	
@@ -28,9 +27,6 @@ public class TranslationState extends State {
 	private ListView<Integer> listY;
 	private Button fertigBtn;
 	
-	private double yFix = 0;
-	private double xFix = 0;
-	
 	public TranslationState(MainController mainController, PixelManager pManager) {
 		this.mainController = mainController;
 		this.pManager = pManager;
@@ -42,7 +38,6 @@ public class TranslationState extends State {
 		this.listY = mainController.getListY();
 		this.fertigBtn = mainController.getFertigBtn();
 		fertigBtn.setDisable(false);
-		
 	}
 
 	@Override
@@ -53,45 +48,7 @@ public class TranslationState extends State {
 
 	@Override
 	public void onClick(MouseEvent e) {
-		System.out.println("TRANSLATE STATE");
-				slider.setDisable(true);
-				gc.setFill(Color.rgb(255, 119, 0, 0.80));						
-				if (mainController.getSettingsController().yFixed() == true && yFix == 0) {
-					//gc.fillRect(e.getX() - 10, e.getY() - 10, 20, 20);
-					yFix = e.getY();
-					Point p = new Point((int)e.getX(), (int)e.getY(), slider.getValue(), points.size());
-					points.add(p);
-					p.drawPoint(gc);
-					listX.getItems().add(p.getX());
-					listY.getItems().add(p.getY());
-					System.out.println(p.getId());
-				} else if (mainController.getSettingsController().yFixed() == true) {
-					Point p = new Point((int)e.getX(), (int)yFix, slider.getValue(), points.size());
-					points.add(p);
-					p.drawPoint(gc);
-					listX.getItems().add(p.getX());
-					listY.getItems().add(p.getY());
-				} else if (mainController.getSettingsController().xFixed() == true && xFix == 0) {
-					xFix = e.getX();
-					Point p = new Point((int)e.getX(), (int)e.getY(), slider.getValue(), points.size());
-					points.add(p);
-					p.drawPoint(gc);
-					listX.getItems().add(p.getX());
-					listY.getItems().add(p.getY());
-				} else if (mainController.getSettingsController().xFixed() == true) {
-					Point p = new Point((int)xFix, (int)e.getY(), slider.getValue(), points.size());
-					points.add(p);
-					p.drawPoint(gc);
-					listX.getItems().add(p.getX());
-					listY.getItems().add(p.getY());
-				} else {
-					Point p = new Point((int)e.getX(), (int)e.getY(), slider.getValue(), points.size());
-					points.add(p);
-					p.drawPoint(gc);
-					listX.getItems().add(p.getX());
-					listY.getItems().add(p.getY());
-				}
-				slider.setValue(slider.getValue() + mainController.getSCHRITTWEITE());				
+		mainController.getToolBarManager().pointButtonEvent(this, e);	
 	}
 
 	@Override
@@ -113,8 +70,6 @@ public class TranslationState extends State {
 		slider.setValue(0);
 		slider.setDisable(false);
 		gc.clearRect(0, 0, mainController.getCanvas().getWidth(), mainController.getCanvas().getWidth());
-		yFix = 0;
-		xFix = 0;
 		pManager.reset();
 	}
 	
@@ -141,6 +96,10 @@ public class TranslationState extends State {
 	@Override
 	public ArrayList<Point> getPoints() {
 		return points;
+	}
+	
+	public MainController getMainController() {
+		return mainController;
 	}
 
 }
