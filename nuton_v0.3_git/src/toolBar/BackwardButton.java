@@ -1,5 +1,6 @@
 package toolBar;
 
+import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 
 public class BackwardButton extends ToolBarButton {
@@ -8,6 +9,7 @@ public class BackwardButton extends ToolBarButton {
 		this.tbm = tbm;
 		setIcon(new Image("file:icons/backwardIcon.png"));
 		//points = controller.getPoints();
+		button.setTooltip(new Tooltip("Zurück"));
 	}
 	
 	@Override

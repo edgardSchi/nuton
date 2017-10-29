@@ -25,14 +25,17 @@ import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import properties.PropertiesReader;
+import properties.PropertiesWriter;
 
 public class MainEventHandler {
 
 	private MainController mainController;
 	private PropertiesReader propReader;
+	private PropertiesWriter propWriter;
 	
 	public MainEventHandler(MainController mainController) {
 		this.mainController = mainController;
+		propWriter = new PropertiesWriter();
 	}
 	
 	private void openMedia(File media) {	
@@ -52,7 +55,13 @@ public class MainEventHandler {
 
 			@Override
 			public void handle(ActionEvent event) {
+				propReader = new PropertiesReader();
 				FileChooser fileChooser = new FileChooser();
+				System.out.println("LAST PATH: " + propReader.getLastPath());
+				
+				if (!propReader.getLastPath().isEmpty()) {
+					fileChooser.setInitialDirectory(new File(propReader.getLastPath()));
+				}
 				
 				FileChooser.ExtensionFilter filter = new FileChooser.ExtensionFilter("Video Dateien (*.fxm), (*.flv), (*.mp4), (*.m4v)", "*.fxm", "*.flv", "*.mp4", "*.m4v");
 				fileChooser.getExtensionFilters().add(filter);
@@ -62,7 +71,9 @@ public class MainEventHandler {
 					
 				
 					openMedia(mediaFile);
-				
+					System.out.println(mediaFile.getAbsolutePath());
+					propWriter.setLastPath(mediaFile.getParent());
+					propWriter.confirm();
 					//Prüft, ob der MediaPlayer bereit ist
 					mainController.getPlayer().setOnReady(new Runnable() {
 
@@ -102,43 +113,55 @@ public class MainEventHandler {
 			public void handle(ActionEvent arg0) {
 				propReader = new PropertiesReader();
 				FileChooser chooser = new FileChooser();
-				String videoPath;
-				videoPath = chooser.showOpenDialog(null).getAbsolutePath();
 				
-				String outputPath = null;
-				if (propReader.isFfmpegOutputSame()) {
-					outputPath = propReader.getFfmpegSameOutputPath();
+				if (!propReader.getLastPath().isEmpty()) {
+					chooser.setInitialDirectory(new File(propReader.getLastPath()));
 				}
 				
-				String name = "output";
-				FfmpegHandler handler = new FfmpegHandler(videoPath, outputPath, name);
-				openMedia(handler.getVideo());
+				String videoPath;
+				File video;
+				video = chooser.showOpenDialog(null);
 				
-				
-				mainController.getPlayer().setOnReady(new Runnable() {
-
-					@Override
-					public void run() {
-						//slider.setMin(0);
-						DoubleProperty mvw = mainController.getMv().fitWidthProperty();
-						DoubleProperty mvh = mainController.getMv().fitHeightProperty();
-						DoubleProperty canvasW = mainController.getCanvas().widthProperty();
-						DoubleProperty canvasH = mainController.getCanvas().heightProperty();
-						
-						mvw.bind(Bindings.selectDouble(mainController.getMv().parentProperty(), "width"));
-						mvh.bind(Bindings.selectDouble(mainController.getMv().parentProperty(), "height"));
-						canvasW.bind(Bindings.selectDouble(mainController.getMv().parentProperty(), "width"));
-						canvasH.bind(Bindings.selectDouble(mainController.getMv().parentProperty(), "height"));
-						
-						mainController.getSlider().setMinorTickCount(0);
-						mainController.getSlider().setMajorTickUnit(1000);
-						mainController.getSlider().setMax(mainController.getPlayer().getTotalDuration().toMillis());
-						mainController.setMediaLength(mainController.getPlayer().getTotalDuration().toMillis());
-					
-						System.out.println("Running");
+				if (video != null) {
+					videoPath = video.getAbsolutePath();
+					String outputPath = null;
+					if (propReader.isFfmpegOutputSame()) {
+						outputPath = propReader.getFfmpegSameOutputPath();
 					}
 					
-				});
+					String name = "output";
+					FfmpegHandler handler = new FfmpegHandler(videoPath, outputPath, name);
+					openMedia(handler.getVideo());
+					
+					propWriter.setLastPath(video.getParent());
+					propWriter.confirm();
+					
+					mainController.getPlayer().setOnReady(new Runnable() {
+
+						@Override
+						public void run() {
+							//slider.setMin(0);
+							DoubleProperty mvw = mainController.getMv().fitWidthProperty();
+							DoubleProperty mvh = mainController.getMv().fitHeightProperty();
+							DoubleProperty canvasW = mainController.getCanvas().widthProperty();
+							DoubleProperty canvasH = mainController.getCanvas().heightProperty();
+							
+							mvw.bind(Bindings.selectDouble(mainController.getMv().parentProperty(), "width"));
+							mvh.bind(Bindings.selectDouble(mainController.getMv().parentProperty(), "height"));
+							canvasW.bind(Bindings.selectDouble(mainController.getMv().parentProperty(), "width"));
+							canvasH.bind(Bindings.selectDouble(mainController.getMv().parentProperty(), "height"));
+							
+							mainController.getSlider().setMinorTickCount(0);
+							mainController.getSlider().setMajorTickUnit(1000);
+							mainController.getSlider().setMax(mainController.getPlayer().getTotalDuration().toMillis());
+							mainController.setMediaLength(mainController.getPlayer().getTotalDuration().toMillis());
+						
+							System.out.println("Running");
+						}
+						
+					});
+				}			
+
 			}
 			
 		};

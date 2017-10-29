@@ -26,46 +26,61 @@ public class AddPointEvents {
 	private static int recCounter = 0;
 	private static double x = 0;
 	private static double y = 0;
+	private static double dragX = 0;
+	private static double dragY = 0;
+	private static double x2 = 0;
+	private static double y2 = 0;
 	public static void addRectangle(State state, MouseEvent e) {
 		GraphicsContext gc = state.getMainController().getGc();
 		MainController mainController = state.getMainController();
 		ArrayList<Point> points = state.getPoints();
 		gc.setFill(Color.rgb(255, 119, 0, 0.80));
 		
-		System.out.println(e.getEventType().toString());
+		System.out.println("x2: " + x2 + " y2: " + y2);
 		
 		
 		
-		if (e.getEventType() == MouseEvent.MOUSE_PRESSED) {
+		if (e.getEventType() == MouseEvent.MOUSE_PRESSED && e.isPrimaryButtonDown() && !e.isSecondaryButtonDown()) {
 			x = e.getX();
 			y = e.getY();
 		}		
 		
-		if (e.getEventType() == MouseEvent.MOUSE_DRAGGED) {
+		if (e.getEventType() == MouseEvent.MOUSE_DRAGGED && e.isPrimaryButtonDown()) {
 			gc.setStroke(Color.RED);
 			gc.clearRect(0, 0, mainController.getCanvas().getWidth(), mainController.getCanvas().getHeight());
 			for(Point p : points) {
 				p.drawPoint(gc);
 			}
 			
-			gc.strokeLine(x, y, e.getX(), y);
-			gc.strokeLine(e.getX(), y, e.getX(), e.getY());
-			gc.strokeLine(x, y, x, e.getY());
-			gc.strokeLine(x, e.getY(), e.getX(), e.getY());
+			if (e.isSecondaryButtonDown()) {			
+				x = x - dragX + e.getX();
+				x2 = x2 - dragX + e.getX();
+				y = y - dragY + e.getY();
+				y2 = y2 - dragY + e.getY();
+				System.out.println("BEIDE MAUSTASTEN");
+			} else {
+				x2 = e.getX();
+				y2 = e.getY();
+			}
+			
+			gc.strokeLine(x, y, x2, y);
+			gc.strokeLine(x2, y, x2, y2);
+			gc.strokeLine(x, y, x, y2);
+			gc.strokeLine(x, y2, x2, y2);
 			
 			//Kreuz
-			gc.strokeLine(((e.getX() - x) / 2 + x) - 5, ((e.getY() - y) / 2 + y), ((e.getX() - x) / 2 + x) + 5, ((e.getY() - y) / 2 + y));
-			gc.strokeLine(((e.getX() - x) / 2 + x), ((e.getY() - y) / 2 + y) - 5, ((e.getX() - x) / 2 + x), ((e.getY() - y) / 2 + y) + 5);
+			gc.strokeLine(((x2 - x) / 2 + x) - 5, ((y2 - y) / 2 + y), ((x2 - x) / 2 + x) + 5, ((y2 - y) / 2 + y));
+			gc.strokeLine(((x2 - x) / 2 + x), ((y2 - y) / 2 + y) - 5, ((x2 - x) / 2 + x), ((y2 - y) / 2 + y) + 5);
 			
 			//Diagonalen
 //			gc.strokeLine(e.getX(), e.getY(), me.getX(), me.getY());
 //			gc.strokeLine(me.getX(), e.getY(), e.getX(), me.getY());
-			
-			System.out.println("Counter: " + recCounter);
+			dragX = e.getX();
+			dragY = e.getY();	
 		}
 		
-		if (e.getEventType() == MouseEvent.MOUSE_RELEASED) {
-			addPoint(state, e, (e.getX() - x) / 2 + x, (e.getY() - y) / 2 + y);
+		if (e.getEventType() == MouseEvent.MOUSE_RELEASED && !e.isPrimaryButtonDown()) {
+			addPoint(state, e, (x2 - x) / 2 + x, (y2 - y) / 2 + y);
 			gc.clearRect(0, 0, mainController.getCanvas().getWidth(), mainController.getCanvas().getHeight());
 			for(Point p : points) {
 				p.drawPoint(gc);
@@ -79,29 +94,43 @@ public class AddPointEvents {
 		ArrayList<Point> points = state.getPoints();
 		gc.setFill(Color.rgb(255, 119, 0, 0.80));
 		
-		if (e.getEventType() == MouseEvent.MOUSE_PRESSED) {
+		if (e.getEventType() == MouseEvent.MOUSE_PRESSED && e.isPrimaryButtonDown() && !e.isSecondaryButtonDown()) {
 			x = e.getX();
 			y = e.getY();
 		}
 		
-		if (e.getEventType() == MouseEvent.MOUSE_DRAGGED) {
+		if (e.getEventType() == MouseEvent.MOUSE_DRAGGED && e.isPrimaryButtonDown()) {
 			gc.setStroke(Color.RED);
 			gc.clearRect(0, 0, mainController.getCanvas().getWidth(), mainController.getCanvas().getHeight());
 			for(Point p : points) {
 				p.drawPoint(gc);
 			}
 			
-			int w = (int) Math.abs(e.getX() - x);
-			int h = (int) Math.abs(e.getY() - y);
+			if (e.isSecondaryButtonDown()) {
+				x = x - dragX + e.getX();
+				x2 = x2 - dragX + e.getX();
+				y = y - dragY + e.getY();
+				y2 = y2 - dragY + e.getY();
+			} else {
+				x2 = e.getX();
+				y2 = e.getY();
+			}
+			
+			
+			int w = (int) Math.abs(x2 - x);
+			int h = (int) Math.abs(y2 - y);
 			
 			
 			gc.strokeOval(x, y, w, h);
-			gc.strokeLine(((e.getX() - x) / 2 + x) - 5, ((e.getY() - y) / 2 + y), ((e.getX() - x) / 2 + x) + 5, ((e.getY() - y) / 2 + y));
-			gc.strokeLine(((e.getX() - x) / 2 + x), ((e.getY() - y) / 2 + y) - 5, ((e.getX() - x) / 2 + x), ((e.getY() - y) / 2 + y) + 5);
+			gc.strokeLine(((x2 - x) / 2 + x) - 5, ((y2 - y) / 2 + y), ((x2 - x) / 2 + x) + 5, ((y2 - y) / 2 + y));
+			gc.strokeLine(((x2 - x) / 2 + x), ((y2 - y) / 2 + y) - 5, ((x2 - x) / 2 + x), ((y2 - y) / 2 + y) + 5);
+			
+			dragX = e.getX();
+			dragY = e.getY();	
 		}
 		
-		if (e.getEventType() == MouseEvent.MOUSE_RELEASED) {
-			addPoint(state, e, (e.getX() - x) / 2 + x, (e.getY() - y) / 2 + y);
+		if (e.getEventType() == MouseEvent.MOUSE_RELEASED && !e.isPrimaryButtonDown()) {
+			addPoint(state, e, (x2 - x) / 2 + x, (y2 - y) / 2 + y);
 			gc.clearRect(0, 0, mainController.getCanvas().getWidth(), mainController.getCanvas().getHeight());
 			for(Point p : points) {
 				p.drawPoint(gc);

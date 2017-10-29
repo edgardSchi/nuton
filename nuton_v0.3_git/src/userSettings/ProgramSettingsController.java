@@ -80,9 +80,7 @@ public class ProgramSettingsController extends Dialog<ButtonType> {
 			
 			Optional<ButtonType> result = showAndWait();
 		    if (result.get() == ButtonType.OK) {
-		    	for(SettingsPane p : panes) {
-		    		p.confirmSettings();
-		    	}
+		    	confirmSettings();
 		        propWriter.confirm();
 		    } else {
 		    	 propWriter.reset();
@@ -151,6 +149,11 @@ public class ProgramSettingsController extends Dialog<ButtonType> {
 			System.out.println("Aussehen");
 		}
 		System.out.println("Click");
+	}
+	
+	private void confirmSettings() {
+		ffmpegPane.confirmSettings();
+		appPane.confirmSettings();
 	}
 	
 

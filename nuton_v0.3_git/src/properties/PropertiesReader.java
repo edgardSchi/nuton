@@ -64,5 +64,10 @@ public class PropertiesReader {
 		Color c = Color.web(prop.getProperty("pointColor"));
 		return c;
 	}
+	
+	public String getLastPath() {
+		String s = prop.getProperty("lastPath");
+		return s;
+	}
 
 }

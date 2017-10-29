@@ -1,6 +1,7 @@
 package toolBar;
 
 import javafx.scene.control.ContentDisplay;
+import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import states.State;
@@ -11,6 +12,7 @@ public class PointButton extends ToolBarToggleButton{
 		this.tbm = tbm;
 		setIcon(new Image("file:icons/pointIcon.png"));
 		button.setContentDisplay(ContentDisplay.CENTER);
+		button.setTooltip(new Tooltip("Punkt"));
 	}
 	
 	

@@ -27,6 +27,7 @@ public class PropertiesWriter {
 	private OutputStream output;
 	private PropertiesReader propReader;
 	private Color pointColor;
+	private String lastPath;
 	
 	public PropertiesWriter() {
 		propReader = new PropertiesReader();
@@ -58,6 +59,7 @@ public class PropertiesWriter {
 		ffmpegSameOutput = propReader.getFfmpegSameOutput();
 		ffmpegSameOutputPath = propReader.getFfmpegSameOutputPath();
 		pointColor = propReader.getPointColor();
+		lastPath = propReader.getLastPath();
 	}
 	
 	public void confirm() {
@@ -68,6 +70,7 @@ public class PropertiesWriter {
 			prop.setProperty("ffmpegSameOutput", ffmpegSameOutput);
 			prop.setProperty("ffmpegSameOutputPath", ffmpegSameOutputPath);
 			prop.setProperty("pointColor", pointColor.toString());
+			prop.setProperty("lastPath", lastPath);
 			try {
 				output = new FileOutputStream("Properties/user.properties");
 				prop.store(output, null);
@@ -94,6 +97,7 @@ public class PropertiesWriter {
 			schreibPuffer.newLine();
 			schreibPuffer.write("ffmpegSameOutputPath=");
 			schreibPuffer.newLine();
+			schreibPuffer.write("lastPath=");
 			System.out.println("Neue Config Datei erstellt.");
 		} catch (IOException io) {
 			io.printStackTrace();
@@ -126,6 +130,11 @@ public class PropertiesWriter {
 	
 	public void setPointColor(String color) {
 		pointColor = Color.web(color);
+	}
+	
+	public void setLastPath(String path) {
+		lastPath = path;
+		System.out.println("Path set");
 	}
 	
 }
