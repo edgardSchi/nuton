@@ -50,23 +50,19 @@
               <menus>
                 <Menu mnemonicParsing="false" text="Datei">
                   <items>
-                    <MenuItem fx:id="openFileMenu" mnemonicParsing="false" text="Datei öffnen..." />
-                        <MenuItem fx:id="ffmpegMenu" mnemonicParsing="false" text="Mit ffmpeg importieren..." />
+                    <MenuItem fx:id="openFileMenu" mnemonicParsing="false" text="Video öffnen..." />
+                        <MenuItem fx:id="ffmpegMenu" mnemonicParsing="false" text="Video mit ffmpeg importieren..." />
+                        <SeparatorMenuItem mnemonicParsing="false" />
+                        <MenuItem fx:id="loadProjectMenu" disable="true" mnemonicParsing="false" text="Projekt öffnen... (WIP)" />
+                        <SeparatorMenuItem mnemonicParsing="false" />
+                        <MenuItem fx:id="saveFileMenu" mnemonicParsing="false" text="Speichern" />
+                        <MenuItem fx:id="saveFileAsMenu" mnemonicParsing="false" text="Speichern unter..." />
                         <SeparatorMenuItem mnemonicParsing="false" />
                         <MenuItem fx:id="einstellungenItem" mnemonicParsing="false" text="Einstellungen.." />
                         <SeparatorMenuItem mnemonicParsing="false" />
                         <MenuItem fx:id="closeMenu" mnemonicParsing="false" text="Schließen" />
                   </items>
                 </Menu>
-                  <Menu mnemonicParsing="false" text="Bewegung">
-                     <items>
-                        <Menu mnemonicParsing="false" text="Bewegung simulieren">
-                          <items>
-                            <MenuItem fx:id="simWaveMenu" mnemonicParsing="false" text="Welle (Beta)" />
-                          </items>
-                        </Menu>
-                     </items>
-                  </Menu>
                 <Menu mnemonicParsing="false" text="Hilfe">
                   <items>
                         <MenuItem fx:id="menuAnleitung" mnemonicParsing="false" text="Anleitung" />
@@ -93,7 +89,7 @@
          <children>
             <StackPane prefHeight="618.0" prefWidth="1100.0" AnchorPane.bottomAnchor="3.0" AnchorPane.leftAnchor="7.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="14.0" BorderPane.alignment="CENTER">
                <children>
-                  <MediaView fx:id="mv" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" StackPane.alignment="CENTER" />
+                  <MediaView fx:id="mv" fitHeight="618.0" fitWidth="1100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" StackPane.alignment="CENTER" />
                   <Canvas fx:id="canvas" height="618.0" width="1100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" StackPane.alignment="CENTER">
                      <cursor>
                         <Cursor fx:constant="DEFAULT" />

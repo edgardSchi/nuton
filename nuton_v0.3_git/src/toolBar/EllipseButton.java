@@ -9,7 +9,7 @@ import states.State;
 public class EllipseButton extends ToolBarToggleButton{
 
 	public EllipseButton() {
-		setIcon(new Image("file:icons/ellipseIcon.png"));
+		setIcon(new Image(getClass().getResourceAsStream("/ellipseIcon.png")));
 		button.setContentDisplay(ContentDisplay.CENTER);
 		button.setTooltip(new Tooltip("Ellipsenauswahl"));
 	}

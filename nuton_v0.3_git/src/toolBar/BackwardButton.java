@@ -7,7 +7,7 @@ public class BackwardButton extends ToolBarButton {
 	
 	public BackwardButton(ToolBarManager tbm) {
 		this.tbm = tbm;
-		setIcon(new Image("file:icons/backwardIcon.png"));
+		setIcon(new Image(getClass().getResourceAsStream("/backwardIcon.png")));
 		//points = controller.getPoints();
 		button.setTooltip(new Tooltip("Zurück"));
 	}

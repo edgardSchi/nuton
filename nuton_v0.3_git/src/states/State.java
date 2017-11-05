@@ -15,5 +15,6 @@ public abstract class State {
 	public abstract void fertigBtnClick();
 	public abstract ArrayList<Point> getPoints();
 	public abstract MainController getMainController();
+	public abstract void reset();
 	
 }

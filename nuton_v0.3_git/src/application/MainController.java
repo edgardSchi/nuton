@@ -1,7 +1,7 @@
 package application;
 
+import java.io.File;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 import javafx.beans.value.ChangeListener;
@@ -10,7 +10,6 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Alert;
@@ -21,15 +20,23 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.Slider;
 import javafx.scene.control.ToolBar;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.input.KeyCombination;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
+import javafx.stage.FileChooser;
 import javafx.util.Duration;
+import savingFile.LoadHandler;
+import savingFile.SaveHandler;
+import settings.Settings;
 import states.StateManager;
 import toolBar.ToolBarManager;
 import userSettings.ProgramSettingsController;
-import waveGenerator.WaveGeneratorController;
 
 public class MainController implements Initializable{
 	
@@ -42,7 +49,9 @@ public class MainController implements Initializable{
 	@FXML private MenuItem ffmpegMenu;
 	@FXML private MenuItem closeMenu;
 	@FXML private MenuItem menuAnleitung;
-	@FXML private MenuItem simWaveMenu;
+	@FXML private MenuItem loadProjectMenu;
+	@FXML private MenuItem saveFileMenu;
+	@FXML private MenuItem saveFileAsMenu;
 	@FXML private Canvas canvas; 
 	@FXML public Slider slider;
 	@FXML public Button startBtn;
@@ -56,23 +65,23 @@ public class MainController implements Initializable{
 	private ToolBarManager tbm;
 	//private ArrayList<Point> points;
 	
-	private double SCHRITTWEITE = 1000;
-	private double EICHUNG = 100;
-	private double LAENGEPIXEL = 0;
 	private double mediaLength = 0;
 	
 	private PixelManager pManager;
 	private MainEventHandler eventHandler;
 	private StateManager stateManager;
+	private Settings settings;
+	private LoadHandler loadHandler;
 	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		
+		settings = new Settings();
 		eventHandler = new MainEventHandler(this);
-		setSettingsController(new SettingsController(this));
+		setSettingsController(new SettingsController(this, settings));
 		
 		//points = new ArrayList<Point>();
-		pManager = new PixelManager(getSettingsController());
+		pManager = new PixelManager(settings);
 		
 
 		gc = canvas.getGraphicsContext2D();
@@ -87,11 +96,14 @@ public class MainController implements Initializable{
 		closeMenu.setOnAction(eventHandler.closeProgram());
 		
 		tbm = new ToolBarManager(toolBar, this);
+		initMenuItems();
 //		ForwardButton fButton = new ForwardButton();
 //		TestToolBarItem item = new TestToolBarItem();
 //		toolBarM.addItem(item);
 //		toolBarM.addItem(fButton);
 		stateManager = new StateManager(this);
+		SaveHandler saveHandler = new SaveHandler(this);
+		loadHandler = new LoadHandler(this, settings);
 		
 		einstellungenItem.setOnAction(new EventHandler<ActionEvent>() {
 
@@ -103,11 +115,57 @@ public class MainController implements Initializable{
 			
 		});
 		
-		simWaveMenu.setOnAction(new EventHandler<ActionEvent>() {
+		loadProjectMenu.setOnAction(new EventHandler<ActionEvent>() {
 
 			@Override
 			public void handle(ActionEvent arg0) {
-				WaveGeneratorController wave = new WaveGeneratorController();
+				//WaveGeneratorController wave = new WaveGeneratorController();
+				FileChooser chooser = new FileChooser();
+				File file = chooser.showOpenDialog(Main.getStage());
+				loadHandler.loadFile(file);
+			}
+			
+		});
+		
+		saveFileMenu.setOnAction(new EventHandler<ActionEvent>() {
+
+			@Override
+			public void handle(ActionEvent arg0) {
+				if (player.getMedia() != null) {
+					saveHandler.write();
+				} else {
+					Alert alert = new Alert(AlertType.ERROR);
+					alert.setTitle("Error!");
+					alert.setContentText("Es ist nichts zum speichern vorhanden.");
+					alert.setHeaderText(null);
+					alert.showAndWait().ifPresent(rs -> {
+						if (rs == ButtonType.OK) {
+							alert.close();
+						}
+					});
+				}		
+			}
+			
+		});
+		
+		saveFileAsMenu.setOnAction(new EventHandler<ActionEvent>() {
+
+			@Override
+			public void handle(ActionEvent event) {
+				if (player.getMedia() != null) {
+					saveHandler.setSaveAs(true);
+					saveHandler.write();
+				} else {
+					Alert alert = new Alert(AlertType.ERROR);
+					alert.setTitle("Error!");
+					alert.setContentText("Es ist nichts zum speichern vorhanden.");
+					alert.setHeaderText(null);
+					alert.showAndWait().ifPresent(rs -> {
+						if (rs == ButtonType.OK) {
+							alert.close();
+						}
+					});
+				}
 			}
 			
 		});
@@ -140,7 +198,27 @@ public class MainController implements Initializable{
 		});
 		
 		
-		startBtn.setOnAction(eventHandler.openSettings());
+		startBtn.setOnAction(new EventHandler<ActionEvent>() {
+
+			@Override
+			public void handle(ActionEvent arg0) {
+				if (mv.getMediaPlayer() == null || mv.getMediaPlayer().getMedia() == null) {
+					Alert alert = new Alert(AlertType.ERROR);
+					alert.setTitle("Videodatei auswählen!");
+					alert.setContentText("Wählen Sie zuerst eine geeignete Videodatei aus.");
+					alert.setHeaderText(null);
+					alert.showAndWait().ifPresent(rs -> {
+						if (rs == ButtonType.OK) {
+							alert.close();
+						}
+					});
+				} else {
+					getStartBtn().setDisable(true);
+					getSettingsController().showDialog();
+				}			
+			}
+			
+		});
 		
 		
 		
@@ -169,21 +247,45 @@ public class MainController implements Initializable{
 		
 	}
 	
+	public void redraw() {
+		gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
+		for (Point p : stateManager.getCurrentState().getPoints()) {
+			p.drawPoint(gc);
+		}
+	}
 	
-	void reset() {
+	public void reset() {
 		//points.clear();
-		SCHRITTWEITE = 1000;
-		EICHUNG = 100;
-		LAENGEPIXEL = 0;
+		settings.setSchrittweite(1000);
+		settings.setEichung(100);
 		listX.getItems().clear();
 		listY.getItems().clear();
 		slider.setValue(0);
 		slider.setDisable(false);
+		slider.setSnapToTicks(false);
 		gc.clearRect(0, 0, canvas.getWidth(), canvas.getWidth());
 		startBtn.setDisable(false);
 		pManager.reset();
+		stateManager.setState(StateManager.DEFAULT);
 	}
-
+	
+	private void initMenuItems() {
+		openFileMenu.setAccelerator(new KeyCodeCombination(KeyCode.O, KeyCombination.CONTROL_DOWN));
+		Image openVideoIcon = new Image(getClass().getResourceAsStream("/openFileIcon.png"));
+		ImageView openVideoIconView = new ImageView(openVideoIcon);
+		openVideoIconView.setFitWidth(15);
+		openVideoIconView.setFitHeight(15);
+		openFileMenu.setGraphic(openVideoIconView);
+		ffmpegMenu.setAccelerator(new KeyCodeCombination(KeyCode.O, KeyCombination.CONTROL_DOWN, KeyCombination.SHIFT_DOWN));
+		einstellungenItem.setAccelerator(new KeyCodeCombination(KeyCode.E, KeyCombination.CONTROL_DOWN));
+		//saveFileMenu.setDisable(true);
+		saveFileMenu.setAccelerator(new KeyCodeCombination(KeyCode.S, KeyCombination.CONTROL_DOWN));
+		Image saveIcon = new Image(getClass().getResourceAsStream("/saveIcon.png"));
+		ImageView saveIconView = new ImageView(saveIcon);
+		saveIconView.setFitWidth(15);
+		saveIconView.setFitHeight(15);
+		saveFileMenu.setGraphic(saveIconView);
+	}
 
 	public Media getMedia() {
 		return media;
@@ -262,27 +364,7 @@ public class MainController implements Initializable{
 	public void setFertigBtn(Button fertigBtn) {
 		this.fertigBtn = fertigBtn;
 	}
-
-
-	public double getSCHRITTWEITE() {
-		return SCHRITTWEITE;
-	}
-
-
-	public void setSCHRITTWEITE(double sCHRITTWEITE) {
-		this.SCHRITTWEITE = sCHRITTWEITE;
-	}
-
-
-	public double getEICHUNG() {
-		return EICHUNG;
-	}
-
-
-	public void setEICHUNG(double eICHUNG) {
-		EICHUNG = eICHUNG;
-	}
-
+	
 
 	public double getMediaLength() {
 		return mediaLength;
@@ -334,5 +416,17 @@ public class MainController implements Initializable{
 
 	public ToolBarManager getToolBarManager() {
 		return tbm;
+	}
+	
+	public Settings getSettings() {
+		return settings;
+	}
+	
+	public MenuItem getSaveFileMenu() {
+		return saveFileMenu;
+	}
+	
+	public MainEventHandler getMainEventHandler() {
+		return eventHandler;
 	}
 }

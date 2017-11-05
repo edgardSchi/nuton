@@ -2,6 +2,8 @@ package application;
 
 import java.util.ArrayList;
 
+import settings.Settings;
+
 public class PixelManager {
 
 	private ArrayList<Point> points;
@@ -9,10 +11,10 @@ public class PixelManager {
 	private ArrayList<Double> acc;
 	private double EICHUNG = 0;
 	private double LAENGEPIXEL = 0;
-	private SettingsController settingsController;
+	private Settings settings;
 	
-	public PixelManager(SettingsController settingsController) {
-		this.settingsController = settingsController;
+	public PixelManager(Settings settings) {
+		this.settings = settings;
 		distances = new ArrayList<Double>();
 		points = new ArrayList<Point>();
 		acc = new ArrayList<Double>();
@@ -57,8 +59,8 @@ public class PixelManager {
 		double yNull = points.get(0).getY();
 		
 		for (Point p : pointArray) {
-			if (settingsController.yRichtung() == true) {
-				if (settingsController.yNullUnten() == true) {
+			if (settings.getDirection() == Settings.DIRECTION_Y) {
+				if (settings.getxNull() == Settings.NULL_Y_BOTTOM) {
 					p.setEntfernungMeterY(-(tmp * (p.getY() - yNull)));
 					System.out.println("ClacMeter: " + (p.getY() - yNull));
 				} else {
@@ -66,7 +68,7 @@ public class PixelManager {
 					System.out.println("ClacMeter: " + (p.getY() - yNull));
 				}				
 			} else {
-				if (settingsController.xNullRechts() == true) {
+				if (settings.getxNull() == Settings.NULL_X_RIGHT) {
 					p.setEntfernungMeterX(-(tmp * (p.getX() - xNull)));
 					System.out.println("ClacMeter: " + (tmp * (p.getX() - xNull)));
 				} else {
@@ -90,7 +92,7 @@ public class PixelManager {
 			if (i == 0) {
 				velo.add(0.0);
 			} else {
-				if (settingsController.yRichtung() == true) {
+				if (settings.getDirection() == Settings.DIRECTION_Y) {
 					double tmp = (pointArray.get(i).getEntfernungMeterY() / ((pointArray.get(i).getTime()) / 1000));
 					velo.add(tmp);			
 					System.out.println("a: " + tmp);	
@@ -110,7 +112,11 @@ public class PixelManager {
 	}
 	
 	public boolean yRichtung() {
-		return settingsController.yRichtung();
+		if (settings.getDirection() == Settings.DIRECTION_Y) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 	
 	public void reset() {
@@ -130,5 +136,10 @@ public class PixelManager {
 	public void setEichung(double EICHUNG) {
 		this.EICHUNG = EICHUNG;
 	}
+
+	public double getLAENGEPIXEL() {
+		return LAENGEPIXEL;
+	}
+	
 	
 }

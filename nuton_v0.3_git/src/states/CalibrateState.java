@@ -71,10 +71,11 @@ public class CalibrateState extends State {
 						//LAENGEPIXEL = pManager.getDistance(x1, y1, x2, y2);
 						pManager.setLaengePixel(pManager.getDistance(x1, y1, x2, y2));
 						//System.out.println(LAENGEPIXEL);			
-						pManager.setEichung(mainController.getEICHUNG());
+						pManager.setEichung(mainController.getSettings().getEichung());
 						gc.clearRect(0, 0, mainController.getCanvas().getWidth(), mainController.getCanvas().getWidth());
 						clickCounter = 0;
 						mainController.getStateManager().setState(StateManager.TRANSLATION);
+						mainController.getSlider().setSnapToTicks(true);
 					} 
 					if (rs == ButtonType.CANCEL) {
 						gc.clearRect(0, 0,mainController.getCanvas().getWidth(), mainController.getCanvas().getWidth());
@@ -117,6 +118,12 @@ public class CalibrateState extends State {
 	public MainController getMainController() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public void reset() {
+		// TODO Auto-generated method stub
+		
 	}
 
 	

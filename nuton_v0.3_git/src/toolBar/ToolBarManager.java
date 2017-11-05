@@ -47,6 +47,8 @@ public class ToolBarManager {
 	private void loadFirstSegment() {
 		ToolBarItem openButton = new OpenFileButton(mainEventHandler);
 		addItem(openButton);
+		ToolBarItem saveButton = new SaveButton(mainController);
+		addItem(saveButton);
 		addSeparator();
 	}
 	

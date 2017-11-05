@@ -17,6 +17,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
+import settings.Settings;
 
 public class DiagramsController {
 
@@ -34,12 +35,14 @@ public class DiagramsController {
 	
 	private NumberAxis xAxis;
 	private NumberAxis yAxis;
+	private Settings settings;
 
 	@SuppressWarnings({ "unchecked", "static-access" })
 	public DiagramsController(MainController mainController, PixelManager pManager) {
 		try {
 			this.mainController = mainController;
 			this.pManager = pManager;
+			settings = mainController.getSettings();
 			FXMLLoader loader;
 			loader = new FXMLLoader(getClass().getResource("Diagrams.fxml"));
 			loader.setController(this);
@@ -119,7 +122,7 @@ public class DiagramsController {
 	public void makeDiagram() {
 		XYChart.Series series = new XYChart.Series();
 		for (Point p : points) {
-			if (pManager.yRichtung() == true) {
+			if (settings.getDirection() == Settings.DIRECTION_Y) {
 				series.getData().add(new XYChart.Data(p.getTime() / 1000, p.getEntfernungMeterY()));
 			} else {
 				series.getData().add(new XYChart.Data(p.getTime() / 1000, p.getEntfernungMeterX()));
@@ -128,12 +131,12 @@ public class DiagramsController {
 		}
 		yAxis.setLabel("s[m]");
 		xAxis.setUpperBound(mainController.getMediaLength());
-		xAxis.setTickUnit(mainController.getSCHRITTWEITE());
+		xAxis.setTickUnit(mainController.getSettings().getSchrittweite());
 		vDiagram.getData().add(series);
 	}
 	
 	public void show() {
-		if (pManager.yRichtung() == true) {
+		if (settings.getDirection() == Settings.DIRECTION_Y) {
 			diagramBox.getItems().clear();
 			diagramBox.getItems().addAll("Zeit-Weg", "Zeit-Geschwindigkeit", "T-Y", "X-Y");
 		} else {
@@ -174,7 +177,7 @@ public class DiagramsController {
 	}
 	
 	private void txDiagram() {
-		if (pManager.yRichtung() == true) {
+		if (settings.getDirection() == Settings.DIRECTION_Y) {
 			XYChart.Series series = new XYChart.Series();
 			for (Point p : points) {
 				series.getData().add(new XYChart.Data(p.getTime(), p.getY()));

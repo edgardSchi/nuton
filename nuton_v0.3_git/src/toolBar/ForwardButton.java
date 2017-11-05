@@ -11,13 +11,13 @@ public class ForwardButton extends ToolBarButton {
 	
 	public ForwardButton(MainEventHandler eventHandler) {
 		this.controller = eventHandler.getMainController();
-		setIcon(new Image("file:icons/forwardIcon.png"));
+		setIcon(new Image(getClass().getResourceAsStream("/forwardIcon.png")));
 		button.setTooltip(new Tooltip("Vorwärts"));
 	}
 	
 	@Override
 	public void onClick() {
-		double schrittweite = controller.getSCHRITTWEITE();
+		double schrittweite = controller.getSettings().getSchrittweite();
 		controller.getSlider().setValue(controller.getSlider().getValue() + schrittweite);
 	}
 

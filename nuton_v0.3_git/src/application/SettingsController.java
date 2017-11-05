@@ -1,6 +1,7 @@
 package application;
 
 import java.io.IOException;
+import java.util.Optional;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -11,20 +12,21 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Dialog;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+import settings.Settings;
 import states.StateManager;
 import userSettings.ThemeLoader;
 
-public class SettingsController {
+public class SettingsController{ 
 	@FXML
 	private ToggleGroup settings;	
-	@FXML public Button saveSettingsBtn;
-	private Stage stage;
 	@FXML private TextField schrittweiteField;
 	@FXML private ComboBox achsenBox;
 	@FXML private TextField eichungsField;
@@ -35,10 +37,15 @@ public class SettingsController {
 	@FXML private ComboBox richtungsBox;
 	@FXML private ComboBox xNullPunktBox;
 	@FXML private ComboBox yNullPunktBox;
+	private Settings settingsObj;
+	private Dialog<ButtonType> dialog;
 	
 	@SuppressWarnings("unchecked")
-	SettingsController(MainController mainController) {		
+	SettingsController(MainController mainController, Settings settings) {		
 		try {
+			dialog = new Dialog<ButtonType>();
+			dialog.setTitle("Einstellungen der Bewegung");
+			this.settingsObj = settings;
 			this.mainController = mainController;
 			FXMLLoader loader;
 			loader = new FXMLLoader(getClass().getResource("Settings.fxml"));
@@ -47,11 +54,13 @@ public class SettingsController {
 			Scene scene = new Scene(root);
 			ThemeLoader themeLoader = new ThemeLoader();
 			scene.getStylesheets().add(themeLoader.getTheme());
-			stage = new Stage();
-			stage.setResizable(false);
-			stage.setTitle("Einstellungen");
-			stage.setScene(scene);
-			stage.getIcons().add(new Image(SettingsController.class.getResourceAsStream("Nuton_logo.png")));
+			Stage stage = (Stage) dialog.getDialogPane().getScene().getWindow();
+			stage.getIcons().add(new Image(getClass().getResourceAsStream("Nuton_logo.png")));
+//			stage = new Stage();
+//			stage.setResizable(false);
+//			stage.setTitle("Einstellungen");
+//			stage.setScene(scene);
+//			stage.getIcons().add(new Image(SettingsController.class.getResourceAsStream("Nuton_logo.png")));
 			
 			richtungsBox.getItems().addAll("X-Achse", "Y-Achse");
 			richtungsBox.setValue("X-Achse");
@@ -62,14 +71,14 @@ public class SettingsController {
 			yNullPunktBox.getItems().addAll("Oben", "Unten");
 			yNullPunktBox.setValue("Oben");
 			
-			stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
-
-				@Override
-				public void handle(WindowEvent arg0) {
-					mainController.startBtn.setDisable(false);
-				}
-				
-			});
+//			stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+//
+//				@Override
+//				public void handle(WindowEvent arg0) {
+//					mainController.startBtn.setDisable(false);
+//				}
+//				
+//			});
 			
 			schrittweiteField.textProperty().addListener(new ChangeListener<String>() {
 				@Override
@@ -116,6 +125,8 @@ public class SettingsController {
 				}
 				
 			});
+			dialog.getDialogPane().setContent(root);
+			dialog.getDialogPane().getButtonTypes().add(ButtonType.APPLY);
 				
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -143,7 +154,7 @@ public class SettingsController {
 		});
 		
 		
-		buttonClicked();
+		//buttonClicked();
 	}
 	
 	
@@ -160,37 +171,48 @@ public class SettingsController {
 		if (schrittweiteField.getText() != "") {
 			String s = schrittweiteField.getText();
 			int t = Integer.parseInt(s);
-			System.out.println(t);
-			SCHRITTWEITE = t;
+			settingsObj.setSchrittweite(t);
 			
 			String e = eichungsField.getText();
 			int i = Integer.parseInt(e);
-			LAENGENEINHEIT = i;
+			settingsObj.setEichung(i);
+			
+			if (xFixed()) {
+				settingsObj.setxFixed(true);
+			} else {
+				settingsObj.setxFixed(false);
+			}
+			
+			if (yFixed()) {
+				settingsObj.setyFixed(true);
+			} else {
+				settingsObj.setyFixed(false);
+			}
+			
+			if (yRichtung()) {
+				settingsObj.setDirection(Settings.DIRECTION_Y);
+			} else {
+				settingsObj.setDirection(Settings.DIRECTION_X);
+			}
+			
+			if (yNullUnten()) {
+				settingsObj.setyNull(Settings.NULL_Y_BOTTOM);
+			} else {
+				settingsObj.setyNull(Settings.NULL_Y_TOP);
+			}
+			
+			if (xNullRechts()) {
+				settingsObj.setxNull(Settings.NULL_X_RIGHT);
+			} else {
+				settingsObj.setxNull(Settings.NULL_X_LEFT);
+			}
 			
 			mainController.slider.setMajorTickUnit(SCHRITTWEITE);
 			mainController.slider.setBlockIncrement(SCHRITTWEITE);
 		}
 	}
-	
-	public void buttonClicked() {
 		
-		saveSettingsBtn.setOnAction(new EventHandler<ActionEvent>() {
-
-			@Override
-			public void handle(ActionEvent event) {
-				System.out.println(achsenBox.getSelectionModel().getSelectedItem());		
-				saveSettings();
-				stage.close();
-				mainController.getStateManager().setState(StateManager.CALIBRATION);
-				mainController.setSCHRITTWEITE(SCHRITTWEITE);
-				mainController.setEICHUNG(LAENGENEINHEIT);
-				mainController.restartBtn.setDisable(false);
-				mainController.fertigBtn.setDisable(false);
-			}		
-		});
-	}
-	
-	public boolean xFixed() {
+	private boolean xFixed() {
 		boolean choice = false;
 		if (richtungsBox.getSelectionModel().getSelectedItem() == "Y-Achse") {
 			if (achsenBox.getSelectionModel().getSelectedItem() == "X-Achse") {
@@ -200,7 +222,7 @@ public class SettingsController {
 		return choice;
 	}
 	
-	public boolean yFixed() {
+	private boolean yFixed() {
 		boolean choice = false;
 		if (richtungsBox.getSelectionModel().getSelectedItem() == "X-Achse") {
 			if (achsenBox.getSelectionModel().getSelectedItem() == "Y-Achse") {
@@ -210,7 +232,7 @@ public class SettingsController {
 		return choice;
 	}
 	
-	public boolean yRichtung() {
+	private boolean yRichtung() {
 		if (richtungsBox.getSelectionModel().getSelectedItem() == "Y-Achse") {
 			return true;
 		} else {
@@ -219,10 +241,29 @@ public class SettingsController {
 		
 	}
 	
-	public void show() {
-		stage.show();
+	public void showDialog() {
+		Optional<ButtonType> result = dialog.showAndWait();
+	    if (result.get() == ButtonType.APPLY) {
+			saveSettings();
+			mainController.getStateManager().setState(StateManager.CALIBRATION);
+			mainController.restartBtn.setDisable(false);
+			mainController.fertigBtn.setDisable(false);
+			mainController.getSlider().setMax(calcMaxSlider(settingsObj.getSchrittweite(), mainController.getPlayer().getTotalDuration().toMillis()));
+			System.out.println("Button wurde gedrückt");
+	    } else {
+	    	//FIXEN//
+	    	reset();
+	    }
 	}
 
+	private double calcMaxSlider(double schrittweite, double duration) {
+		double max = 0;
+		for (int i = 0; i <= duration; i += schrittweite) {
+			max = i;
+		}
+		return max;
+	}
+	
 	public double getSCHRITTWEITE() {
 		return SCHRITTWEITE;
 	}
@@ -240,7 +281,7 @@ public class SettingsController {
 		SCHRITTWEITE = 1000;
 	}
 	
-	public boolean xNullRechts() {
+	private boolean xNullRechts() {
 		boolean xRechts = false;
 		if (xNullPunktBox.getSelectionModel().getSelectedItem() == "Links") {
 			xRechts = false;
@@ -250,7 +291,7 @@ public class SettingsController {
 		return xRechts;
 	}
 	
-	public boolean yNullUnten() {
+	private boolean yNullUnten() {
 		boolean yUnten = false;
 		if (yNullPunktBox.getSelectionModel().getSelectedItem() == "Oben") {
 			yUnten = false;

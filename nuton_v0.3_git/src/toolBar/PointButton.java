@@ -10,7 +10,7 @@ public class PointButton extends ToolBarToggleButton{
 	
 	public PointButton(ToolBarManager tbm) {
 		this.tbm = tbm;
-		setIcon(new Image("file:icons/pointIcon.png"));
+		setIcon(new Image(getClass().getResourceAsStream("/pointIcon.png")));
 		button.setContentDisplay(ContentDisplay.CENTER);
 		button.setTooltip(new Tooltip("Punkt"));
 	}

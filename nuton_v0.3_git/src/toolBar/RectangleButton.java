@@ -11,7 +11,7 @@ public class RectangleButton extends ToolBarToggleButton {
 	
 	public RectangleButton(ToolBarManager tbm) {
 		this.tbm = tbm;
-		setIcon(new Image("file:icons/rectangleIcon.png"));
+		setIcon(new Image(getClass().getResourceAsStream("/rectangleIcon.png")));
 		button.setContentDisplay(ContentDisplay.CENTER);
 		button.setTooltip(new Tooltip("Rechteckauswahl"));
 	}

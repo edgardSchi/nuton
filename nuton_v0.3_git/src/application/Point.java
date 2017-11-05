@@ -8,7 +8,6 @@ public class Point {
 	
 	private int x;
 	private int y;
-	private int id;
 	private int SEITENLAENGE = 16;
 	private double time;
 	private double entfernungMeterX;
@@ -16,11 +15,10 @@ public class Point {
 	private Color color;
 	private PropertiesReader propReader;
 
-	public Point(int x, int y, double time, int id) {
+	public Point(int x, int y, double time) {
 		this.x = x;
 		this.y = y;
 		this.time = time;
-		this.id = id;
 		propReader = new PropertiesReader();
 		color = propReader.getPointColor();
 	}
@@ -32,14 +30,13 @@ public class Point {
 	public int getY() {
 		return y;
 	}
-
-	public int getId() {
-		return id;
-	}
 	
 	public void drawPoint(GraphicsContext gc) {
-		gc.setFill(color);
-		gc.fillRect(x - SEITENLAENGE/2, y - SEITENLAENGE/2, SEITENLAENGE, SEITENLAENGE);
+//		gc.setFill(color);
+//		gc.fillRect(x - SEITENLAENGE/2, y - SEITENLAENGE/2, SEITENLAENGE, SEITENLAENGE);
+		gc.setStroke(color);
+		gc.strokeLine(x + 5, y, x - 5, y);
+		gc.strokeLine(x, y + 5, x, y - 5);
 	}
 	
 	public void removePoint(GraphicsContext gc) {
@@ -68,11 +65,13 @@ public class Point {
 
 	@Override
 	public String toString() {
-		return "Point [x=" + x + ", y=" + y + ", id=" + id + ", SEITENLAENGE=" + SEITENLAENGE + ", time=" + time
+		return "Point [x=" + x + ", y=" + y  + ", SEITENLAENGE=" + SEITENLAENGE + ", time=" + time
 				+ ", entfernungMeterX=" + entfernungMeterX + ", entfernungMeterY=" + entfernungMeterY + "]";
 	}
 
-
+	public String saveString() {
+		return x + "," + y + "," + time;
+	}
 	
 	
 

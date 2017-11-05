@@ -69,6 +69,7 @@ public class TranslationState extends State {
 		listY.getItems().clear();
 		slider.setValue(0);
 		slider.setDisable(false);
+		slider.setSnapToTicks(true);
 		gc.clearRect(0, 0, mainController.getCanvas().getWidth(), mainController.getCanvas().getWidth());
 		pManager.reset();
 	}

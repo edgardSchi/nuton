@@ -8,7 +8,7 @@ public class OpenFileButton extends ToolBarButton{
 	
 	
 	public OpenFileButton(MainEventHandler eventHandler) {
-		setIcon(new Image("file:icons/openFileIcon.png"));
+		setIcon(new Image(getClass().getResourceAsStream("/openFileIcon.png")));
 		setEventHandler(eventHandler.openFileDialog());
 		button.setTooltip(new Tooltip("Video öffnen"));
 	}

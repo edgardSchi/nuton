@@ -23,15 +23,16 @@ public class AddPointEvents {
 		
 	}
 	
-	private static int recCounter = 0;
 	private static double x = 0;
 	private static double y = 0;
 	private static double dragX = 0;
 	private static double dragY = 0;
 	private static double x2 = 0;
 	private static double y2 = 0;
+	private static boolean leftClicked = false;
 	public static void addRectangle(State state, MouseEvent e) {
 		GraphicsContext gc = state.getMainController().getGc();
+		gc.setStroke(Color.RED);
 		MainController mainController = state.getMainController();
 		ArrayList<Point> points = state.getPoints();
 		gc.setFill(Color.rgb(255, 119, 0, 0.80));
@@ -43,6 +44,7 @@ public class AddPointEvents {
 		if (e.getEventType() == MouseEvent.MOUSE_PRESSED && e.isPrimaryButtonDown() && !e.isSecondaryButtonDown()) {
 			x = e.getX();
 			y = e.getY();
+			leftClicked = true;
 		}		
 		
 		if (e.getEventType() == MouseEvent.MOUSE_DRAGGED && e.isPrimaryButtonDown()) {
@@ -51,6 +53,7 @@ public class AddPointEvents {
 			for(Point p : points) {
 				p.drawPoint(gc);
 			}
+			gc.setStroke(Color.RED);
 			
 			if (e.isSecondaryButtonDown()) {			
 				x = x - dragX + e.getX();
@@ -79,17 +82,19 @@ public class AddPointEvents {
 			dragY = e.getY();	
 		}
 		
-		if (e.getEventType() == MouseEvent.MOUSE_RELEASED && !e.isPrimaryButtonDown()) {
+		if (e.getEventType() == MouseEvent.MOUSE_RELEASED && !e.isPrimaryButtonDown() && leftClicked) {
 			addPoint(state, e, (x2 - x) / 2 + x, (y2 - y) / 2 + y);
 			gc.clearRect(0, 0, mainController.getCanvas().getWidth(), mainController.getCanvas().getHeight());
 			for(Point p : points) {
 				p.drawPoint(gc);
 			}
+			leftClicked = false;
 		}
 	}
 	
 	public static void addEllipse(State state, MouseEvent e) {
 		GraphicsContext gc = state.getMainController().getGc();
+		gc.setStroke(Color.RED);
 		MainController mainController = state.getMainController();
 		ArrayList<Point> points = state.getPoints();
 		gc.setFill(Color.rgb(255, 119, 0, 0.80));
@@ -97,14 +102,15 @@ public class AddPointEvents {
 		if (e.getEventType() == MouseEvent.MOUSE_PRESSED && e.isPrimaryButtonDown() && !e.isSecondaryButtonDown()) {
 			x = e.getX();
 			y = e.getY();
+			leftClicked = true;
 		}
 		
-		if (e.getEventType() == MouseEvent.MOUSE_DRAGGED && e.isPrimaryButtonDown()) {
-			gc.setStroke(Color.RED);
+		if (e.getEventType() == MouseEvent.MOUSE_DRAGGED && e.isPrimaryButtonDown()) {			
 			gc.clearRect(0, 0, mainController.getCanvas().getWidth(), mainController.getCanvas().getHeight());
 			for(Point p : points) {
 				p.drawPoint(gc);
 			}
+			gc.setStroke(Color.RED);
 			
 			if (e.isSecondaryButtonDown()) {
 				x = x - dragX + e.getX();
@@ -122,19 +128,20 @@ public class AddPointEvents {
 			
 			
 			gc.strokeOval(x, y, w, h);
-			gc.strokeLine(((x2 - x) / 2 + x) - 5, ((y2 - y) / 2 + y), ((x2 - x) / 2 + x) + 5, ((y2 - y) / 2 + y));
-			gc.strokeLine(((x2 - x) / 2 + x), ((y2 - y) / 2 + y) - 5, ((x2 - x) / 2 + x), ((y2 - y) / 2 + y) + 5);
+			gc.strokeLine((Math.abs(x2 - x) / 2 + x) - 5, (Math.abs(y2 - y) / 2 + y), (Math.abs(x2 - x) / 2 + x) + 5, (Math.abs(y2 - y) / 2 + y));
+			gc.strokeLine((Math.abs(x2 - x) / 2 + x), (Math.abs(y2 - y) / 2 + y) - 5, (Math.abs(x2 - x) / 2 + x), (Math.abs(y2 - y) / 2 + y) + 5);
 			
 			dragX = e.getX();
 			dragY = e.getY();	
 		}
 		
-		if (e.getEventType() == MouseEvent.MOUSE_RELEASED && !e.isPrimaryButtonDown()) {
-			addPoint(state, e, (x2 - x) / 2 + x, (y2 - y) / 2 + y);
-			gc.clearRect(0, 0, mainController.getCanvas().getWidth(), mainController.getCanvas().getHeight());
-			for(Point p : points) {
-				p.drawPoint(gc);
-			}
+		if (e.getEventType() == MouseEvent.MOUSE_RELEASED && !e.isPrimaryButtonDown() && leftClicked) {
+				addPoint(state, e, (x2 - x) / 2 + x, (y2 - y) / 2 + y);
+				gc.clearRect(0, 0, mainController.getCanvas().getWidth(), mainController.getCanvas().getHeight());
+				for(Point p : points) {
+					p.drawPoint(gc);
+				}
+				leftClicked = false;
 		}
 	}
 	
@@ -145,47 +152,47 @@ public class AddPointEvents {
 		ArrayList<Point> points = state.getPoints();
 		ListView<Integer> listX = state.getMainController().getListX();
 		ListView<Integer> listY = state.getMainController().getListY();
-		slider.setDisable(true);
-		gc.setFill(Color.rgb(255, 119, 0, 0.80));						
-		if (mainController.getSettingsController().yFixed() == true && yFix == 0) {
-			//gc.fillRect(e.getX() - 10, e.getY() - 10, 20, 20);
-			yFix = y;
-			Point p = new Point((int)x, (int)y, slider.getValue(), points.size());
-			points.add(p);
-			p.drawPoint(gc);
-			listX.getItems().add(p.getX());
-			listY.getItems().add(p.getY());
-			System.out.println(p.getId());
-		} else if (mainController.getSettingsController().yFixed() == true) {
-			Point p = new Point((int)x, (int)yFix, slider.getValue(), points.size());
-			points.add(p);
-			p.drawPoint(gc);
-			listX.getItems().add(p.getX());
-			listY.getItems().add(p.getY());
-		} else if (mainController.getSettingsController().xFixed() == true && xFix == 0) {
-			xFix = x;
-			Point p = new Point((int)x, (int)y, slider.getValue(), points.size());
-			points.add(p);
-			p.drawPoint(gc);
-			listX.getItems().add(p.getX());
-			listY.getItems().add(p.getY());
-		} else if (mainController.getSettingsController().xFixed() == true) {
-			Point p = new Point((int)xFix, (int)y, slider.getValue(), points.size());
-			points.add(p);
-			p.drawPoint(gc);
-			listX.getItems().add(p.getX());
-			listY.getItems().add(p.getY());
-		} else {
-			Point p = new Point((int)x, (int)y, slider.getValue(), points.size());
-			points.add(p);
-			p.drawPoint(gc);
-			listX.getItems().add(p.getX());
-			listY.getItems().add(p.getY());
-		}
-		for (Point p : points) {
-			p.drawPoint(gc);
-		}
-		slider.setValue(slider.getValue() + mainController.getSCHRITTWEITE());
+		if (slider.getValue() < slider.getMax()) {
+			gc.setFill(Color.rgb(255, 119, 0, 0.80));						
+			if (mainController.getSettings().isyFixed() && yFix == 0) {
+				//gc.fillRect(e.getX() - 10, e.getY() - 10, 20, 20);
+				yFix = y;
+				Point p = new Point((int)x, (int)y, slider.getValue());
+				points.add(p);
+				p.drawPoint(gc);
+				listX.getItems().add(p.getX());
+				listY.getItems().add(p.getY());
+			} else if (mainController.getSettings().isyFixed()) {
+				Point p = new Point((int)x, (int)yFix, slider.getValue());
+				points.add(p);
+				p.drawPoint(gc);
+				listX.getItems().add(p.getX());
+				listY.getItems().add(p.getY());
+			} else if (mainController.getSettings().isxFixed() && xFix == 0) {
+				xFix = x;
+				Point p = new Point((int)x, (int)y, slider.getValue());
+				points.add(p);
+				p.drawPoint(gc);
+				listX.getItems().add(p.getX());
+				listY.getItems().add(p.getY());
+			} else if (mainController.getSettings().isxFixed()) {
+				Point p = new Point((int)xFix, (int)y, slider.getValue());
+				points.add(p);
+				p.drawPoint(gc);
+				listX.getItems().add(p.getX());
+				listY.getItems().add(p.getY());
+			} else {
+				Point p = new Point((int)x, (int)y, slider.getValue());
+				points.add(p);
+				p.drawPoint(gc);
+				listX.getItems().add(p.getX());
+				listY.getItems().add(p.getY());
+			}
+			for (Point p : points) {
+				p.drawPoint(gc);
+			}
+			slider.setValue(slider.getValue() + mainController.getSettings().getSchrittweite());
+		}		
 	}
 	
 	private static void addPoint(State state, MouseEvent e) {
@@ -195,45 +202,55 @@ public class AddPointEvents {
 		ArrayList<Point> points = state.getPoints();
 		ListView<Integer> listX = state.getMainController().getListX();
 		ListView<Integer> listY = state.getMainController().getListY();
-		slider.setDisable(true);
-		gc.setFill(Color.rgb(255, 119, 0, 0.80));						
-		if (mainController.getSettingsController().yFixed() == true && yFix == 0) {
-			//gc.fillRect(e.getX() - 10, e.getY() - 10, 20, 20);
-			yFix = e.getY();
-			Point p = new Point((int)e.getX(), (int)e.getY(), slider.getValue(), points.size());
-			points.add(p);
-			p.drawPoint(gc);
-			listX.getItems().add(p.getX());
-			listY.getItems().add(p.getY());
-			System.out.println(p.getId());
-		} else if (mainController.getSettingsController().yFixed() == true) {
-			Point p = new Point((int)e.getX(), (int)yFix, slider.getValue(), points.size());
-			points.add(p);
-			p.drawPoint(gc);
-			listX.getItems().add(p.getX());
-			listY.getItems().add(p.getY());
-		} else if (mainController.getSettingsController().xFixed() == true && xFix == 0) {
-			xFix = e.getX();
-			Point p = new Point((int)e.getX(), (int)e.getY(), slider.getValue(), points.size());
-			points.add(p);
-			p.drawPoint(gc);
-			listX.getItems().add(p.getX());
-			listY.getItems().add(p.getY());
-		} else if (mainController.getSettingsController().xFixed() == true) {
-			Point p = new Point((int)xFix, (int)e.getY(), slider.getValue(), points.size());
-			points.add(p);
-			p.drawPoint(gc);
-			listX.getItems().add(p.getX());
-			listY.getItems().add(p.getY());
-		} else {
-			Point p = new Point((int)e.getX(), (int)e.getY(), slider.getValue(), points.size());
-			points.add(p);
-			p.drawPoint(gc);
-			listX.getItems().add(p.getX());
-			listY.getItems().add(p.getY());
+		if (slider.getValue() < slider.getMax()) {
+			gc.setFill(Color.rgb(255, 119, 0, 0.80));						
+			if (mainController.getSettings().isyFixed() && yFix == 0) {
+				//gc.fillRect(e.getX() - 10, e.getY() - 10, 20, 20);
+				yFix = e.getY();
+				Point p = new Point((int)e.getX(), (int)e.getY(), slider.getValue());
+				points.add(p);
+				p.drawPoint(gc);
+				listX.getItems().add(p.getX());
+				listY.getItems().add(p.getY());
+			} else if (mainController.getSettings().isyFixed() == true) {
+				Point p = new Point((int)e.getX(), (int)yFix, slider.getValue());
+				points.add(p);
+				p.drawPoint(gc);
+				listX.getItems().add(p.getX());
+				listY.getItems().add(p.getY());
+			} else if (mainController.getSettings().isxFixed() && xFix == 0) {
+				xFix = e.getX();
+				Point p = new Point((int)e.getX(), (int)e.getY(), slider.getValue());
+				points.add(p);
+				p.drawPoint(gc);
+				listX.getItems().add(p.getX());
+				listY.getItems().add(p.getY());
+			} else if (mainController.getSettings().isxFixed() == true) {
+				Point p = new Point((int)xFix, (int)e.getY(), slider.getValue());
+				points.add(p);
+				p.drawPoint(gc);
+				listX.getItems().add(p.getX());
+				listY.getItems().add(p.getY());
+			} else {
+				Point p = new Point((int)e.getX(), (int)e.getY(), slider.getValue());
+				points.add(p);
+				p.drawPoint(gc);
+				listX.getItems().add(p.getX());
+				listY.getItems().add(p.getY());
+			}
+			slider.setValue(slider.getValue() + mainController.getSettings().getSchrittweite());
 		}
-		slider.setValue(slider.getValue() + mainController.getSCHRITTWEITE());
 	}
 	
+	public static void reset() {
+		x = 0;
+		y = 0;
+		dragX = 0;
+		dragY = 0;
+		x2 = 0;
+		y2 = 0;
+		xFix = 0;
+		yFix = 0;
+	}
 
 }

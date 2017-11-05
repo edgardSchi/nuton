@@ -24,7 +24,7 @@ public class DefaultState extends State{
 	@Override
 	public void onClick(MouseEvent e) {
 		//System.out.println("DEFAULT STATE");
-		//mainController.getToolBarManager().pointButtonEvent(this, e);
+		//mainController.getToolBarManager().pointButtonEvent(this, e);		
 	}
 
 	@Override
@@ -54,6 +54,12 @@ public class DefaultState extends State{
 	@Override
 	public MainController getMainController() {
 		return mainController;
+	}
+
+	@Override
+	public void reset() {
+		// TODO Auto-generated method stub
+		
 	}
 	
 }

@@ -42,16 +42,16 @@ public class FfmpegHandler {
 					files[i].delete();
 				}
 				System.out.println("\"" + videoPath + "\"");
+	
 				ProcessBuilder pb = new ProcessBuilder("cmd", "/c", ffmpegPath + "/ffmpeg -i \"" + videoPath + "\" \"" + outputPath +"/" + outputName + "." + propReader.getPrefVideoFormat() + "\"");
 				pb.redirectErrorStream(true);
 				
 				Process process = pb.start();
-				InputStream inputStream = process.getInputStream();
-				
+				InputStream inputStream = process.getInputStream();			
 				BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream), 1);
 				String line = null;
 				StringBuilder s = new StringBuilder();
-				while((line = bufferedReader.readLine()) != null) {
+				while((line = bufferedReader.readLine()) != null) {		
 					s.append(line);
 					s.append(System.lineSeparator());
 				}
@@ -62,8 +62,10 @@ public class FfmpegHandler {
 				System.out.println("\"" + outputPath + "/" + outputName + "." + propReader.getPrefVideoFormat() + "\"");
 			} catch (IOException e) {
 				e.printStackTrace();
+				System.out.println("Fehler1");
 			} catch (InterruptedException e) {
 				e.printStackTrace();
+				System.out.println("Fehler2");
 			}
 		}
 	}
@@ -109,5 +111,11 @@ public class FfmpegHandler {
 	    }    
 
 	}
+	
+//	private boolean checkForFfmpeg() {
+//		String path = propReader.getFfmpegPath();
+//		File ffmpeg = new File(path);
+//		//if ()
+//	}
 	
 }

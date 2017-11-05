@@ -13,19 +13,18 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
 import javafx.scene.image.Image;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
-import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import properties.PropertiesReader;
 import properties.PropertiesWriter;
+import savingFile.SaveHandler;
+import states.StateManager;
 
 public class MainEventHandler {
 
@@ -38,16 +37,42 @@ public class MainEventHandler {
 		propWriter = new PropertiesWriter();
 	}
 	
-	private void openMedia(File media) {	
-		mainController.setMedia(new Media(media.toURI().toString()));
-		mainController.setPlayer(new MediaPlayer(mainController.getMedia()));
-		mainController.getMv().setMediaPlayer(mainController.getPlayer());
-		mainController.getPlayer().setMute(true);
-		mainController.getSettingsController().reset();
-		mainController.reset();
-		mainController.getStartBtn().setDisable(false);
-		System.out.println("Öffne das Video...");
-		//mainController.getMv().setPreserveRatio(true);
+	public void openMedia(File media) {
+		if (media != null) {
+			mainController.setPlayer(new MediaPlayer(new Media(media.toURI().toString())));
+			mainController.getPlayer().setOnReady(new Runnable() {
+
+				@Override
+				public void run() {
+					//slider.setMin(0);
+					DoubleProperty mvw = mainController.getMv().fitWidthProperty();
+					DoubleProperty mvh = mainController.getMv().fitHeightProperty();
+					DoubleProperty canvasW = mainController.getCanvas().widthProperty();
+					DoubleProperty canvasH = mainController.getCanvas().heightProperty();
+					
+					mvw.bind(Bindings.selectDouble(mainController.getMv().parentProperty(), "width"));
+					mvh.bind(Bindings.selectDouble(mainController.getMv().parentProperty(), "height"));
+					canvasW.bind(Bindings.selectDouble(mainController.getMv().parentProperty(), "width"));
+					canvasH.bind(Bindings.selectDouble(mainController.getMv().parentProperty(), "height"));
+					
+					mainController.getSlider().setMinorTickCount(0);
+					mainController.getSlider().setMajorTickUnit(1000);
+					mainController.getSlider().setMax(mainController.getPlayer().getTotalDuration().toMillis());
+					mainController.setMediaLength(mainController.getPlayer().getTotalDuration().toMillis());
+				
+					System.out.println("Running");
+				}
+				
+			});
+			mainController.getMv().setMediaPlayer(mainController.getPlayer());
+			mainController.getPlayer().setMute(true);
+			
+			mainController.getSettingsController().reset();
+			mainController.reset();		
+			mainController.getStartBtn().setDisable(false);
+			//mainController.getSettingsController().showDialog();
+		}
+
 	}
 	
 	public EventHandler<ActionEvent> openFileDialog() {
@@ -57,48 +82,26 @@ public class MainEventHandler {
 			public void handle(ActionEvent event) {
 				propReader = new PropertiesReader();
 				FileChooser fileChooser = new FileChooser();
-				System.out.println("LAST PATH: " + propReader.getLastPath());
 				
 				if (!propReader.getLastPath().isEmpty()) {
-					fileChooser.setInitialDirectory(new File(propReader.getLastPath()));
+					if (new File(propReader.getLastPath()).isDirectory()) {
+						fileChooser.setInitialDirectory(new File(propReader.getLastPath()));
+					} else {
+						propWriter.setLastPath("");
+					}
 				}
 				
 				FileChooser.ExtensionFilter filter = new FileChooser.ExtensionFilter("Video Dateien (*.fxm), (*.flv), (*.mp4), (*.m4v)", "*.fxm", "*.flv", "*.mp4", "*.m4v");
 				fileChooser.getExtensionFilters().add(filter);
-				File mediaFile = fileChooser.showOpenDialog(null);
+				File mediaFile = fileChooser.showOpenDialog(Main.getStage());
 				
 				if (mediaFile != null) {
-					
-				
 					openMedia(mediaFile);
 					System.out.println(mediaFile.getAbsolutePath());
 					propWriter.setLastPath(mediaFile.getParent());
 					propWriter.confirm();
-					//Prüft, ob der MediaPlayer bereit ist
-					mainController.getPlayer().setOnReady(new Runnable() {
-
-						@Override
-						public void run() {
-							//slider.setMin(0);
-							DoubleProperty mvw = mainController.getMv().fitWidthProperty();
-							DoubleProperty mvh = mainController.getMv().fitHeightProperty();
-							DoubleProperty canvasW = mainController.getCanvas().widthProperty();
-							DoubleProperty canvasH = mainController.getCanvas().heightProperty();
-							
-							mvw.bind(Bindings.selectDouble(mainController.getMv().parentProperty(), "width"));
-							mvh.bind(Bindings.selectDouble(mainController.getMv().parentProperty(), "height"));
-							canvasW.bind(Bindings.selectDouble(mainController.getMv().parentProperty(), "width"));
-							canvasH.bind(Bindings.selectDouble(mainController.getMv().parentProperty(), "height"));
-							
-							mainController.getSlider().setMinorTickCount(0);
-							mainController.getSlider().setMajorTickUnit(1000);
-							mainController.getSlider().setMax(mainController.getPlayer().getTotalDuration().toMillis());
-							mainController.setMediaLength(mainController.getPlayer().getTotalDuration().toMillis());
-						
-							System.out.println("Running");
-						}
-						
-					});
+					savingFile.TempSaving.setURL(mediaFile.getAbsolutePath());
+					savingFile.TempSaving.withFfmpeg(false);
 				}
 			}		
 		};
@@ -115,12 +118,16 @@ public class MainEventHandler {
 				FileChooser chooser = new FileChooser();
 				
 				if (!propReader.getLastPath().isEmpty()) {
-					chooser.setInitialDirectory(new File(propReader.getLastPath()));
+					if (new File(propReader.getLastPath()).exists()) {
+						chooser.setInitialDirectory(new File(propReader.getLastPath()));
+					} else {
+						propWriter.setLastPath("");
+					}
 				}
 				
 				String videoPath;
 				File video;
-				video = chooser.showOpenDialog(null);
+				video = chooser.showOpenDialog(Main.getStage());
 				
 				if (video != null) {
 					videoPath = video.getAbsolutePath();
@@ -131,35 +138,24 @@ public class MainEventHandler {
 					
 					String name = "output";
 					FfmpegHandler handler = new FfmpegHandler(videoPath, outputPath, name);
-					openMedia(handler.getVideo());
 					
-					propWriter.setLastPath(video.getParent());
-					propWriter.confirm();
-					
-					mainController.getPlayer().setOnReady(new Runnable() {
+					if (!handler.getVideo().exists()) {
+						Alert alert = new Alert(AlertType.ERROR);
+						alert.setTitle("Error");
+						alert.setHeaderText("Ein Fehler ist aufgetreten!");
+						alert.setContentText("Das Video konnte nicht gefunden werden. Überprüfen Sie, ob der Pfad zu ffmpeg korrekt ist.");
 
-						@Override
-						public void run() {
-							//slider.setMin(0);
-							DoubleProperty mvw = mainController.getMv().fitWidthProperty();
-							DoubleProperty mvh = mainController.getMv().fitHeightProperty();
-							DoubleProperty canvasW = mainController.getCanvas().widthProperty();
-							DoubleProperty canvasH = mainController.getCanvas().heightProperty();
-							
-							mvw.bind(Bindings.selectDouble(mainController.getMv().parentProperty(), "width"));
-							mvh.bind(Bindings.selectDouble(mainController.getMv().parentProperty(), "height"));
-							canvasW.bind(Bindings.selectDouble(mainController.getMv().parentProperty(), "width"));
-							canvasH.bind(Bindings.selectDouble(mainController.getMv().parentProperty(), "height"));
-							
-							mainController.getSlider().setMinorTickCount(0);
-							mainController.getSlider().setMajorTickUnit(1000);
-							mainController.getSlider().setMax(mainController.getPlayer().getTotalDuration().toMillis());
-							mainController.setMediaLength(mainController.getPlayer().getTotalDuration().toMillis());
+						alert.showAndWait();
+					} else {
+						openMedia(handler.getVideo());
 						
-							System.out.println("Running");
-						}
-						
-					});
+						propWriter.setLastPath(video.getParent());
+						propWriter.confirm();
+						savingFile.TempSaving.setURL(video.getAbsolutePath());
+						savingFile.TempSaving.withFfmpeg(true);
+		
+					}				
+
 				}			
 
 			}
@@ -167,6 +163,64 @@ public class MainEventHandler {
 		};
 		
 		return event;
+	}
+	
+	public void openMediaDialogWithoutReset() {
+		propReader = new PropertiesReader();
+		FileChooser fileChooser = new FileChooser();
+		
+		if (!propReader.getLastPath().isEmpty()) {
+			if (new File(propReader.getLastPath()).isDirectory()) {
+				fileChooser.setInitialDirectory(new File(propReader.getLastPath()));
+			} else {
+				propWriter.setLastPath("");
+			}
+		}
+		
+		FileChooser.ExtensionFilter filter = new FileChooser.ExtensionFilter("Video Dateien (*.fxm), (*.flv), (*.mp4), (*.m4v)", "*.fxm", "*.flv", "*.mp4", "*.m4v");
+		fileChooser.getExtensionFilters().add(filter);
+		File mediaFile = fileChooser.showOpenDialog(Main.getStage());
+		
+		if (mediaFile != null) {
+			mainController.setPlayer(new MediaPlayer(new Media(mediaFile.toURI().toString())));
+			mainController.getPlayer().setOnReady(new Runnable() {
+
+				@Override
+				public void run() {
+					//slider.setMin(0);
+					DoubleProperty mvw = mainController.getMv().fitWidthProperty();
+					DoubleProperty mvh = mainController.getMv().fitHeightProperty();
+					DoubleProperty canvasW = mainController.getCanvas().widthProperty();
+					DoubleProperty canvasH = mainController.getCanvas().heightProperty();
+					
+					mvw.bind(Bindings.selectDouble(mainController.getMv().parentProperty(), "width"));
+					mvh.bind(Bindings.selectDouble(mainController.getMv().parentProperty(), "height"));
+					canvasW.bind(Bindings.selectDouble(mainController.getMv().parentProperty(), "width"));
+					canvasH.bind(Bindings.selectDouble(mainController.getMv().parentProperty(), "height"));
+					
+					mainController.getSlider().setMinorTickCount(0);
+					mainController.getSlider().setMajorTickUnit(1000);
+					mainController.getSlider().setMax(mainController.getPlayer().getTotalDuration().toMillis());
+					mainController.setMediaLength(mainController.getPlayer().getTotalDuration().toMillis());
+				
+					System.out.println("Running");
+				}
+				
+			});
+			mainController.getMv().setMediaPlayer(mainController.getPlayer());
+			mainController.getPlayer().setMute(true);
+			
+			mainController.getSettingsController().reset();
+			mainController.reset();		
+			mainController.getStartBtn().setDisable(false);
+			//mainController.getSettingsController().showDialog();
+		}
+			
+		System.out.println(mediaFile.getAbsolutePath());
+		propWriter.setLastPath(mediaFile.getParent());
+		propWriter.confirm();
+		savingFile.TempSaving.setURL(mediaFile.getAbsolutePath());
+		savingFile.TempSaving.withFfmpeg(false);
 	}
 
 	
@@ -182,7 +236,7 @@ public class MainEventHandler {
 					Stage stage = new Stage();
 					stage.setTitle("Anleitung");
 					stage.setScene(scene);
-					stage.getIcons().add(new Image(SettingsController.class.getResourceAsStream("Nuton_logo.png")));
+					stage.getIcons().add(new Image(MainEventHandler.class.getResourceAsStream("Nuton_logo.png")));
 					stage.show();
 				} catch (IOException e){
 					e.printStackTrace();
@@ -223,7 +277,7 @@ public class MainEventHandler {
 					});
 				} else {
 					mainController.getStartBtn().setDisable(true);
-					mainController.getSettingsController().show();
+					mainController.getSettingsController().showDialog();
 				}			
 			}
 			
@@ -236,7 +290,10 @@ public class MainEventHandler {
 
 			@Override
 			public void handle(ActionEvent event) {
-				mainController.reset();			
+				mainController.getStartBtn().setDisable(false);
+				mainController.getStateManager().getCurrentState().reset();
+				mainController.getStateManager().setState(StateManager.DEFAULT);
+				toolBarEvents.AddPointEvents.reset();
 			}
 			
 		};
@@ -245,26 +302,29 @@ public class MainEventHandler {
 	
 	public void backwardButton() {
 		ArrayList<Point> points = mainController.getStateManager().getPoints();
+		double schrittweite = mainController.getSettings().getSchrittweite();
 		if (points != null) {
-			double time = points.get(points.size()-1).getTime();
-			if (time == mainController.getSlider().getValue() - mainController.getSCHRITTWEITE() && mainController.getSlider().getValue() - mainController.getSCHRITTWEITE() >= 0) {
+			double time = 0;
+			if (points.size()-1 > 0) {
+				time = points.get(points.size()-1).getTime();
+			}
+			
+			if (time == mainController.getSlider().getValue() - schrittweite && mainController.getSlider().getValue() - schrittweite >= 0) {
 				points.get(points.size()-1).removePoint(mainController.getGc());
 				points.remove(points.size()-1);
-				mainController.getSlider().setValue(mainController.getSlider().getValue() - mainController.getSCHRITTWEITE());
+				mainController.getSlider().setValue(mainController.getSlider().getValue() - schrittweite);
+				mainController.getListX().getItems().remove(points.size());
+				mainController.getListY().getItems().remove(points.size());
+			} else if (mainController.getSlider().getValue() - schrittweite >= 0){
+				mainController.getSlider().setValue(mainController.getSlider().getValue() - schrittweite);
 			}
-		} else if (mainController.getSlider().getValue() - mainController.getSCHRITTWEITE() >= 0){
-			mainController.getSlider().setValue(mainController.getSlider().getValue() - mainController.getSCHRITTWEITE());
+		} else if (mainController.getSlider().getValue() - schrittweite >= 0){
+			mainController.getSlider().setValue(mainController.getSlider().getValue() - schrittweite);
 		}
 	}
 	
 	public MainController getMainController() {
 		return mainController;
-	}
-
-	
-	//Toolbarevents
-	public void setPoint(MouseEvent e, ArrayList<Point> points, GraphicsContext gc) {
-		
 	}
 	
 }

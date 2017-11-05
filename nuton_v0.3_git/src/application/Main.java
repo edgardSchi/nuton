@@ -21,12 +21,14 @@ public class Main extends Application {
 	@FXML private MediaView mv;
 	@FXML private Canvas canvas;
 	private ThemeLoader themeLoader;
+	private static Stage stage;
 	
-	private final String VERSION = "v0.3.4";
+	private final String VERSION = "v0.4";
 	
 	@Override
 	public void start(Stage primaryStage) {
 		try {
+			stage = primaryStage;
 			Parent root = FXMLLoader.load(getClass().getResource("/application/Main.fxml"));
 			Scene scene = new Scene(root);
 			themeLoader = new ThemeLoader();
@@ -54,5 +56,8 @@ public class Main extends Application {
 		launch(args);
 	}
 	
+	public static Stage getStage() {
+		return stage;
+	}
 
 }
