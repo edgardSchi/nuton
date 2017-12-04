@@ -310,11 +310,11 @@ public class MainEventHandler {
 			}
 			
 			if (time == mainController.getSlider().getValue() - schrittweite && mainController.getSlider().getValue() - schrittweite >= 0) {
-				points.get(points.size()-1).removePoint(mainController.getGc());
-				points.remove(points.size()-1);
+//				points.get(points.size()-1).removePoint(mainController.getGc());
+//				points.remove(points.size()-1);
 				mainController.getSlider().setValue(mainController.getSlider().getValue() - schrittweite);
-				mainController.getListX().getItems().remove(points.size());
-				mainController.getListY().getItems().remove(points.size());
+//				mainController.getListX().getItems().remove(points.size());
+//				mainController.getListY().getItems().remove(points.size());
 			} else if (mainController.getSlider().getValue() - schrittweite >= 0){
 				mainController.getSlider().setValue(mainController.getSlider().getValue() - schrittweite);
 			}

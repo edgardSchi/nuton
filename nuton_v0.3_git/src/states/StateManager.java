@@ -15,6 +15,7 @@ public class StateManager {
 	public static final int DEFAULT = 0;
 	public static final int CALIBRATION = 1;
 	public static final int TRANSLATION = 2;
+	public static final int POSTCALIBRATION = 3;
 	
 	public StateManager(MainController mainController) {
 		this.mainController = mainController;
@@ -27,6 +28,7 @@ public class StateManager {
 		states.add(new DefaultState(mainController));
 		states.add(new CalibrateState(mainController, mainController.getPManager()));
 		states.add(new TranslationState(mainController, mainController.getPManager()));
+		states.add(new PostCalibrationState(mainController, mainController.getPManager()));
 	}
 	
 	public void init() {
@@ -49,7 +51,12 @@ public class StateManager {
 		return states.get(currentState);
 	}
 	
+	public int getCurrentStateID() {
+		return currentState;
+	}
+	
 	public void setState(int state) {
+		states.get(state).init();
 		currentState = state;
 	}
 	

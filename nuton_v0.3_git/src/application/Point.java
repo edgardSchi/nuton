@@ -13,6 +13,8 @@ public class Point {
 	private double entfernungMeterX;
 	private double entfernungMeterY;
 	private Color color;
+	private Color highlightColor;
+	private Color normalColor;
 	private PropertiesReader propReader;
 
 	public Point(int x, int y, double time) {
@@ -20,7 +22,9 @@ public class Point {
 		this.y = y;
 		this.time = time;
 		propReader = new PropertiesReader();
-		color = propReader.getPointColor();
+		normalColor = propReader.getPointColor();
+		highlightColor = Color.RED;
+		color = normalColor;
 	}
 
 	public int getX() {
@@ -37,6 +41,15 @@ public class Point {
 		gc.setStroke(color);
 		gc.strokeLine(x + 5, y, x - 5, y);
 		gc.strokeLine(x, y + 5, x, y - 5);
+	}
+	
+	public void highlightPoint(boolean highlight) {
+		if (highlight) {
+			color = highlightColor;
+		} else {
+			color = normalColor;
+		}
+		
 	}
 	
 	public void removePoint(GraphicsContext gc) {
@@ -72,6 +85,16 @@ public class Point {
 	public String saveString() {
 		return x + "," + y + "," + time;
 	}
+
+	public void setX(int x) {
+		this.x = x;
+	}
+
+	public void setY(int y) {
+		this.y = y;
+	}
+	
+	
 	
 	
 

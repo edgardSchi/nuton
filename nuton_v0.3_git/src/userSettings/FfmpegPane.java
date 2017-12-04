@@ -1,5 +1,6 @@
 package userSettings;
 
+import java.io.File;
 import java.io.IOException;
 
 import javafx.event.ActionEvent;
@@ -62,7 +63,10 @@ public class FfmpegPane extends SettingsPane {
 				FileChooser chooser = new FileChooser();
 				FileChooser.ExtensionFilter filter = new FileChooser.ExtensionFilter("ffmpeg", "*.exe");
 				chooser.getExtensionFilters().add(filter);
-				pathField.setText(chooser.showOpenDialog(null).getParentFile().getAbsolutePath());
+				File path = chooser.showOpenDialog(null);
+				if (path != null) {
+					pathField.setText(path.getParentFile().getAbsolutePath());
+				}				
 			}
 			
 		});

@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane fx:id="ffmpegPane" prefHeight="222.0" prefWidth="434.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <Separator layoutY="33.0" prefHeight="12.0" prefWidth="434.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
+            <Label layoutX="14.0" layoutY="6.0" prefHeight="12.0" prefWidth="61.0" text="ffmpeg" textAlignment="CENTER">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Label>
+            <VBox layoutX="14.0" layoutY="54.0" prefHeight="334.0" prefWidth="408.0" AnchorPane.bottomAnchor="9.0" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="54.0">
+               <children>
+                  <HBox prefHeight="31.0" prefWidth="277.0">
+                     <children>
+                        <Label prefHeight="22.0" prefWidth="46.0" text="Pfad">
+                           <font>
+                              <Font size="18.0" />
+                           </font>
+                        </Label>
+                        <TextField fx:id="pathField" prefHeight="28.0" prefWidth="281.0">
+                           <HBox.margin>
+                              <Insets left="25.0" />
+                           </HBox.margin>
+                        </TextField>
+                        <Button fx:id="pathBtn" mnemonicParsing="false" prefHeight="28.0" prefWidth="28.0" text="...">
+                           <HBox.margin>
+                              <Insets left="10.0" />
+                           </HBox.margin>
+                        </Button>
+                     </children>
+                  </HBox>
+                  <HBox prefHeight="31.0" prefWidth="408.0">
+                     <children>
+                        <Label text="Format">
+                           <font>
+                              <Font size="18.0" />
+                           </font>
+                           <HBox.margin>
+                              <Insets />
+                           </HBox.margin>
+                        </Label>
+                        <ComboBox fx:id="formatBox" prefHeight="28.0" prefWidth="150.0">
+                           <HBox.margin>
+                              <Insets left="15.0" />
+                           </HBox.margin>
+                        </ComboBox>
+                     </children>
+                     <VBox.margin>
+                        <Insets top="21.0" />
+                     </VBox.margin>
+                  </HBox>
+                  <HBox prefHeight="31.0" prefWidth="408.0">
+                     <children>
+                        <CheckBox fx:id="sameDirBox" mnemonicParsing="false" prefHeight="27.0" prefWidth="407.0" text="Videos immer im gleichen Verzeichnis speichern" />
+                     </children>
+                     <VBox.margin>
+                        <Insets top="21.0" />
+                     </VBox.margin>
+                  </HBox>
+                  <HBox fx:id="sameDirHBox" prefHeight="32.0" prefWidth="422.0">
+                     <VBox.margin>
+                        <Insets left="67.0" top="19.0" />
+                     </VBox.margin>
+                     <children>
+                        <Label text="Pfad">
+                           <font>
+                              <Font size="18.0" />
+                           </font>
+                        </Label>
+                        <TextField fx:id="sameDirPathField" prefHeight="28.0" prefWidth="239.0">
+                           <HBox.margin>
+                              <Insets left="10.0" />
+                           </HBox.margin>
+                        </TextField>
+                        <Button fx:id="sameDirPathBtn" mnemonicParsing="false" prefHeight="28.0" prefWidth="28.0" text="...">
+                           <HBox.margin>
+                              <Insets left="10.0" />
+                           </HBox.margin>
+                        </Button>
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
+            <Button fx:id="applyBtn" layoutX="310.0" layoutY="349.0" mnemonicParsing="false" prefHeight="28.0" prefWidth="110.0" text="Anwenden" AnchorPane.bottomAnchor="20.0" AnchorPane.rightAnchor="14.0" />
+         </children>
+      </AnchorPane>
+   </children>
+</AnchorPane>

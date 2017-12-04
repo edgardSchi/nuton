@@ -11,7 +11,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Dialog;
@@ -19,7 +18,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
 import settings.Settings;
 import states.StateManager;
 import userSettings.ThemeLoader;
@@ -39,6 +37,8 @@ public class SettingsController{
 	@FXML private ComboBox yNullPunktBox;
 	private Settings settingsObj;
 	private Dialog<ButtonType> dialog;
+	private boolean invalidEichung = false;
+	private boolean invalidSchrittweite = false;
 	
 	@SuppressWarnings("unchecked")
 	SettingsController(MainController mainController, Settings settings) {		
@@ -70,6 +70,8 @@ public class SettingsController{
 			
 			yNullPunktBox.getItems().addAll("Oben", "Unten");
 			yNullPunktBox.setValue("Oben");
+			dialog.getDialogPane().setContent(root);
+			dialog.getDialogPane().getButtonTypes().add(ButtonType.APPLY);
 			
 //			stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
 //
@@ -83,21 +85,33 @@ public class SettingsController{
 			schrittweiteField.textProperty().addListener(new ChangeListener<String>() {
 				@Override
 				public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+					int i = 1;
 					if (!newValue.matches("\\d*")) {
 						schrittweiteField.setText(newValue.replaceAll("[^\\d]", "1"));
+					} else {
+						if (!newValue.isEmpty()) {
+							i = Integer.parseInt(newValue);
+						}
 					}
 					
-					int i = Integer.parseInt(newValue);
 					if (i > 10000) {
 						schrittweiteField.setText(newValue.replaceAll(newValue, "10000"));
+						invalidSchrittweite = false;
 					}
 					
 					if (i == 0) {
 						schrittweiteField.setText(newValue.replaceAll(newValue, "1"));
+						invalidSchrittweite = false;
 					}
 					
-					if (newValue == "") {
-						schrittweiteField.setText(newValue.replaceAll(newValue, "1"));
+					if (newValue.isEmpty()) {
+						dialog.getDialogPane().lookupButton(ButtonType.APPLY).setDisable(true);
+						invalidSchrittweite = true;
+					} else {
+						invalidSchrittweite = false;
+						if (!invalidSchrittweite && !invalidEichung) {
+							dialog.getDialogPane().lookupButton(ButtonType.APPLY).setDisable(false);
+						}						
 					}
 				}
 				
@@ -106,27 +120,38 @@ public class SettingsController{
 			eichungsField.textProperty().addListener(new ChangeListener<String>() {
 				@Override
 				public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+					int i = 1;
 					if (!newValue.matches("\\d*")) {
 						eichungsField.setText(newValue.replaceAll("[^\\d]", "1"));
+					} else {
+						if (!newValue.isEmpty()) {
+							i = Integer.parseInt(newValue);
+						}						
+					}
+									
+					if (i > 1000) {
+						eichungsField.setText(newValue.replaceAll(newValue, "1000"));
+						invalidEichung = false;
 					}
 					
-					int i = Integer.parseInt(newValue);
-					if (i > 500) {
-						eichungsField.setText(newValue.replaceAll(newValue, "500"));
+					if (i == 0) {
+						eichungsField.setText(newValue.replaceAll(newValue, "1"));
+						invalidEichung = false;
 					}
 					
-//					if (i < 10) {
-//						eichungsField.setText(newValue.replaceAll(newValue, "10"));
-//					}
-					
-					if (newValue == "") {
-						eichungsField.setText(newValue.replaceAll(newValue, "10"));
+					if (newValue.isEmpty()) {
+						dialog.getDialogPane().lookupButton(ButtonType.APPLY).setDisable(true);
+						invalidEichung = true;
+					} else {
+						invalidEichung = false;
+						if (!invalidSchrittweite && !invalidEichung) {
+							dialog.getDialogPane().lookupButton(ButtonType.APPLY).setDisable(false);
+						}		
 					}
 				}
 				
 			});
-			dialog.getDialogPane().setContent(root);
-			dialog.getDialogPane().getButtonTypes().add(ButtonType.APPLY);
+
 				
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -243,17 +268,21 @@ public class SettingsController{
 	
 	public void showDialog() {
 		Optional<ButtonType> result = dialog.showAndWait();
-	    if (result.get() == ButtonType.APPLY) {
+	    if (result.isPresent() && result != null && result.get() == ButtonType.APPLY) {
 			saveSettings();
 			mainController.getStateManager().setState(StateManager.CALIBRATION);
 			mainController.restartBtn.setDisable(false);
 			mainController.fertigBtn.setDisable(false);
+			mainController.getSlider().setMajorTickUnit(settingsObj.getSchrittweite());
 			mainController.getSlider().setMax(calcMaxSlider(settingsObj.getSchrittweite(), mainController.getPlayer().getTotalDuration().toMillis()));
-			System.out.println("Button wurde gedrückt");
+			System.out.println(settingsObj.getSchrittweite());
 	    } else {
 	    	//FIXEN//
 	    	reset();
+	    	mainController.reset();
 	    }
+	    dialog.setResult(null);
+	    System.out.println("RESULT: " + result.toString());
 	}
 
 	private double calcMaxSlider(double schrittweite, double duration) {

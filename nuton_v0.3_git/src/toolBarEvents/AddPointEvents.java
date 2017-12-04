@@ -35,11 +35,7 @@ public class AddPointEvents {
 		gc.setStroke(Color.RED);
 		MainController mainController = state.getMainController();
 		ArrayList<Point> points = state.getPoints();
-		gc.setFill(Color.rgb(255, 119, 0, 0.80));
-		
-		System.out.println("x2: " + x2 + " y2: " + y2);
-		
-		
+		gc.setFill(Color.rgb(255, 119, 0, 0.80));		
 		
 		if (e.getEventType() == MouseEvent.MOUSE_PRESSED && e.isPrimaryButtonDown() && !e.isSecondaryButtonDown()) {
 			x = e.getX();
@@ -60,7 +56,6 @@ public class AddPointEvents {
 				x2 = x2 - dragX + e.getX();
 				y = y - dragY + e.getY();
 				y2 = y2 - dragY + e.getY();
-				System.out.println("BEIDE MAUSTASTEN");
 			} else {
 				x2 = e.getX();
 				y2 = e.getY();

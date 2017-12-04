@@ -254,6 +254,15 @@ public class MainController implements Initializable{
 		}
 	}
 	
+	public void updateLists() {
+		listX.getItems().clear();
+		listY.getItems().clear();
+		for (Point p : stateManager.getCurrentState().getPoints()) {
+			listX.getItems().add(p.getX());
+			listY.getItems().add(p.getY());
+		}
+	}
+	
 	public void reset() {
 		//points.clear();
 		settings.setSchrittweite(1000);
@@ -420,6 +429,10 @@ public class MainController implements Initializable{
 	
 	public Settings getSettings() {
 		return settings;
+	}
+	
+	public void setSettings(Settings settings) {
+		this.settings = settings;
 	}
 	
 	public MenuItem getSaveFileMenu() {

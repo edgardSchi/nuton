@@ -13,10 +13,15 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
+import settings.Settings;
 
-public class CalibrateState extends State { 
-
+public class PostCalibrationState extends State{
+	
 	private MainController mainController;
+	private ArrayList<Point> points;
+	private Settings settings;
+	private double sliderPos = 0;
+	
 	private PixelManager pManager;
 	private GraphicsContext gc;
 	private int clickCounter = 0;
@@ -25,23 +30,24 @@ public class CalibrateState extends State {
 	private double y1;
 	private double y2;
 	
-	public CalibrateState(MainController mainController, PixelManager pManager) {
+	public PostCalibrationState(MainController mainController, PixelManager pManager) {
 		this.mainController = mainController;
+		points = new ArrayList<Point>();
 		this.pManager = pManager;
 		this.gc = mainController.getGc();
-		mainController.getFertigBtn().setDisable(true);
+		settings = mainController.getSettings();
 	}
 	
 	@Override
 	public void init() {
-		mainController.getSlider().setSnapToTicks(false);
-		mainController.getSlider().setValue(0);
+		mainController.getFertigBtn().setDisable(true);
+		points = mainController.getStateManager().getPoints();
+		sliderPos = mainController.getSlider().getValue();
 	}
 
 	@Override
 	public void onClick(MouseEvent e) {
 		if (e.getEventType() == MouseEvent.MOUSE_CLICKED) {
-			System.out.println("CALIBRATE STATE");
 			gc.setFill(Color.rgb(255, 119, 0, 0.80));
 			gc.fillRect(e.getX() - 10, e.getY() - 10, 20, 20);
 			
@@ -109,6 +115,10 @@ public class CalibrateState extends State {
 					gc.clearRect(0, 0, mainController.getCanvas().getWidth(), mainController.getCanvas().getWidth());
 					clickCounter = 0;
 					mainController.getStateManager().setState(StateManager.TRANSLATION);
+					mainController.getStateManager().getCurrentState().setPoints(points);
+					mainController.getSlider().setValue(sliderPos);
+					mainController.setSettings(settings);
+					mainController.redraw();
 					mainController.getSlider().setSnapToTicks(true);
 				} else {
 					gc.clearRect(0, 0,mainController.getCanvas().getWidth(), mainController.getCanvas().getWidth());
@@ -120,7 +130,6 @@ public class CalibrateState extends State {
 				}
 			}
 		}
-		
 	}
 
 	@Override
@@ -148,7 +157,6 @@ public class CalibrateState extends State {
 
 	@Override
 	public MainController getMainController() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -164,5 +172,4 @@ public class CalibrateState extends State {
 		return null;
 	}
 
-	
 }

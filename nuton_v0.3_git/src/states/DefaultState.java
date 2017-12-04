@@ -17,8 +17,8 @@ public class DefaultState extends State{
 
 	@Override
 	public void init() {
-		// TODO Auto-generated method stub
-		
+		mainController.getSlider().setSnapToTicks(false);
+		mainController.getSlider().setValue(0);
 	}
 
 	@Override
@@ -60,6 +60,12 @@ public class DefaultState extends State{
 	public void reset() {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public ArrayList<Point> setPoints(ArrayList<Point> points) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 }

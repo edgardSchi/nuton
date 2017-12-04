@@ -1,10 +1,8 @@
-/application/
-/ffmpeg/
-/properties/
-/savingFile/
-/settings/
-/states/
-/toolBar/
 /toolBarEvents/
-/userSettings/
-/waveGenerator/
+/states/
+/application/
+/toolBar/
+/customDialogs/
+/dialogs/
+/removePoint.png
+/removePointIcon.png

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import application.MainController;
 import application.MainEventHandler;
+import application.Point;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.geometry.Orientation;
@@ -18,6 +19,7 @@ public class ToolBarManager {
 	
 	ArrayList<ToolBarItem> items;
 	ArrayList<ToolBarToggleButton> pointItems;
+	private Point selectedPoint = null;
 	
 	private ToolBar toolBar;
 	private MainController mainController;
@@ -42,6 +44,7 @@ public class ToolBarManager {
 		loadFirstSegment();
 		loadSecondSegment();
 		loadThirdSegment();
+		loadFourthSegment();
 	}
 	
 	private void loadFirstSegment() {
@@ -71,6 +74,16 @@ public class ToolBarManager {
 		ToolBarToggleButton cButton = new EllipseButton();
 		addItem(cButton);
 		pointItems.add(cButton);
+		addSeparator();
+	}
+	
+	private void loadFourthSegment() {
+		ToolBarButton calibration = new CalibrateDistanceButton(this);
+		addItem(calibration);
+//		ToolBarButton stepsize = new ChangeStepSizeButton(this);
+//		addItem(stepsize);
+		ToolBarButton removePoint = new RemovePointButton(this);
+		addItem(removePoint);
 	}
 	
 	private void initGroup() {
@@ -108,7 +121,14 @@ public class ToolBarManager {
 				p.addPoint(state, e);
 				break;
 			}
-		}
-		
+		}		
+	}
+	
+	public void setSelectedPoint(Point p) {
+		selectedPoint = p;
+	}
+	
+	public Point getSelectedPoint() {
+		return selectedPoint;
 	}
 }

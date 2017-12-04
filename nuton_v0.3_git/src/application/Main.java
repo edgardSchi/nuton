@@ -23,7 +23,7 @@ public class Main extends Application {
 	private ThemeLoader themeLoader;
 	private static Stage stage;
 	
-	private final String VERSION = "v0.4";
+	private final String VERSION = "v0.4.1";
 	
 	@Override
 	public void start(Stage primaryStage) {
