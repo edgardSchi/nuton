@@ -16,8 +16,7 @@ public class SaveButton extends ToolBarButton{
 	
 	@Override
 	public void onClick() {
-		mainController.getSaveFileMenu().fire();
-		
+		mainController.getSaveFileMenu().fire();		
 	}
 
 }

@@ -6,6 +6,7 @@ import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Optional;
 
+import application.MainController;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Alert;
@@ -51,9 +52,11 @@ public class ProgramSettingsController extends Dialog<ButtonType> {
 	
 	private int currentPane = 0;
 	private ArrayList<SettingsPane> panes;
+	private MainController mainController;
 	
-	public ProgramSettingsController() {
+	public ProgramSettingsController(MainController mainController) {
 		try {
+			this.mainController = mainController;
 			propWriter = new PropertiesWriter();
 			FXMLLoader loader;
 			loader = new FXMLLoader(getClass().getResource("ProgramSettings.fxml"));
@@ -61,7 +64,7 @@ public class ProgramSettingsController extends Dialog<ButtonType> {
 			loader.load();
 			panes = new ArrayList<SettingsPane>();
 			Stage stage = (Stage) getDialogPane().getScene().getWindow();
-			stage.getIcons().add(new Image(ProgramSettingsController.class.getResourceAsStream("Nuton_logo.png")));
+			stage.getIcons().add(new Image(this.getClass().getResourceAsStream("/nutonLogo.png")));
 			ffmpegPane = new FfmpegPane(propWriter);
 			ffmpegPane.anchorPane(centerPane);
 			panes.add(ffmpegPane);
@@ -78,13 +81,6 @@ public class ProgramSettingsController extends Dialog<ButtonType> {
 			ThemeLoader themeLoader = new ThemeLoader();
 			stage.getScene().getStylesheets().add(themeLoader.getTheme());
 			
-			Optional<ButtonType> result = showAndWait();
-		    if (result.get() == ButtonType.OK) {
-		    	confirmSettings();
-		        propWriter.confirm();
-		    } else {
-		    	 propWriter.reset();
-		    }
 			
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -121,6 +117,17 @@ public class ProgramSettingsController extends Dialog<ButtonType> {
 			alert.showAndWait();
 		}
 		
+	}
+	
+	public void showDialog() {
+		Optional<ButtonType> result = showAndWait();
+	    if (result.get() == ButtonType.OK) {
+	    	mainController.redraw();
+	    	confirmSettings();
+	        propWriter.confirm();
+	    } else {
+	    	 propWriter.reset();
+	    }
 	}
 	
 	@SuppressWarnings("unchecked")

@@ -23,7 +23,7 @@ public class Point {
 		this.time = time;
 		propReader = new PropertiesReader();
 		normalColor = propReader.getPointColor();
-		highlightColor = Color.RED;
+		highlightColor = normalColor.invert();
 		color = normalColor;
 	}
 
@@ -94,6 +94,11 @@ public class Point {
 		this.y = y;
 	}
 	
+	public void updateColor() {
+		propReader.update();
+		normalColor = propReader.getPointColor();
+		highlightColor = normalColor.invert();
+	}
 	
 	
 	

@@ -13,6 +13,7 @@ import javafx.scene.image.Image;
 import javafx.scene.media.MediaView;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+import properties.PropertiesWriter;
 import userSettings.ThemeLoader;
 
 
@@ -22,12 +23,14 @@ public class Main extends Application {
 	@FXML private Canvas canvas;
 	private ThemeLoader themeLoader;
 	private static Stage stage;
+	private PropertiesWriter propWriter;
 	
-	private final String VERSION = "v0.4.1";
+	private final String VERSION = "v0.4.2";
 	
 	@Override
 	public void start(Stage primaryStage) {
 		try {
+			propWriter = new PropertiesWriter();
 			stage = primaryStage;
 			Parent root = FXMLLoader.load(getClass().getResource("/application/Main.fxml"));
 			Scene scene = new Scene(root);
@@ -37,7 +40,7 @@ public class Main extends Application {
 
 			primaryStage.setScene(scene);
 			primaryStage.setResizable(true);
-			primaryStage.getIcons().add(new Image(Main.class.getResourceAsStream("Nuton_logo.png")));
+			primaryStage.getIcons().add(new Image(Main.class.getResourceAsStream("/nutonLogo.png")));
 			primaryStage.show();
 			
 			primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {

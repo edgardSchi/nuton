@@ -16,13 +16,14 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import settings.Settings;
 
 public class DiagramsController {
 
 	private MainController mainController;
-	private LineChart<NumberAxis, NumberAxis> vDiagram;
+	private LineChart<NumberAxis, NumberAxis> vDiagram; 
 	@FXML private LineChart<NumberAxis, NumberAxis> aDiagram;
 	public static Stage stage;
 	private ArrayList<Point> points;
@@ -36,12 +37,15 @@ public class DiagramsController {
 	private NumberAxis xAxis;
 	private NumberAxis yAxis;
 	private Settings settings;
+	
+	private XYChart.Series<NumberAxis, NumberAxis>[] seriesArray;
 
 	@SuppressWarnings({ "unchecked", "static-access" })
 	public DiagramsController(MainController mainController, PixelManager pManager) {
 		try {
 			this.mainController = mainController;
 			this.pManager = pManager;
+			seriesArray = new XYChart.Series[4];
 			settings = mainController.getSettings();
 			FXMLLoader loader;
 			loader = new FXMLLoader(getClass().getResource("Diagrams.fxml"));
@@ -52,13 +56,10 @@ public class DiagramsController {
 			Scene scene = new Scene(root);
 			
 			stage = new Stage();
-			stage.setTitle("Diagrams");
+			stage.setTitle("Diagramme");
 			stage.setScene(scene);
-			
-			stage.getIcons().add(new Image(DiagramsController.class.getResourceAsStream("Nuton_logo.png")));
-			
-			
-			
+			stage.initModality(Modality.NONE);
+			stage.getIcons().add(new Image(DiagramsController.class.getResourceAsStream("/nutonLogo.png")));						
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -90,16 +91,29 @@ public class DiagramsController {
 				
 				if (diagramBox.getSelectionModel().getSelectedItem() == "Zeit-Weg") {		
 					vDiagram.getData().clear();
-					makeDiagram();
+					yAxis.setLabel("s[m]");
+					xAxis.setUpperBound(mainController.getMediaLength());
+					xAxis.setTickUnit(mainController.getSettings().getSchrittweite());
+					vDiagram.getData().add(seriesArray[0]);
 				} else if (diagramBox.getSelectionModel().getSelectedItem() == "Zeit-Geschwindigkeit") {
 					vDiagram.getData().clear();
-					testAcc();
+					yAxis.setLabel("v[m/s]");
+					vDiagram.getData().add(seriesArray[1]);
 				} else if (diagramBox.getSelectionModel().getSelectedItem() == "X-Y") {
 					vDiagram.getData().clear();
-					xyDiagram();
+					yAxis.setLabel("y[px]");
+					xAxis.setLabel("x[px]");
+					vDiagram.getData().add(seriesArray[3]);
 				} else if (diagramBox.getSelectionModel().getSelectedItem() == "T-X" || diagramBox.getSelectionModel().getSelectedItem() == "T-Y") {
 					vDiagram.getData().clear();
-					txDiagram();
+					if (settings.getDirection() == Settings.DIRECTION_Y) {
+						yAxis.setLabel("y[px]");
+						xAxis.setLabel("t[s]");
+					} else {
+						yAxis.setLabel("x[px]");
+						xAxis.setLabel("t[s]");
+					}
+					vDiagram.getData().add(seriesArray[2]);
 				}
 			}
 			
@@ -111,7 +125,7 @@ public class DiagramsController {
 
 			@Override
 			public void handle(ActionEvent arg0) {
-				exporter = new Exporter(DiagramsController.this, points);
+				exporter = new Exporter(points);
 				exporter.exportData();
 			}
 			
@@ -129,13 +143,15 @@ public class DiagramsController {
 			}
 			System.out.println("Punkt: " + p.toString());
 		}
-		yAxis.setLabel("s[m]");
-		xAxis.setUpperBound(mainController.getMediaLength());
-		xAxis.setTickUnit(mainController.getSettings().getSchrittweite());
-		vDiagram.getData().add(series);
+		seriesArray[0] = series;
 	}
 	
 	public void show() {
+		makeDiagram();
+		testAcc();
+		xyDiagram();
+		txDiagram();
+		vDiagram.getData().add(seriesArray[0]);
 		if (settings.getDirection() == Settings.DIRECTION_Y) {
 			diagramBox.getItems().clear();
 			diagramBox.getItems().addAll("Zeit-Weg", "Zeit-Geschwindigkeit", "T-Y", "X-Y");
@@ -161,8 +177,7 @@ public class DiagramsController {
 			series.getData().add(new XYChart.Data(points.get(i).getTime() / 1000, velo.get(i)));
 			System.out.println("V: " + velo.get(i));
 		}
-		yAxis.setLabel("v[m/s]");
-		vDiagram.getData().add(series);
+		seriesArray[1] = series;
 	}
 	
 	@SuppressWarnings({ "rawtypes", "unchecked" })
@@ -171,9 +186,7 @@ public class DiagramsController {
 		for (Point p : points) {
 			series.getData().add(new XYChart.Data(p.getX(), p.getY()));
 		}
-		yAxis.setLabel("y[px]");
-		xAxis.setLabel("x[px]");
-		vDiagram.getData().add(series);
+		seriesArray[3] = series;
 	}
 	
 	private void txDiagram() {
@@ -182,17 +195,13 @@ public class DiagramsController {
 			for (Point p : points) {
 				series.getData().add(new XYChart.Data(p.getTime(), p.getY()));
 			}
-			yAxis.setLabel("y[px]");
-			xAxis.setLabel("t[s]");
-			vDiagram.getData().add(series);
+			seriesArray[2] = series;
 		} else {
 			XYChart.Series series = new XYChart.Series();
 			for (Point p : points) {
 				series.getData().add(new XYChart.Data(p.getTime(), p.getX()));
 			}
-			yAxis.setLabel("x[px]");
-			xAxis.setLabel("t[s]");
-			vDiagram.getData().add(series);
+			seriesArray[2] = series;
 		}
 	}
 	

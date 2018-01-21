@@ -1,6 +1,7 @@
 package properties;
 
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -28,8 +29,13 @@ public class PropertiesWriter {
 	private PropertiesReader propReader;
 	private Color pointColor;
 	private String lastPath;
+	private String userPath;
+	private String propertiesPath;
 	
 	public PropertiesWriter() {
+		userPath = System.getProperty("user.home");
+		propertiesPath = userPath + "/.nuton/Properties";
+		checkFiles();
 		propReader = new PropertiesReader();
 		reset();
 	}
@@ -37,7 +43,7 @@ public class PropertiesWriter {
 	public void reset() {
 		prop = new Properties();
 		try {
-			InputStream reader = new FileInputStream("Properties/user.properties");
+			InputStream reader = new FileInputStream(propertiesPath + "/user.properties");
 			try {
 				prop.load(reader);
 			} catch (IOException e) {
@@ -72,7 +78,7 @@ public class PropertiesWriter {
 			prop.setProperty("pointColor", pointColor.toString());
 			prop.setProperty("lastPath", lastPath);
 			try {
-				output = new FileOutputStream("Properties/user.properties");
+				output = new FileOutputStream(propertiesPath + "/user.properties");
 				prop.store(output, null);
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -82,9 +88,20 @@ public class PropertiesWriter {
 		//System.out.println("Neue Config Datei erstellt.");
 	}
 	
+	public void checkFiles() {
+		File file = new File(propertiesPath + "/user.properties");
+		
+		if (!file.exists()) {
+			makeNewFile();
+			System.out.println("Datei existiert jetzt");
+		}
+	}
+	
 	private void makeNewFile() {
-		String pfad = "user.properties";
-		java.nio.file.Path pfadDatei = Paths.get(pfad);
+		String pfad = propertiesPath;
+		File folder = new File(propertiesPath);
+		folder.mkdirs();
+		java.nio.file.Path pfadDatei = Paths.get(pfad + "/user.properties");
 		
 		try (BufferedWriter schreibPuffer = Files.newBufferedWriter(pfadDatei)) {
 			schreibPuffer.write("ffmpegPath=");
@@ -98,6 +115,8 @@ public class PropertiesWriter {
 			schreibPuffer.write("ffmpegSameOutputPath=");
 			schreibPuffer.newLine();
 			schreibPuffer.write("lastPath=");
+			schreibPuffer.newLine();
+			schreibPuffer.write("pointColor=#000000");
 			System.out.println("Neue Config Datei erstellt.");
 		} catch (IOException io) {
 			io.printStackTrace();

@@ -13,7 +13,6 @@ public class Exporter {
 	
 	private ArrayList<Point> points;
 	private ArrayList<Double> velo;
-	private DiagramsController diaController;
 	private String x = "x[px]";
 	private String y = "y[px]";
 	private String t = "t[s]";
@@ -22,10 +21,9 @@ public class Exporter {
 	private String ym = "y[m]";
 	private FileChooser fileChooser;
 
-	public Exporter(DiagramsController diaController, ArrayList<Point> points /*ArrayList<Double> velo*/) {
+	public Exporter(ArrayList<Point> points /*ArrayList<Double> velo*/) {
 		this.points = points;
 //		this.velo = velo;
-		this.diaController = diaController;
 	}
 	
 	public void exportData() {
@@ -35,7 +33,7 @@ public class Exporter {
 		FileChooser.ExtensionFilter exFilter = new FileChooser.ExtensionFilter("CSV Dateien (*.csv)", "*.csv");
 		fileChooser.getExtensionFilters().add(exFilter);
 		
-		String pfad = fileChooser.showSaveDialog(diaController.stage).getAbsolutePath();
+		String pfad = fileChooser.showSaveDialog(Main.getStage()).getAbsolutePath();
 		Path pfadDatei = Paths.get(pfad);
 
 		

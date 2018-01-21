@@ -3,6 +3,7 @@ package states;
 import java.util.ArrayList;
 
 import application.DiagramsController;
+import application.FertigDialogController;
 import application.MainController;
 import application.PixelManager;
 import application.Point;
@@ -31,6 +32,7 @@ public class TranslationState extends State {
 	private Button fertigBtn;
 	private boolean pointSelected = false;
 	private Point selectedPoint = null;
+	private ChangeListener<Number> sliderListener;
 	
 	public TranslationState(MainController mainController, PixelManager pManager) {
 		this.mainController = mainController;
@@ -55,17 +57,12 @@ public class TranslationState extends State {
 
 	@Override
 	public void onClick(MouseEvent e) {
+		updateSlider(mainController.getSlider());
 		if (pointSelected) {
 			toolBarEvents.MovePointEvents.dragPoint(mainController, e, selectedPoint);
 		} else {
 			mainController.getToolBarManager().pointButtonEvent(this, e);	
 		}
-//		for (Point p : points) {
-//			if (p.getTime() == slider.getValue()) {
-//				p.highlightPoint();
-//				mainController.redraw();
-//			}
-//		}	
 	}
 
 	@Override
@@ -81,6 +78,7 @@ public class TranslationState extends State {
 	}
 	
 	public void reset() {
+		pointSelected = false;
 		points.clear();
 		listX.getItems().clear();
 		listY.getItems().clear();
@@ -102,12 +100,13 @@ public class TranslationState extends State {
 				}
 			});
 		} else {		
+			diaController = new DiagramsController(mainController, pManager);
 			pManager.setPoints(points);
 			pManager.calcDistances();
 			pManager.calcMeter(points);
 			diaController.setPoints(points);
-			diaController.makeDiagram();
-			diaController.show();
+			FertigDialogController fController = new FertigDialogController(diaController, pManager, points);
+			fController.showDialog();
 		}
 	}
 
@@ -127,30 +126,32 @@ public class TranslationState extends State {
 	}
 	
 	private void checkSlider(Slider slider) {
-		slider.valueProperty().addListener(new ChangeListener<Number>() {
-
-			@Override
-			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-				selectedPoint = null;
-				if (points != null) {
-					for (Point p : points) {
-						if (p.getTime() == newValue.doubleValue()) {
-							selectedPoint = p;
-						} else {
-							p.highlightPoint(false);
-							pointSelected = false;
-						}
+		
+		sliderListener = (ObservableValue<? extends Number> observable, Number oldValue, Number newValue) -> {
+			selectedPoint = null;
+			if (points != null) {
+				for (Point p : points) {
+					if (p.getTime() == newValue.doubleValue()) {
+						selectedPoint = p;
+					} else {
+						p.highlightPoint(false);
+						pointSelected = false;
 					}
-					if (selectedPoint != null) {
-						selectedPoint.highlightPoint(true);
-						pointSelected = true;
-						mainController.getToolBarManager().setSelectedPoint(selectedPoint);
-					}
-					mainController.redraw();
-				}				
-			}
+				}
+				if (selectedPoint != null) {
+					selectedPoint.highlightPoint(true);
+					pointSelected = true;
+					mainController.getToolBarManager().setSelectedPoint(selectedPoint);
+				}
+				mainController.redraw();
+			}				
+		};
 			
-		});
+		slider.valueProperty().addListener(sliderListener);
+	}
+	
+	private void updateSlider(Slider slider) {
+		sliderListener.changed(slider.valueProperty(), slider.getValue(), slider.getValue());
 	}
 
 }

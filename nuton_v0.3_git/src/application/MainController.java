@@ -67,6 +67,7 @@ public class MainController implements Initializable{
 	
 	private double mediaLength = 0;
 	
+	private ProgramSettingsController pSettings;
 	private PixelManager pManager;
 	private MainEventHandler eventHandler;
 	private StateManager stateManager;
@@ -86,6 +87,7 @@ public class MainController implements Initializable{
 
 		gc = canvas.getGraphicsContext2D();
 		
+		pSettings = new ProgramSettingsController(this);
 		
 		openFileMenu.setOnAction(eventHandler.openFileDialog());
 		
@@ -109,8 +111,7 @@ public class MainController implements Initializable{
 
 			@Override
 			public void handle(ActionEvent event) {
-				@SuppressWarnings("unused")
-				ProgramSettingsController pSettings = new ProgramSettingsController();
+				pSettings.showDialog();
 			}
 			
 		});
@@ -119,7 +120,6 @@ public class MainController implements Initializable{
 
 			@Override
 			public void handle(ActionEvent arg0) {
-				//WaveGeneratorController wave = new WaveGeneratorController();
 				FileChooser chooser = new FileChooser();
 				File file = chooser.showOpenDialog(Main.getStage());
 				loadHandler.loadFile(file);
@@ -249,8 +249,13 @@ public class MainController implements Initializable{
 	
 	public void redraw() {
 		gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
-		for (Point p : stateManager.getCurrentState().getPoints()) {
-			p.drawPoint(gc);
+		if (stateManager.getCurrentState().getPoints() != null) {
+			for (Point p : stateManager.getCurrentState().getPoints()) {
+				if (p != null) {
+					p.updateColor();
+					p.drawPoint(gc);
+				}
+			}
 		}
 	}
 	

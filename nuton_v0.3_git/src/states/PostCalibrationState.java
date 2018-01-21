@@ -11,8 +11,10 @@ import javafx.beans.value.ObservableValue;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextInputDialog;
+import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
+import javafx.stage.Stage;
 import settings.Settings;
 
 public class PostCalibrationState extends State{
@@ -73,6 +75,8 @@ public class PostCalibrationState extends State{
 				gc.strokeLine(x1, y1, x2, y2);
 				
 				TextInputDialog dialog = new TextInputDialog("" + (int)mainController.getSettings().getEichung());
+				Stage stage = (Stage) dialog.getDialogPane().getScene().getWindow();
+				stage.getIcons().add(new Image(getClass().getResourceAsStream("/nutonLogo.png")));
 				dialog.setTitle("Bestätigen");
 				dialog.setHeaderText(null);
 				dialog.setContentText("Distanz für folgenen Wert speichern? (cm):");
@@ -152,7 +156,7 @@ public class PostCalibrationState extends State{
 
 	@Override
 	public ArrayList<Point> getPoints() {
-		return null;
+		return points;
 	}
 
 	@Override

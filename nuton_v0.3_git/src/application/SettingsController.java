@@ -55,7 +55,7 @@ public class SettingsController{
 			ThemeLoader themeLoader = new ThemeLoader();
 			scene.getStylesheets().add(themeLoader.getTheme());
 			Stage stage = (Stage) dialog.getDialogPane().getScene().getWindow();
-			stage.getIcons().add(new Image(getClass().getResourceAsStream("Nuton_logo.png")));
+			stage.getIcons().add(new Image(getClass().getResourceAsStream("/nutonLogo.png")));
 //			stage = new Stage();
 //			stage.setResizable(false);
 //			stage.setTitle("Einstellungen");

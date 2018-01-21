@@ -19,10 +19,9 @@ public class FfmpegHandler {
 	
 	public FfmpegHandler(String videoPath, String outputPath, String outputName) {
 		propReader = new PropertiesReader();
-		boolean isWindows = System.getProperty("os.name").toLowerCase().startsWith("windows");
 		outputName = genFileName(outputName);
 		String ffmpegPath = propReader.getFfmpegPath();
-		File logFolder = new File("ffmpeg_log");
+		File logFolder = new File(System.getProperty("user.home") + "/.nuton/ffmpeg_log");
 		if (!logFolder.exists()) {
 			createLogFolder();
 		}
@@ -34,39 +33,36 @@ public class FfmpegHandler {
 		
 		ffmpegPath = ffmpegPath.replaceAll("\\\\", "/");
 		System.out.println(">" + ffmpegPath + "<");
-		
-		if (isWindows) {
-			try {
-				File[] files = logFolder.listFiles();
-				for (int i = 0; i < files.length; i++) {
-					files[i].delete();
-				}
-				System.out.println("\"" + videoPath + "\"");
-	
-				ProcessBuilder pb = new ProcessBuilder("cmd", "/c", ffmpegPath + "/ffmpeg -i \"" + videoPath + "\" \"" + outputPath +"/" + outputName + "." + propReader.getPrefVideoFormat() + "\"");
-				pb.redirectErrorStream(true);
-				
-				Process process = pb.start();
-				InputStream inputStream = process.getInputStream();			
-				BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream), 1);
-				String line = null;
-				StringBuilder s = new StringBuilder();
-				while((line = bufferedReader.readLine()) != null) {		
-					s.append(line);
-					s.append(System.lineSeparator());
-				}
-				process.waitFor();
-				writeLogFile(s.toString());
-				outputFile = new File(outputPath + "/" + outputName + "." + propReader.getPrefVideoFormat());
-				
-				System.out.println("\"" + outputPath + "/" + outputName + "." + propReader.getPrefVideoFormat() + "\"");
-			} catch (IOException e) {
-				e.printStackTrace();
-				System.out.println("Fehler1");
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-				System.out.println("Fehler2");
+		try {
+			File[] files = logFolder.listFiles();
+			for (int i = 0; i < files.length; i++) {
+				files[i].delete();
 			}
+			System.out.println("\"" + videoPath + "\"");
+	
+			ProcessBuilder pb = new ProcessBuilder(ffmpegPath + "/ffmpeg", "-i", videoPath, outputPath +"/" + outputName + "." + propReader.getPrefVideoFormat());
+			pb.redirectErrorStream(true);
+				
+			Process process = pb.start();
+			InputStream inputStream = process.getInputStream();			
+			BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream), 1);
+			String line = null;
+			StringBuilder s = new StringBuilder();
+			while((line = bufferedReader.readLine()) != null) {		
+				s.append(line);
+				s.append(System.lineSeparator());
+			}
+			process.waitFor();
+			writeLogFile(s.toString());
+			outputFile = new File(outputPath + "/" + outputName + "." + propReader.getPrefVideoFormat());
+				
+			System.out.println("\"" + outputPath + "/" + outputName + "." + propReader.getPrefVideoFormat() + "\"");
+		} catch (IOException e) {
+			e.printStackTrace();
+			System.out.println("Fehler1");
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+			System.out.println("Fehler2");
 		}
 	}
 	
@@ -105,7 +101,7 @@ public class FfmpegHandler {
 	}
 	
 	private void createLogFolder() {
-		boolean success = (new File("ffmpeg_log")).mkdir();
+		boolean success = (new File(System.getProperty("user.home") + "/.nuton/ffmpeg_log")).mkdir();
 	    if (success) {
 	      System.out.println("Directory created!");
 	    }    
