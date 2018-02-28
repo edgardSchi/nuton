@@ -1,62 +1,51 @@
 package states;
 
-import java.util.ArrayList;
-
 import application.DiagramsController;
 import application.FertigDialogController;
 import application.MainController;
-import application.PixelManager;
 import application.Point;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ListView;
 import javafx.scene.control.Slider;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.input.MouseEvent;
-import javafx.util.Duration;
 
-public class TranslationState extends State {
+public abstract class PointState extends State{
+
+	protected GraphicsContext gc;
+	protected DiagramsController diaController;
+	protected Slider slider;
+	protected ListView<Integer> listX;
+	protected ListView<Integer> listY;
+	protected Button fertigBtn;
+	protected boolean pointSelected = false;
+	protected Point selectedPoint = null;
+	protected ChangeListener<Number> sliderListener;
 	
-	private MainController mainController;
-	private PixelManager pManager;
-	private GraphicsContext gc;
-	private DiagramsController diaController;
-	private ArrayList<Point> points;
-	private Slider slider;
-	private ListView<Integer> listX;
-	private ListView<Integer> listY;
-	private Button fertigBtn;
-	private boolean pointSelected = false;
-	private Point selectedPoint = null;
-	private ChangeListener<Number> sliderListener;
-	
-	public TranslationState(MainController mainController, PixelManager pManager) {
-		this.mainController = mainController;
-		this.pManager = pManager;
+	public PointState(MainController mainController) {
+		super(mainController);
 		this.gc = mainController.getGc();
-		diaController = new DiagramsController(mainController, pManager);
-		points = new ArrayList<Point>();
+		//diaController = new DiagramsController(mainController, pManager);
 		this.slider = mainController.getSlider();
 		this.listX = mainController.getListX();
 		this.listY = mainController.getListY();
 		this.fertigBtn = mainController.getFertigBtn();
-		fertigBtn.setDisable(false);
+		fertigBtn.setDisable(false);	
 	}
-
-	@Override
-	public void init() {
+	
+	public void defaultInit() {
 		mainController.getSlider().setSnapToTicks(true);
 		mainController.getSlider().setValue(0);
 		fertigBtn.setDisable(false);
 		checkSlider(mainController.getSlider());
 	}
-
-	@Override
-	public void onClick(MouseEvent e) {
+	
+	public void defaultOnClick(MouseEvent e) {
 		updateSlider(mainController.getSlider());
 		if (pointSelected) {
 			toolBarEvents.MovePointEvents.dragPoint(mainController, e, selectedPoint);
@@ -64,20 +53,8 @@ public class TranslationState extends State {
 			mainController.getToolBarManager().pointButtonEvent(this, e);	
 		}
 	}
-
-	@Override
-	public void keyPressed(int k) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void keyReleased(int k) {
-		// TODO Auto-generated method stub
-		
-	}
 	
-	public void reset() {
+	public void defaultReset() {
 		pointSelected = false;
 		points.clear();
 		listX.getItems().clear();
@@ -89,41 +66,28 @@ public class TranslationState extends State {
 		pManager.reset();
 	}
 	
-	@Override
-	public void fertigBtnClick() {
-		if (points.size() < 2) {
-			Alert alert = new Alert(AlertType.ERROR);
-			alert.setHeaderText("Bitte wählen Sie mindestens zwei Punke aus.");
-			alert.showAndWait().ifPresent(rs -> {
-				if (rs == ButtonType.OK) {
-					alert.close();
-				}
-			});
-		} else {		
-			diaController = new DiagramsController(mainController, pManager);
-			pManager.setPoints(points);
-			pManager.calcDistances();
-			pManager.calcMeter(points);
-			diaController.setPoints(points);
-			FertigDialogController fController = new FertigDialogController(diaController, pManager, points);
-			fController.showDialog();
-		}
-	}
-
-	@Override
-	public ArrayList<Point> getPoints() {
-		return points;
-	}
+//	public void defaultFertigBtnClick() {
+//		if (points.size() < 2) {
+//			Alert alert = new Alert(AlertType.ERROR);
+//			alert.setHeaderText("Bitte wählen Sie mindestens zwei Punke aus.");
+//			alert.showAndWait().ifPresent(rs -> {
+//				if (rs == ButtonType.OK) {
+//					alert.close();
+//				}
+//			});
+//		} else {		
+//			diaController = new DiagramsController(mainController, pManager);
+//			pManager.setPoints(points);
+//			pManager.calcDistances();
+//			pManager.calcMeter(points);
+//			diaController.setPoints(points);
+//			//pManager.createVectors(points);
+//			//pManager.calcDeltaPhi();
+//			FertigDialogController fController = new FertigDialogController(diaController, pManager, points);
+//			fController.showDialog();
+//		}
+//	}
 	
-	public MainController getMainController() {
-		return mainController;
-	}
-
-	@Override
-	public ArrayList<Point> setPoints(ArrayList<Point> points) {
-		// TODO Auto-generated method stub
-		return null;
-	}
 	
 	private void checkSlider(Slider slider) {
 		
@@ -153,5 +117,7 @@ public class TranslationState extends State {
 	private void updateSlider(Slider slider) {
 		sliderListener.changed(slider.valueProperty(), slider.getValue(), slider.getValue());
 	}
+
+	
 
 }

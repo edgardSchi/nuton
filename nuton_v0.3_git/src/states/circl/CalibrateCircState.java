@@ -1,10 +1,8 @@
-package states;
+package states.circl;
 
-import java.util.ArrayList;
 import java.util.Optional;
 
 import application.MainController;
-import application.PixelManager;
 import application.Point;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -15,25 +13,24 @@ import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import states.State;
+import states.StateManager;
 
-public class CalibrateState extends State { 
+public class CalibrateCircState extends State{
 
-	private MainController mainController;
-	private PixelManager pManager;
 	private GraphicsContext gc;
 	private int clickCounter = 0;
 	private double x1;
 	private double x2;
 	private double y1;
 	private double y2;
+	private Point origin;
 	
-	public CalibrateState(MainController mainController, PixelManager pManager) {
-		this.mainController = mainController;
-		this.pManager = pManager;
-		this.gc = mainController.getGc();
-		mainController.getFertigBtn().setDisable(true);
+	public CalibrateCircState(MainController mainController) {
+		super(mainController);
+		gc = mainController.getGc();
 	}
-	
+
 	@Override
 	public void init() {
 		mainController.getSlider().setSnapToTicks(false);
@@ -43,9 +40,8 @@ public class CalibrateState extends State {
 	@Override
 	public void onClick(MouseEvent e) {
 		if (e.getEventType() == MouseEvent.MOUSE_CLICKED) {
-			System.out.println("CALIBRATE STATE");
 			gc.setFill(Color.rgb(255, 119, 0, 0.80));
-			gc.fillRect(e.getX() - 10, e.getY() - 10, 20, 20);
+			gc.fillRect(e.getX() - 5, e.getY() - 5, 10, 10);
 			
 			if (clickCounter == 0) {
 				x1 = e.getX();
@@ -57,11 +53,6 @@ public class CalibrateState extends State {
 				y2 = e.getY();
 			}
 			
-			System.out.println("X1: " + x1);
-			System.out.println("Y1: " + y1);
-			System.out.println("X2: " + x2);
-			System.out.println("Y2: " + y2);
-			
 			clickCounter++;
 			
 			if (clickCounter == 2) {
@@ -71,7 +62,7 @@ public class CalibrateState extends State {
 				TextInputDialog dialog = new TextInputDialog("" + (int)mainController.getSettings().getEichung());
 				dialog.setTitle("Bestätigen");
 				dialog.setHeaderText(null);
-				dialog.setContentText("Distanz für folgenen Wert speichern? (cm):");
+				dialog.setContentText("Mittelpunkt und Radius mit folgendem Wert speichern?:");
 				Stage stage = (Stage) dialog.getDialogPane().getScene().getWindow();
 				stage.getIcons().add(new Image(this.getClass().getResourceAsStream("/nutonLogo.png")));
 				
@@ -106,13 +97,15 @@ public class CalibrateState extends State {
 				
 				Optional<String> result = dialog.showAndWait();
 				if (result.isPresent()){
+					origin = new Point((int)x1, (int)y1, 0);
 					pManager.setLaengePixel(pManager.getDistance(x1, y1, x2, y2));		
 				
 					mainController.getSettings().setEichung(Double.parseDouble(result.get()));
 					pManager.setEichung(Double.parseDouble(result.get()));
+					pManager.setOrigin(origin);
 					gc.clearRect(0, 0, mainController.getCanvas().getWidth(), mainController.getCanvas().getWidth());
 					clickCounter = 0;
-					mainController.getStateManager().setState(StateManager.TRANSLATION);
+					mainController.getStateManager().setState(StateManager.CIRCULAR);
 					mainController.getSlider().setSnapToTicks(true);
 				} else {
 					gc.clearRect(0, 0,mainController.getCanvas().getWidth(), mainController.getCanvas().getWidth());
@@ -124,7 +117,6 @@ public class CalibrateState extends State {
 				}
 			}
 		}
-		
 	}
 
 	@Override
@@ -143,18 +135,7 @@ public class CalibrateState extends State {
 	public void fertigBtnClick() {
 		// TODO Auto-generated method stub
 		
-	}
-
-	@Override
-	public ArrayList<Point> getPoints() {
-		return null;
-	}
-
-	@Override
-	public MainController getMainController() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	}	
 
 	@Override
 	public void reset() {
@@ -163,10 +144,9 @@ public class CalibrateState extends State {
 	}
 
 	@Override
-	public ArrayList<Point> setPoints(ArrayList<Point> points) {
+	public void redraw() {
 		// TODO Auto-generated method stub
-		return null;
+		
 	}
 
-	
 }

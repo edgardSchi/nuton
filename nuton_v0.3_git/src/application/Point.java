@@ -94,6 +94,10 @@ public class Point {
 		this.y = y;
 	}
 	
+	public void setTime(double time) {
+		this.time = time;
+	}
+	
 	public void updateColor() {
 		propReader.update();
 		normalColor = propReader.getPointColor();

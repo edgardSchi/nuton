@@ -3,6 +3,7 @@ package application;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import io.Exporter;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -12,12 +13,14 @@ import javafx.scene.Scene;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
+import javafx.scene.chart.XYChart.Series;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import math.Vector2;
 import settings.Settings;
 
 public class DiagramsController {
@@ -34,18 +37,27 @@ public class DiagramsController {
 	private Exporter exporter;
 	@FXML private Button exportButton;
 	
+	private ArrayList<Vector2> deltaPhi;
+	//private ArrayList<Double> angleVelo;
+	
 	private NumberAxis xAxis;
 	private NumberAxis yAxis;
 	private Settings settings;
 	
 	private XYChart.Series<NumberAxis, NumberAxis>[] seriesArray;
+	
+	private int stateID;
+	
+	public static final int TRANSLATION = 0;
+	public static final int CIRCULAR = 1;
 
 	@SuppressWarnings({ "unchecked", "static-access" })
-	public DiagramsController(MainController mainController, PixelManager pManager) {
+	public DiagramsController(MainController mainController, PixelManager pManager, int stateID) {
 		try {
 			this.mainController = mainController;
 			this.pManager = pManager;
-			seriesArray = new XYChart.Series[4];
+			this.stateID = stateID;
+			seriesArray = new XYChart.Series[8];
 			settings = mainController.getSettings();
 			FXMLLoader loader;
 			loader = new FXMLLoader(getClass().getResource("Diagrams.fxml"));
@@ -81,40 +93,73 @@ public class DiagramsController {
 
 		anchorPane.getChildren().add(vDiagram);
 		
-		diagramBox.getItems().addAll("Zeit-Weg", "Zeit-Geschwindigkeit", "T-X", "X-Y");
+		if (stateID == 0) {
+			diagramBox.getItems().addAll("Zeit-Weg", "Zeit-Geschwindigkeit", "T-X", "X-Y");
+		} else if (stateID == 1) {
+			diagramBox.getItems().addAll("Zeit-Winkel", "Zeit-Winkelgeschwindigkeit", "Zeit-Bahngeschwindigkeit", "Zeit-Frequenz", "X-Y");
+		}
+		
 		
 		
 		diagramBox.setOnAction(new EventHandler<ActionEvent>() {
 
 			@Override
 			public void handle(ActionEvent arg0) {
-				
-				if (diagramBox.getSelectionModel().getSelectedItem() == "Zeit-Weg") {		
-					vDiagram.getData().clear();
-					yAxis.setLabel("s[m]");
-					xAxis.setUpperBound(mainController.getMediaLength());
-					xAxis.setTickUnit(mainController.getSettings().getSchrittweite());
-					vDiagram.getData().add(seriesArray[0]);
-				} else if (diagramBox.getSelectionModel().getSelectedItem() == "Zeit-Geschwindigkeit") {
-					vDiagram.getData().clear();
-					yAxis.setLabel("v[m/s]");
-					vDiagram.getData().add(seriesArray[1]);
-				} else if (diagramBox.getSelectionModel().getSelectedItem() == "X-Y") {
-					vDiagram.getData().clear();
-					yAxis.setLabel("y[px]");
-					xAxis.setLabel("x[px]");
-					vDiagram.getData().add(seriesArray[3]);
-				} else if (diagramBox.getSelectionModel().getSelectedItem() == "T-X" || diagramBox.getSelectionModel().getSelectedItem() == "T-Y") {
-					vDiagram.getData().clear();
-					if (settings.getDirection() == Settings.DIRECTION_Y) {
+				if (stateID == 0) {
+					if (diagramBox.getSelectionModel().getSelectedItem() == "Zeit-Weg") {		
+						vDiagram.getData().clear();
+						yAxis.setLabel("s[m]");
+						xAxis.setUpperBound(mainController.getMediaLength());
+						xAxis.setTickUnit(mainController.getSettings().getSchrittweite());
+						vDiagram.getData().add(seriesArray[0]);
+					} else if (diagramBox.getSelectionModel().getSelectedItem() == "Zeit-Geschwindigkeit") {
+						vDiagram.getData().clear();
+						yAxis.setLabel("v[m/s]");
+						vDiagram.getData().add(seriesArray[1]);
+					} else if (diagramBox.getSelectionModel().getSelectedItem() == "X-Y") {
+						vDiagram.getData().clear();
 						yAxis.setLabel("y[px]");
-						xAxis.setLabel("t[s]");
-					} else {
-						yAxis.setLabel("x[px]");
-						xAxis.setLabel("t[s]");
+						xAxis.setLabel("x[px]");
+						vDiagram.getData().add(seriesArray[3]);
+					} else if (diagramBox.getSelectionModel().getSelectedItem() == "T-X" || diagramBox.getSelectionModel().getSelectedItem() == "T-Y") {
+						vDiagram.getData().clear();
+						if (settings.getDirection() == Settings.DIRECTION_Y) {
+							yAxis.setLabel("y[px]");
+							xAxis.setLabel("t[s]");
+						} else {
+							yAxis.setLabel("x[px]");
+							xAxis.setLabel("t[s]");
+						}
+						vDiagram.getData().add(seriesArray[2]);
 					}
-					vDiagram.getData().add(seriesArray[2]);
+				} else if(stateID == 1) {
+					if (diagramBox.getSelectionModel().getSelectedItem() == "Zeit-Winkel") {
+						vDiagram.getData().clear();
+						yAxis.setLabel("Winkel" + "[°]");
+						xAxis.setUpperBound(mainController.getMediaLength());
+						xAxis.setTickUnit(mainController.getSettings().getSchrittweite());
+						vDiagram.getData().add(seriesArray[4]);
+					} else if (diagramBox.getSelectionModel().getSelectedItem() == "Zeit-Winkelgeschwindigkeit") {
+						vDiagram.getData().clear();
+						yAxis.setLabel("Winkelgeschwindigkeit" + "[1/s]");
+						xAxis.setUpperBound(mainController.getMediaLength());
+						xAxis.setTickUnit(mainController.getSettings().getSchrittweite());
+						vDiagram.getData().add(seriesArray[5]);
+					} else if (diagramBox.getSelectionModel().getSelectedItem() == "Zeit-Bahngeschwindigkeit") {
+						vDiagram.getData().clear();
+						yAxis.setLabel("Bahngeschwindigkeit" + "[m/s]");
+						xAxis.setUpperBound(mainController.getMediaLength());
+						xAxis.setTickUnit(mainController.getSettings().getSchrittweite());
+						vDiagram.getData().add(seriesArray[6]);
+					} else if (diagramBox.getSelectionModel().getSelectedItem() == "Zeit-Frequenz") {
+						vDiagram.getData().clear();
+						yAxis.setLabel("f" + "[Hz]");
+						xAxis.setUpperBound(mainController.getMediaLength());
+						xAxis.setTickUnit(mainController.getSettings().getSchrittweite());
+						vDiagram.getData().add(seriesArray[7]);
+					}
 				}
+
 			}
 			
 		});
@@ -125,7 +170,7 @@ public class DiagramsController {
 
 			@Override
 			public void handle(ActionEvent arg0) {
-				exporter = new Exporter(points);
+				exporter = new Exporter(points, pManager);
 				exporter.exportData();
 			}
 			
@@ -147,19 +192,33 @@ public class DiagramsController {
 	}
 	
 	public void show() {
-		makeDiagram();
-		testAcc();
-		xyDiagram();
 		txDiagram();
-		vDiagram.getData().add(seriesArray[0]);
-		if (settings.getDirection() == Settings.DIRECTION_Y) {
+		if (settings.getDirection() == Settings.DIRECTION_Y && stateID == 0) {
+			makeDiagram();
+			testAcc();
+			xyDiagram();
+			vDiagram.getData().add(seriesArray[0]);
 			diagramBox.getItems().clear();
 			diagramBox.getItems().addAll("Zeit-Weg", "Zeit-Geschwindigkeit", "T-Y", "X-Y");
-		} else {
+			diagramBox.setValue("Zeit-Weg");
+		} else if (stateID == 0){
+			makeDiagram();
+			testAcc();
+			xyDiagram();
+			vDiagram.getData().add(seriesArray[0]);
 			diagramBox.getItems().clear();
 			diagramBox.getItems().addAll("Zeit-Weg", "Zeit-Geschwindigkeit", "T-X", "X-Y");
+			diagramBox.setValue("Zeit-Weg");
+		} else if (stateID == 1) {
+			angleDiagram();
+			angleVeloDiagram();
+			circVeloDiagram();
+			circFreqDiagram();
+			vDiagram.getData().add(seriesArray[4]);
+			diagramBox.getItems().clear();
+			diagramBox.getItems().addAll("Zeit-Winkel", "Zeit-Winkelgeschwindigkeit", "Zeit-Bahngeschwindigkeit", "Zeit-Frequenz", "X-Y");
+			diagramBox.setValue("Zeit-Winkel");
 		}
-		diagramBox.setValue("Zeit-Weg");
 		stage.show();
 	}
 	
@@ -203,6 +262,42 @@ public class DiagramsController {
 			}
 			seriesArray[2] = series;
 		}
+	}
+	
+	private void angleDiagram() {
+		Series<NumberAxis, NumberAxis> series = new XYChart.Series<>();
+		this.deltaPhi = pManager.getDeltaPhi();
+		for(Vector2 v : deltaPhi) {
+			series.getData().add(new XYChart.Data(v.getY(), v.getX()));
+		}
+		seriesArray[4] = series;
+	}
+	
+	private void angleVeloDiagram() {
+		Series<NumberAxis, NumberAxis> series = new XYChart.Series<>();
+		ArrayList<Vector2> velo = pManager.getAngleVelo();
+		for(int i = 0; i < velo.size(); i++) {
+			series.getData().add(new XYChart.Data(velo.get(i).getY(), velo.get(i).getX()));
+		}
+		seriesArray[5] = series;
+	}
+	
+	private void circVeloDiagram() {
+		Series<NumberAxis, NumberAxis> series = new XYChart.Series<>();
+		ArrayList<Vector2> velo = pManager.getCircVelo();
+		for(int i = 0; i < velo.size(); i++) {
+			series.getData().add(new XYChart.Data(velo.get(i).getY(), velo.get(i).getX()));
+		}
+		seriesArray[6] = series;
+	}
+	
+	private void circFreqDiagram() {
+		Series<NumberAxis, NumberAxis> series = new XYChart.Series<>();
+		ArrayList<Vector2> freq = pManager.getCircFreq();
+		for(int i = 0; i < freq.size(); i++) {
+			series.getData().add(new XYChart.Data(freq.get(i).getY(), freq.get(i).getX()));
+		}
+		seriesArray[7] = series;
 	}
 	
 	public void reset() {

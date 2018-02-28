@@ -14,7 +14,6 @@ public abstract class ToolBarToggleButton extends ToolBarItem {
 		button = createToggleButton();
 		button.selectedProperty().addListener((p, ov, nv) -> {
 	       if (button.isSelected()) {
-	    	   System.out.println("Fire");
 	       }
 	    });
 	}

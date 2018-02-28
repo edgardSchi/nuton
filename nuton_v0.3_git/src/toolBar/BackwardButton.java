@@ -9,7 +9,7 @@ public class BackwardButton extends ToolBarButton {
 		this.tbm = tbm;
 		setIcon(new Image(getClass().getResourceAsStream("/backwardIcon.png")));
 		//points = controller.getPoints();
-		button.setTooltip(new Tooltip("Zurück"));
+		button.setTooltip(new Tooltip("Eine Schrittweite zurück"));
 	}
 	
 	@Override

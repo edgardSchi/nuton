@@ -58,8 +58,12 @@ public class ToolBarManager {
 	private void loadSecondSegment() {
 		ToolBarItem bButton = new BackwardButton(this);
 		ToolBarItem fButton = new ForwardButton(mainEventHandler);
+		ToolBarItem firstPointButton = new FirstPointButton(this);
+		ToolBarItem lastPointButton = new LastPointButton(this);
+		addItem(firstPointButton);
 		addItem(bButton);
 		addItem(fButton);
+		addItem(lastPointButton);
 		addSeparator();
 	}
 	

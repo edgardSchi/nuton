@@ -5,6 +5,11 @@ import java.util.ArrayList;
 import application.MainController;
 import application.Point;
 import javafx.scene.input.MouseEvent;
+import states.circl.CalibrateCircState;
+import states.circl.CircState;
+import states.translation.CalibrateState;
+import states.translation.PostCalibrationState;
+import states.translation.TranslationState;
 
 public class StateManager {
 
@@ -13,22 +18,28 @@ public class StateManager {
 	private MainController mainController;
 	
 	public static final int DEFAULT = 0;
-	public static final int CALIBRATION = 1;
+	public static final int TRANSLATION_CALIBRATION = 1;
 	public static final int TRANSLATION = 2;
-	public static final int POSTCALIBRATION = 3;
+	public static final int TRANSLATION_POSTCALIBRATION = 3;
+	public static final int CIRCULAR_CALIBRATION = 4;
+	public static final int CIRCULAR = 5;
+	public static final int CIRCULAR_POSTCALIBRATION = 6;
 	
 	public StateManager(MainController mainController) {
 		this.mainController = mainController;
 		currentState = 0;
 		states = new ArrayList<State>();
 		initStates();
+		states.get(0).init();
 	}
 	
 	private void initStates() {
 		states.add(new DefaultState(mainController));
-		states.add(new CalibrateState(mainController, mainController.getPManager()));
-		states.add(new TranslationState(mainController, mainController.getPManager()));
-		states.add(new PostCalibrationState(mainController, mainController.getPManager()));
+		states.add(new CalibrateState(mainController));
+		states.add(new TranslationState(mainController));
+		states.add(new PostCalibrationState(mainController));
+		states.add(new CalibrateCircState(mainController));
+		states.add(new CircState(mainController));
 	}
 	
 	public void init() {
@@ -47,6 +58,10 @@ public class StateManager {
 		states.get(currentState).keyReleased(k);
 	}
 	
+	public void redraw() {
+		states.get(currentState).redraw();
+	}
+	
 	public State getCurrentState() {
 		return states.get(currentState);
 	}
@@ -58,6 +73,7 @@ public class StateManager {
 	public void setState(int state) {
 		states.get(state).init();
 		currentState = state;
+		System.out.println("Neuer State: " + currentState);
 	}
 	
 	public void fertigBtnClick() {

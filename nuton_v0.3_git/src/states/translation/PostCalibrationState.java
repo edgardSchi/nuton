@@ -1,11 +1,8 @@
-package states;
+package states.translation;
 
-import java.util.ArrayList;
 import java.util.Optional;
 
 import application.MainController;
-import application.PixelManager;
-import application.Point;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.canvas.GraphicsContext;
@@ -15,16 +12,13 @@ import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-import settings.Settings;
+import states.State;
+import states.StateManager;
 
 public class PostCalibrationState extends State{
 	
-	private MainController mainController;
-	private ArrayList<Point> points;
-	private Settings settings;
 	private double sliderPos = 0;
 	
-	private PixelManager pManager;
 	private GraphicsContext gc;
 	private int clickCounter = 0;
 	private double x1;
@@ -32,12 +26,9 @@ public class PostCalibrationState extends State{
 	private double y1;
 	private double y2;
 	
-	public PostCalibrationState(MainController mainController, PixelManager pManager) {
-		this.mainController = mainController;
-		points = new ArrayList<Point>();
-		this.pManager = pManager;
+	public PostCalibrationState(MainController mainController) {
+		super(mainController);
 		this.gc = mainController.getGc();
-		settings = mainController.getSettings();
 	}
 	
 	@Override
@@ -155,25 +146,16 @@ public class PostCalibrationState extends State{
 	}
 
 	@Override
-	public ArrayList<Point> getPoints() {
-		return points;
-	}
-
-	@Override
-	public MainController getMainController() {
-		return null;
-	}
-
-	@Override
 	public void reset() {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public ArrayList<Point> setPoints(ArrayList<Point> points) {
+	public void redraw() {
 		// TODO Auto-generated method stub
-		return null;
+		
 	}
+
 
 }

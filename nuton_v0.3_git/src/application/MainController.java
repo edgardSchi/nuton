@@ -4,6 +4,9 @@ import java.io.File;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import com.sun.javafx.scene.web.Debugger;
+
+import application.settingsPane.SettingsController;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
@@ -26,10 +29,12 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.StackPane;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
 import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 import savingFile.LoadHandler;
 import savingFile.SaveHandler;
@@ -61,8 +66,10 @@ public class MainController implements Initializable{
 	@FXML private ListView<Integer> listX;
 	@FXML private ListView<Integer> listY;
 	@FXML private ToolBar toolBar;
+	@FXML private StackPane stackPane;
 	private GraphicsContext gc;
 	private ToolBarManager tbm;
+	private Stage mainStage;
 	//private ArrayList<Point> points;
 	
 	private double mediaLength = 0;
@@ -131,7 +138,7 @@ public class MainController implements Initializable{
 
 			@Override
 			public void handle(ActionEvent arg0) {
-				if (player.getMedia() != null) {
+				if (player != null && player.getMedia() != null) {
 					saveHandler.write();
 				} else {
 					Alert alert = new Alert(AlertType.ERROR);
@@ -169,8 +176,6 @@ public class MainController implements Initializable{
 			}
 			
 		});
-		
-		mv.setPreserveRatio(false);
 
 		
 		if (getPlayer() != null) {
@@ -245,18 +250,64 @@ public class MainController implements Initializable{
 
 		});
 		
+		listX.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
+
+			@Override
+			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+				if (newValue.intValue() != -1) {
+					double t = stateManager.getPoints().get(newValue.intValue()).getTime();
+					slider.setValue(t);
+				}
+			}
+		});
+		
+		listY.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
+
+			@Override
+			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+				if (newValue.intValue() != -1) {
+					double t = stateManager.getPoints().get(newValue.intValue()).getTime();
+					slider.setValue(t);
+				}
+			}
+		});
+		
+		canvas.widthProperty().addListener(new ChangeListener<Number>() {
+
+			@Override
+			public void changed(ObservableValue<? extends Number> arg0, Number arg1, Number arg2) {
+				if (arg2.intValue()/arg1.intValue() > 1) {
+					System.out.println("Ratio > 1");
+				}
+				double newX = 0;
+				if (stateManager.getCurrentState().getPoints() != null) {
+					for (Point p : stateManager.getCurrentState().getPoints()) {
+						newX = (p.getX() / arg1.doubleValue()) * arg2.doubleValue();
+						p.setX((int)newX);
+//						if (p.getX() != (int)newX) {
+//							System.out.println("X hat sich geändert!");
+//						}
+						
+					}
+					redraw();
+				}
+				
+			}
+		});
+		
 	}
 	
 	public void redraw() {
-		gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
-		if (stateManager.getCurrentState().getPoints() != null) {
-			for (Point p : stateManager.getCurrentState().getPoints()) {
-				if (p != null) {
-					p.updateColor();
-					p.drawPoint(gc);
-				}
-			}
-		}
+//		gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
+//		if (stateManager.getCurrentState().getPoints() != null) {
+//			for (Point p : stateManager.getCurrentState().getPoints()) {
+//				if (p != null) {
+//					p.updateColor();
+//					p.drawPoint(gc);
+//				}
+//			}
+//		}
+		stateManager.redraw();
 	}
 	
 	public void updateLists() {
@@ -300,7 +351,17 @@ public class MainController implements Initializable{
 		saveIconView.setFitHeight(15);
 		saveFileMenu.setGraphic(saveIconView);
 	}
-
+	
+	public void setMainStage(Stage stage) {
+		
+//		
+//		stage.getScene().widthProperty().addListener(new ChangeListener<Number>() {
+//			@Override public void changed(ObservableValue<? extends Number> observableValue, Number oldSceneWidth, Number newSceneWidth) {
+//				System.out.println("Width: " + newSceneWidth);
+//			}
+//		});
+	}
+	
 	public Media getMedia() {
 		return media;
 	}
@@ -446,5 +507,9 @@ public class MainController implements Initializable{
 	
 	public MainEventHandler getMainEventHandler() {
 		return eventHandler;
+	}
+	
+	public StackPane getStackPane() {
+		return stackPane;
 	}
 }

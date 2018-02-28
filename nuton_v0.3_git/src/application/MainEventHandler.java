@@ -7,15 +7,20 @@ import java.util.ArrayList;
 import ffmpeg.FfmpegHandler;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
+import javafx.beans.binding.ObjectBinding;
 import javafx.beans.property.DoubleProperty;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Bounds;
+import javafx.geometry.Orientation;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.ScrollBar;
 import javafx.scene.image.Image;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
@@ -45,22 +50,40 @@ public class MainEventHandler {
 				@Override
 				public void run() {
 					//slider.setMin(0);
+					mainController.getMv().setPreserveRatio(true);
 					DoubleProperty mvw = mainController.getMv().fitWidthProperty();
 					DoubleProperty mvh = mainController.getMv().fitHeightProperty();
+					DoubleProperty canvasX = mainController.getCanvas().layoutXProperty();
 					DoubleProperty canvasW = mainController.getCanvas().widthProperty();
 					DoubleProperty canvasH = mainController.getCanvas().heightProperty();
 					
 					mvw.bind(Bindings.selectDouble(mainController.getMv().parentProperty(), "width"));
 					mvh.bind(Bindings.selectDouble(mainController.getMv().parentProperty(), "height"));
-					canvasW.bind(Bindings.selectDouble(mainController.getMv().parentProperty(), "width"));
-					canvasH.bind(Bindings.selectDouble(mainController.getMv().parentProperty(), "height"));
+					canvasW.bind(Bindings.selectDouble(mainController.getMv().boundsInParentProperty(), "width"));
+					canvasH.bind(Bindings.selectDouble(mainController.getMv().boundsInParentProperty(), "height"));
+					
+					
+					//Synchronisiert die Scrolls der ListViews. Kann erst gemacht werden, wenn die ListViews gerendert sind
+					Node n = mainController.getListX().lookup(".scroll-bar");
+			        if (n instanceof ScrollBar) {
+			            final ScrollBar bar = (ScrollBar) n;
+			            if (bar.getOrientation().equals(Orientation.VERTICAL)) {
+			                Node ny = mainController.getListY().lookup(".scroll-bar");
+			                final ScrollBar bary = (ScrollBar) ny;
+			                bar.valueProperty().bindBidirectional(bary.valueProperty());
+			            }
+			        }
+					
+					System.out.println("MEDIA READY");
 					
 					mainController.getSlider().setMinorTickCount(0);
 					mainController.getSlider().setMajorTickUnit(1000);
 					mainController.getSlider().setMax(mainController.getPlayer().getTotalDuration().toMillis());
 					mainController.setMediaLength(mainController.getPlayer().getTotalDuration().toMillis());
+					
 				
-					System.out.println("Running");
+				
+					System.out.println("X:" + mainController.getMv().getLayoutX());
 				}
 				
 			});
@@ -71,6 +94,8 @@ public class MainEventHandler {
 			mainController.reset();		
 			mainController.getStartBtn().setDisable(false);
 			//mainController.getSettingsController().showDialog();
+		} else {
+			System.out.println("MEDIA NULL");
 		}
 
 	}

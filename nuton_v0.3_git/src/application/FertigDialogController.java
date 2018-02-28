@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Optional;
 
+import io.Exporter;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -27,15 +28,16 @@ public class FertigDialogController {
 	private Dialog<ButtonType> dialog;
 	private ButtonType btnType;
 	private DiagramsController diaController;
-	private PixelManager pixelManager;
 	private ArrayList<Point> points;
 	private Exporter exporter;
+	private PixelManager pManager;
+	
 
 	public FertigDialogController(DiagramsController diaController, PixelManager pixelManager, ArrayList<Point> points) {
 		try {
 			this.diaController = diaController;
-			this.pixelManager = pixelManager;
 			this.points = points;
+			this.pManager = pixelManager;
 			dialog = new Dialog<ButtonType>();
 			dialog.setTitle("Optionen für Daten");
 			FXMLLoader loader;
@@ -71,7 +73,7 @@ public class FertigDialogController {
 		exportButton.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
-				exporter = new Exporter(points);
+				exporter = new Exporter(points, pManager);
 				exporter.exportData();
 			}
 			

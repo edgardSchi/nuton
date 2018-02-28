@@ -40,6 +40,7 @@ public class FfmpegHandler {
 			}
 			System.out.println("\"" + videoPath + "\"");
 	
+			/* !!! "-s" entfernen !!! */
 			ProcessBuilder pb = new ProcessBuilder(ffmpegPath + "/ffmpeg", "-i", videoPath, outputPath +"/" + outputName + "." + propReader.getPrefVideoFormat());
 			pb.redirectErrorStream(true);
 				

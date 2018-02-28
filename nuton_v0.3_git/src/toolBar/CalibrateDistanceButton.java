@@ -16,7 +16,7 @@ public class CalibrateDistanceButton extends ToolBarButton{
 	@Override
 	public void onClick() {
 		if (tbm.getMainController().getStateManager().getCurrentStateID() == StateManager.TRANSLATION) {
-			tbm.getMainController().getStateManager().setState(StateManager.POSTCALIBRATION);
+			tbm.getMainController().getStateManager().setState(StateManager.TRANSLATION_POSTCALIBRATION);
 		}
 	}
 

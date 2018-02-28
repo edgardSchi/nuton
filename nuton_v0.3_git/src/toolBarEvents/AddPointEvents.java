@@ -30,6 +30,7 @@ public class AddPointEvents {
 	private static double x2 = 0;
 	private static double y2 = 0;
 	private static boolean leftClicked = false;
+	
 	public static void addRectangle(State state, MouseEvent e) {
 		GraphicsContext gc = state.getMainController().getGc();
 		gc.setStroke(Color.RED);
