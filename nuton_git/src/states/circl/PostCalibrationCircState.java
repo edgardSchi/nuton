@@ -1,3 +1,20 @@
+/*******************************************************************************
+ * Nuton
+ * Copyright (C) 2018 Edgard Schiebelbein
+ * 
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ ******************************************************************************/
 package states.circl;
 
 import java.util.Optional;
@@ -27,12 +44,14 @@ public class PostCalibrationCircState extends CalibrateState{
 	public PostCalibrationCircState(MainController mainController) {
 		super(mainController);
 		this.gc = mainController.getGc();
+		setPointAmount(3);
 	}
 	
 
 
 	@Override
 	public void init() {
+		mainController.setHelpLabel("Distanz kalibieren");
 		mainController.getFertigBtn().setDisable(true);
 		points = mainController.getStateManager().getPoints();
 		sliderPos = mainController.getSlider().getValue();
@@ -49,13 +68,15 @@ public class PostCalibrationCircState extends CalibrateState{
 			if (clickCounter == 2) {
 				gc.setStroke(Color.RED);
 				gc.strokeLine(calibratePoints[0].getX(), calibratePoints[0].getY(), calibratePoints[1].getX(), calibratePoints[1].getY());	
-				
+			}
+			
+			if(clickCounter == 3) {
 				TextInputDialog dialog = new TextInputDialog("" + (int)mainController.getSettings().getEichung());
 				Stage stage = (Stage) dialog.getDialogPane().getScene().getWindow();
 				stage.getIcons().add(new Image(getClass().getResourceAsStream("/nutonLogo.png")));
-				dialog.setTitle("Best�tigen");
+				dialog.setTitle("Bestätigen");
 				dialog.setHeaderText(null);
-				dialog.setContentText("Mittelpunkt und Radius mit folgendem Wert speichern?:");
+				dialog.setContentText("Mittelpunkt und Distanz mit folgendem Wert speichern? (cm):");
 				
 				dialog.getEditor().textProperty().addListener(new ChangeListener<String>() {
 					@Override
@@ -69,8 +90,8 @@ public class PostCalibrationCircState extends CalibrateState{
 							}						
 						}
 										
-						if (i > 1000) {
-							dialog.getEditor().setText(newValue.replaceAll(newValue, "10000"));
+						if (i > Integer.MAX_VALUE) {
+							dialog.getEditor().setText(newValue.replaceAll(newValue, Integer.toString(Integer.MAX_VALUE)));
 						}
 						
 						if (newValue.isEmpty()) {
@@ -84,7 +105,7 @@ public class PostCalibrationCircState extends CalibrateState{
 				
 				Optional<String> result = dialog.showAndWait();
 				if (result.isPresent()){	
-					origin = calibratePoints[0];
+					origin = calibratePoints[2];
 					mainController.getScalingManager().normalizePoint(origin);
 					pManager.setCalibratePoints(calibratePoints);
 					mainController.getSettings().setEichung(Double.parseDouble(result.get()));

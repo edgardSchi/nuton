@@ -1,9 +1,27 @@
+/*******************************************************************************
+ * Nuton
+ * Copyright (C) 2018 Edgard Schiebelbein
+ * 
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ ******************************************************************************/
 package ffmpeg;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
@@ -22,6 +40,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 import javafx.stage.StageStyle;
 import properties.PropertiesReader;
+import settings.Settings;
 
 public class FfmpegHandler {
 
@@ -30,6 +49,7 @@ public class FfmpegHandler {
 	private PropertiesReader propReader;
 	private File outputFile;
 	private String outputPath;
+	private static File logFolder;
 	private List<String> ffmpegArguments;
 
 	private String videoPath;
@@ -44,10 +64,7 @@ public class FfmpegHandler {
 		outputName = genFileName(outputName);
 		ffmpegArguments = new ArrayList<String>();
 		ffmpegPath = propReader.getFfmpegPath();
-		File logFolder = new File(System.getProperty("user.home") + "/.nuton/ffmpeg_log");
-		if (!logFolder.exists()) {
-			createLogFolder();
-		}
+		checkLogFolder();
 		if (outputPath == null) {
 			if (propReader.getFfmpegSameOutputPath().isEmpty()) {
 				outputPath = logFolder.getAbsolutePath();
@@ -71,6 +88,8 @@ public class FfmpegHandler {
 
 			loadFfmpegArguments();
 			ProcessBuilder pb = new ProcessBuilder(ffmpegArguments);
+			//ProcessBuilder pb = new ProcessBuilder(ffmpegPath + "/ffmpeg", "-ss", "0", "-i", videoPath, "-vframes", "1", "-q:v", "2", "G:/output2.png");
+
 			pb.redirectErrorStream(true);
 
 			for (String s : pb.command()) {
@@ -105,6 +124,13 @@ public class FfmpegHandler {
 		return outputFile;
 	}
 
+	private static void checkLogFolder() {
+		logFolder = new File(System.getProperty("user.home") + "/.nuton/ffmpeg_log");
+		if (!logFolder.exists()) {
+			createLogFolder();
+		}
+	}
+	
 	private void createAlert() {
 		alert = new Alert(Alert.AlertType.NONE);
 		alert.setHeaderText("Ffmpeg verabeitet das Video.");
@@ -141,7 +167,6 @@ public class FfmpegHandler {
 				e.printStackTrace();
 			}
 		}
-
 	}
 
 	private void loadFfmpegArguments() {
@@ -160,7 +185,7 @@ public class FfmpegHandler {
 		}
 	}
 
-	private void createLogFolder() {
+	private static void createLogFolder() {
 		boolean success = (new File(System.getProperty("user.home") + "/.nuton/ffmpeg_log")).mkdir();
 		if (success) {
 			System.out.println("Directory created!");
@@ -204,5 +229,34 @@ public class FfmpegHandler {
 		alert.getDialogPane().setExpandableContent(expContent);
 
 		alert.showAndWait();
+	}
+	
+	public static boolean checkForFfmpeg() {
+		PropertiesReader reader = new PropertiesReader();
+		String path = reader.getFfmpegPath() + "/ffprobe.exe";
+//		String ffmpegString = path.substring(0, path.lastIndexOf("."));
+		if(new File(path).exists()) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	public static void getFrame(String inputPath, double time) {
+		checkLogFolder();
+		PropertiesReader reader = new PropertiesReader();
+		String path = reader.getFfmpegPath();
+		try {
+				ProcessBuilder pb = new ProcessBuilder(path + "/ffmpeg", "-ss", Double.toString((time/1000)), "-i", inputPath, "-vframes", "1", "-q:v", "1", /*"-vf", "\"transpose=2\"",*/ logFolder.getAbsolutePath() + "/frame.png");
+				Process p = pb.start();
+				try {
+					p.waitFor();
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				p.destroy();		
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 }

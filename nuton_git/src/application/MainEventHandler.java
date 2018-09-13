@@ -1,3 +1,20 @@
+/*******************************************************************************
+ * Nuton
+ * Copyright (C) 2018 Edgard Schiebelbein
+ * 
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ ******************************************************************************/
 package application;
 
 import java.io.File;
@@ -39,6 +56,7 @@ public class MainEventHandler {
 	}
 
 	public void openMedia(File media) {
+		reset();
 		if (media != null) {
 			mainController.setPlayer(new MediaPlayer(new Media(media.toURI().toString())));
 			mainController.getPlayer().setOnReady(new Runnable() {
@@ -96,9 +114,9 @@ public class MainEventHandler {
 			}
 		}
 
-		FileChooser.ExtensionFilter filter = new FileChooser.ExtensionFilter(
-				"Video Dateien (*.fxm), (*.flv), (*.mp4), (*.m4v)", "*.fxm", "*.flv", "*.mp4", "*.m4v");
-		fileChooser.getExtensionFilters().add(filter);
+//		FileChooser.ExtensionFilter filter = new FileChooser.ExtensionFilter(
+//				"Video Dateien (*.fxm), (*.flv), (*.mp4), (*.m4v)", "*.fxm", "*.flv", "*.mp4", "*.m4v");
+//		fileChooser.getExtensionFilters().add(filter);
 		File mediaFile = fileChooser.showOpenDialog(Main.getStage());
 
 		if (mediaFile != null) {
@@ -163,6 +181,8 @@ public class MainEventHandler {
 				alert.showAndWait();
 				return false;
 			} else {
+				propWriter.setLastPath(video.getParent());
+				propWriter.confirm();
 				openMedia(handler.getVideo());
 				savingFile.TempSaving.setURL(video.getAbsolutePath());
 				savingFile.TempSaving.withFfmpeg(true);
@@ -247,6 +267,22 @@ public class MainEventHandler {
 		}
 
 	}
+	
+	public void openAboutDialog() {
+		try {
+			Parent loader = FXMLLoader.load(getClass().getResource("About.fxml"));
+			Scene scene = new Scene(loader);
+			Stage stage = new Stage();
+			stage.setTitle("Über Nuton");
+			stage.setScene(scene);
+			stage.getIcons().add(new Image(MainEventHandler.class.getResourceAsStream("/nutonLogo.png")));
+			stage.setResizable(false);
+			stage.show();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+	}
 
 	public void closeProgram() {
 		Platform.exit();
@@ -257,7 +293,7 @@ public class MainEventHandler {
 		if (mainController.getMedia() == null) {
 			Alert alert = new Alert(AlertType.ERROR);
 			alert.setTitle("Videodatei auswählen!");
-			alert.setContentText("W�hlen Sie zuerst eine geeignete Videodatei aus.");
+			alert.setContentText("Wählen Sie zuerst eine geeignete Videodatei aus.");
 			alert.setHeaderText(null);
 			alert.showAndWait().ifPresent(rs -> {
 				if (rs == ButtonType.OK) {

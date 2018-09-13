@@ -1,3 +1,20 @@
+/*******************************************************************************
+ * Nuton
+ * Copyright (C) 2018 Edgard Schiebelbein
+ * 
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ ******************************************************************************/
 package application;
 
 import java.io.IOException;
@@ -43,7 +60,7 @@ public class FertigDialogController {
 			this.pManager = pixelManager;
 			this.motion = motion;
 			dialog = new Dialog<ButtonType>();
-			dialog.setTitle("Optionen f¸r Daten");
+			dialog.setTitle("Optionen f√ºr Daten");
 			FXMLLoader loader;
 			loader = new FXMLLoader(getClass().getResource("FertigDialog.fxml"));
 			loader.setController(this);
@@ -54,7 +71,7 @@ public class FertigDialogController {
 			Stage stage = (Stage) dialog.getDialogPane().getScene().getWindow();
 			stage.getIcons().add(new Image(getClass().getResourceAsStream("/nutonLogo.png")));
 			
-			btnType = new ButtonType("Schlieﬂen", ButtonData.FINISH);
+			btnType = new ButtonType("Schlie√üen", ButtonData.FINISH);
 			dialog.getDialogPane().getButtonTypes().add(btnType);
 			dialog.initOwner(Main.getStage());
 			dialog.initModality(Modality.WINDOW_MODAL);

@@ -1,3 +1,20 @@
+/*******************************************************************************
+ * Nuton
+ * Copyright (C) 2018 Edgard Schiebelbein
+ * 
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ ******************************************************************************/
 package states;
 
 import application.MainController;
@@ -41,7 +58,7 @@ public abstract class CalibrateState extends State{
 	
 	protected TextInputDialog createDialog(String contentText, int lowerBound, int upperBound) {
 		TextInputDialog dialog = new TextInputDialog("" + (int)mainController.getSettings().getEichung());
-		dialog.setTitle("Bestätigen");
+		dialog.setTitle("BestÃ¤tigen");
 		dialog.setHeaderText(null);
 		dialog.setContentText(contentText);
 		Stage stage = (Stage) dialog.getDialogPane().getScene().getWindow();
@@ -59,10 +76,17 @@ public abstract class CalibrateState extends State{
 						i = Integer.parseInt(newValue);
 					}
 				}
-				if (i > upperBound) {
-					dialog.getEditor().setText(newValue.replaceAll(newValue, Integer.toString(upperBound)));
-				}
 				
+				if(upperBound != 0) {
+					if (i > upperBound) {
+						dialog.getEditor().setText(newValue.replaceAll(newValue, Integer.toString(upperBound)));
+					}
+				} else {
+					if (i > Integer.MAX_VALUE) {
+						dialog.getEditor().setText(newValue.replaceAll(newValue, Integer.toString(Integer.MAX_VALUE)));
+					}
+				}
+			
 				if (i < lowerBound) {
 					dialog.getEditor().setText(newValue.replaceAll(newValue, Integer.toString(lowerBound)));				
 				}

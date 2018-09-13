@@ -1,3 +1,20 @@
+/*******************************************************************************
+ * Nuton
+ * Copyright (C) 2018 Edgard Schiebelbein
+ * 
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ ******************************************************************************/
 package application;
 
 import javafx.scene.canvas.GraphicsContext;
@@ -85,8 +102,11 @@ public class Point {
 
 	@Override
 	public String toString() {
-		return "Point [x=" + x + ", y=" + y  + ", NormX=" + normX + ", NormY=" + normY + ", SEITENLAENGE=" + SEITENLAENGE + ", time=" + time
-				+ ", entfernungMeterX=" + entfernungMeterX + ", entfernungMeterY=" + entfernungMeterY + "]";
+		return "Point [x=" + x + ", y=" + y + ", SEITENLAENGE=" + SEITENLAENGE + ", time=" + time
+				+ ", entfernungMeterX=" + entfernungMeterX + ", entfernungMeterY=" + entfernungMeterY + ", color="
+				+ color + ", highlightColor=" + highlightColor + ", normalColor=" + normalColor + ", propReader="
+				+ propReader + ", normX=" + normX + ", normY=" + normY + ", mediaX=" + mediaX + ", mediaY=" + mediaY
+				+ ", drawX=" + drawX + ", drawY=" + drawY + ", deltaTime=" + deltaTime + "]";
 	}
 
 	public String saveString() {

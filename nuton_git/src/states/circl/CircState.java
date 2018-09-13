@@ -1,3 +1,20 @@
+/*******************************************************************************
+ * Nuton
+ * Copyright (C) 2018 Edgard Schiebelbein
+ * 
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ ******************************************************************************/
 package states.circl;
 
 import application.DrawHandler;
@@ -26,6 +43,7 @@ public class CircState extends PointState{
 		defaultInit();
 		this.origin = pManager.getOrigin();
 		redraw();
+		mainController.setHelpLabel("Punkte anklicken");
 	}
 
 	@Override
@@ -50,7 +68,7 @@ public class CircState extends PointState{
 	public void fertigBtnClick() {
 		if (points.size() < 2) {
 			Alert alert = new Alert(AlertType.ERROR);
-			alert.setHeaderText("Bitte w�hlen Sie mindestens zwei Punke aus.");
+			alert.setHeaderText("Bitte wählen Sie mindestens zwei Punke aus.");
 			alert.showAndWait().ifPresent(rs -> {
 				if (rs == ButtonType.OK) {
 					alert.close();

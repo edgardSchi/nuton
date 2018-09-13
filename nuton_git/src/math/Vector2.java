@@ -1,3 +1,20 @@
+/*******************************************************************************
+ * Nuton
+ * Copyright (C) 2018 Edgard Schiebelbein
+ * 
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ ******************************************************************************/
 package math;
 
 import application.Point;
@@ -39,10 +56,10 @@ public class Vector2 {
 	
 	/**
 	 * Gibt den Winkel zwischen zwei Vektoren. Dieser ist der Winkel vom ersten Vektor bis zum zweiten Vektor,
-	 * wenn man sich gegen den Uhrzeigersinn bewegt. Die Funktion gibt den Winkel im Gradmaß zurück.
+	 * wenn man sich gegen den Uhrzeigersinn bewegt. Die Funktion gibt den Winkel im Gradmaï¿½ zurï¿½ck.
 	 * @param v1 Erster Vektor
 	 * @param v2 Zweiter Vektor
-	 * @return Winkel zwischen beiden Vektoren im Gradmaß
+	 * @return Winkel zwischen beiden Vektoren im Gradmaï¿½
 	 */
 	public static double getAngleWithATan2(Vector2 v1, Vector2 v2) {
 		double angle = (Math.atan2(v1.getY(), v1.getX()) - Math.atan2(v2.getY(), v2.getX()));

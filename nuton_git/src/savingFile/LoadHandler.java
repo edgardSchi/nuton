@@ -1,3 +1,20 @@
+/*******************************************************************************
+ * Nuton
+ * Copyright (C) 2018 Edgard Schiebelbein
+ * 
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ ******************************************************************************/
 package savingFile;
 
 import java.io.File;
@@ -70,17 +87,19 @@ public class LoadHandler {
 				alert.close();
 			}
 		});
-		Alert alert2 = new Alert(AlertType.CONFIRMATION);
-		alert2.setTitle("Video öffnen?");
-		alert2.setContentText("Möchten Sie das Video manuell öffnen?");
-		alert2.setHeaderText(null);
-		Optional<ButtonType> result = alert2.showAndWait();
-		if (result.get() == ButtonType.OK){
-			loadVideo("");
-			return true;
-		}
-		alert2.close();
-		return false;
+		return true;
+		// >> Muss unbedingt gefixed werden! <<
+//		Alert alert2 = new Alert(AlertType.CONFIRMATION);
+//		alert2.setTitle("Video öffnen?");
+//		alert2.setContentText("Möchten Sie das Video manuell öffnen?");
+//		alert2.setHeaderText(null);
+//		Optional<ButtonType> result = alert2.showAndWait();
+//		if (result.get() == ButtonType.OK){
+//			loadVideo("");
+//			return true;
+//		}
+//		alert2.close();
+//		return false;
 	}
 	
 	private void applySettings(SaveFile saveFile) {
@@ -148,22 +167,26 @@ public class LoadHandler {
 			points[i] = new Point(sPoints[i].getX(), sPoints[i].getY(), 0);
 			points[i].setNormX(sPoints[i].getNormX());
 			points[i].setNormY(sPoints[i].getNormY());
-			System.out.println(points[i]);
+			//System.out.println(points[i]);
 		}
 		return points;
 	}
 	
 	private ArrayList<Point> convertPoints(ArrayList<SerializablePoint> sPoints) {
 		ArrayList<Point> points = new ArrayList<Point>();
+		mainController.getScalingManager().setMediaDimension();
 		for(SerializablePoint sPoint : sPoints) {
 			Point p = new Point(sPoint.getX(), sPoint.getY(), sPoint.getTime());
 			p.setNormCord(sPoint.getNormX(), sPoint.getNormY());
+			p.setDrawX(sPoint.getDrawX());
+			p.setDrawY(sPoint.getDrawY());
 			p.setEntfernungMeterX(sPoint.getEntfernungMeterX());
 			p.setEntfernungMeterY(sPoint.getEntfernungMeterY());
-			p.setMediaX(sPoint.getMediaX());
-			p.setMediaY(sPoint.getMediaY());
+			p.setMediaX(sPoint.getX());
+			p.setMediaY(sPoint.getY());
 			mainController.getScalingManager().updatePointPos(p);
 			points.add(p);
+			System.out.println(p.toString());
 		}
 		return points;
 	}

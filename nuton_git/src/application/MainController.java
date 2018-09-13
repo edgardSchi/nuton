@@ -1,3 +1,20 @@
+/*******************************************************************************
+ * Nuton
+ * Copyright (C) 2018 Edgard Schiebelbein
+ * 
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ ******************************************************************************/
 package application;
 
 import java.io.File;
@@ -75,6 +92,7 @@ public class MainController implements Initializable{
 	@FXML private TableView<Point> tableView;
 	@FXML private ToolBar toolBar;
 	@FXML private StackPane stackPane;
+	@FXML private Label helpLabel;
 	private GraphicsContext gc;
 	private ToolBarManager tbm;
 	private Stage mainStage;
@@ -102,7 +120,6 @@ public class MainController implements Initializable{
 		setSettingsController(new SettingsController(this, settings, themeLoader));
 		trackingController = new TrackingSettingsController(this, themeLoader);
 		
-		//points = new ArrayList<Point>();
 		pManager = new PixelManager(this);
 		
 		hostServices = (HostServices)Main.getStage().getProperties().get("hostServices");
@@ -119,15 +136,6 @@ public class MainController implements Initializable{
 			}
 			
 		});
-		
-//		menuAnleitung.setOnAction(new EventHandler<ActionEvent>() {
-//
-//			@Override
-//			public void handle(ActionEvent event) {
-//				eventHandler.openAnleitungDialog();
-//			}
-//			
-//		});
 		
 		ffmpegMenu.setOnAction(new EventHandler<ActionEvent>() {
 
@@ -356,6 +364,17 @@ public class MainController implements Initializable{
 			}
 			
 		});
+		
+		menuAbout.setOnAction(new EventHandler<ActionEvent>() {
+
+			@Override
+			public void handle(ActionEvent arg0) {
+				eventHandler.openAboutDialog();
+			}
+			
+		});
+		
+		setHelpLabel("Video öffnen");
 			
 		
 	}
@@ -365,11 +384,8 @@ public class MainController implements Initializable{
 	}
 	
 	public void reset() {
-		//points.clear();
 		settings.setSchrittweite(1000);
 		settings.setEichung(100);
-//		listX.getItems().clear();
-//		listY.getItems().clear();
 		slider.setValue(0);
 		slider.setDisable(false);
 		slider.setSnapToTicks(false);
@@ -416,7 +432,6 @@ public class MainController implements Initializable{
 		yCol.setPrefWidth(54);
 		yCol.setSortable(false);
 		
-		//tableView.getColumns()
 		tableView.getColumns().addAll(timeCol, xCol, yCol);
 		
 		tableView.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
@@ -546,11 +561,6 @@ public class MainController implements Initializable{
 	public void setCanvas(Canvas canvas) {
 		this.canvas = canvas;
 	}
-
-
-//	public ArrayList<Point> getPoints() {
-//		return points;
-//	}
 	
 	public StateManager getStateManager() {
 		return stateManager;
@@ -565,16 +575,6 @@ public class MainController implements Initializable{
 	public GraphicsContext getGc() {
 		return gc;
 	}
-
-
-//	public ListView<Integer> getListX() {
-//		return listX;
-//	}
-//
-//
-//	public ListView<Integer> getListY() {
-//		return listY;
-//	}
 
 	public ToolBarManager getToolBarManager() {
 		return tbm;
@@ -614,5 +614,9 @@ public class MainController implements Initializable{
 	
 	public HostServices getHostServices() {
 		return hostServices;
+	}
+	
+	public void setHelpLabel(String text) {
+		helpLabel.setText(text);
 	}
 }

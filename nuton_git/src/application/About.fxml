@@ -1,24 +1,54 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.image.*?>
-<?import javafx.scene.text.*?>
-<?import javafx.scene.control.*?>
-<?import java.lang.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.layout.AnchorPane?>
+<!--
+  Nuton
+  Copyright (C) 2018 Edgard Schiebelbein
+  
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
+  
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+  
+  You should have received a copy of the GNU General Public License
+  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <Label layoutX="224.0" layoutY="7.0" prefHeight="123.0" prefWidth="245.0" text="NUTON">
+      <AnchorPane layoutX="21.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="145.0" prefWidth="579.0">
+         <children>
+            <Label layoutX="430.0" layoutY="90.0" text="v1.1" />
+            <ImageView fitHeight="89.0" fitWidth="79.0" layoutX="89.0" layoutY="26.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../icons/nutonLogo.png" />
+               </image>
+            </ImageView>
+            <Label layoutX="168.0" layoutY="-27.0" text="NUTON">
+               <font>
+                  <Font name="Javanese Text" size="72.0" />
+               </font>
+            </Label>
+            <Separator layoutX="-28.0" layoutY="144.0" prefHeight="4.0" prefWidth="611.0" />
+         </children>
+      </AnchorPane>
+      <TextArea editable="false" layoutX="2.0" layoutY="145.0" prefHeight="253.0" prefWidth="595.0" text="Website: https://edgardschi.github.io/nuton-website/&#10;Wiki: https://github.com/edgardSchi/nuton/wiki&#10;GitHub: https://github.com/edgardSchi/nuton&#10;&#10;&#10;Bei Fragen oder Bugs eine E-Mail an folgende Adresse senden: &#10;EdgardSchiebelbein@hotmail.de&#10;&#10;*******************************************************************************&#10; * Nuton&#10; * Copyright (C) 2018 Edgard Schiebelbein&#10; * &#10; * This program is free software: you can redistribute it and/or modify&#10; * it under the terms of the GNU General Public License as published by&#10; * the Free Software Foundation, either version 3 of the License, or&#10; * (at your option) any later version.&#10; * &#10; * This program is distributed in the hope that it will be useful,&#10; * but WITHOUT ANY WARRANTY; without even the implied warranty of&#10; * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the&#10; * GNU General Public License for more details.&#10; * &#10; * You should have received a copy of the GNU General Public License&#10; * along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.&#10; ******************************************************************************">
          <font>
-            <Font name="Javanese Text" size="64.0" />
+            <Font size="13.0" />
          </font>
-      </Label>
-      <Label layoutX="458.0" layoutY="108.0" text="v0.1" />
-      <ImageView fitHeight="70.0" fitWidth="74.0" layoutX="154.0" layoutY="61.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@Nuton_logo.png" />
-         </image>
-      </ImageView>
+      </TextArea>
    </children>
 </Pane>

@@ -1,3 +1,20 @@
+/*******************************************************************************
+ * Nuton
+ * Copyright (C) 2018 Edgard Schiebelbein
+ * 
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ ******************************************************************************/
 package tracking;
 
 import java.util.Optional;
@@ -9,10 +26,12 @@ import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import userSettings.ThemeLoader;
@@ -55,10 +74,12 @@ public class TrackingSettingsController extends Dialog<ButtonType> {
 	public void showDialog() {
 		Optional<ButtonType> result = showAndWait();
 	    if (result.get() == ButtonType.APPLY) {
-	    	TrackingManager tm = new TrackingManager(mainController, themeLoader, Integer.parseInt(radiusField.getText()),  Integer.parseInt(stepsizeField.getText()),  1);
-	    	tm.openDialog();
-	    } else {
-	    	
+	    	if(mainController.getStateManager().getPoints().size() != 0) {
+		    	TrackingManager tm = new TrackingManager(mainController, themeLoader, Integer.parseInt(radiusField.getText()),  Integer.parseInt(stepsizeField.getText()),  1);
+		    	tm.openDialog();
+	    	} else {
+	    		showErrorDialog();
+	    	}
 	    }
 	}
 	
@@ -108,6 +129,18 @@ public class TrackingSettingsController extends Dialog<ButtonType> {
 	
 	private ButtonType getApplyButton() {
 		return this.getDialogPane().getButtonTypes().get(0);
+	}
+	
+	private void showErrorDialog() {
+		Alert alert = new Alert(AlertType.ERROR);
+		alert.setTitle("Keine Punkte vorhanden!");
+		alert.setContentText("Wählen Sie zuerst einen Punkt im Video aus, welcher zur Kalibrierung dienen soll.");
+		alert.setHeaderText(null);
+		alert.showAndWait().ifPresent(rs -> {
+			if (rs == ButtonType.OK) {
+				alert.close();
+			}
+		});
 	}
 
 }

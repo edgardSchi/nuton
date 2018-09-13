@@ -1,3 +1,20 @@
+/*******************************************************************************
+ * Nuton
+ * Copyright (C) 2018 Edgard Schiebelbein
+ * 
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ ******************************************************************************/
 package toolBarEvents;
 
 import java.util.ArrayList;
@@ -172,6 +189,46 @@ public class AddPointEvents {
 				p.drawPoint(gc);
 			}
 			mainController.getScalingManager().normalizePoint(p);
+			state.getMainController().updateLists();
+			for (Point po : points) {
+				po.drawPoint(gc);
+			}
+			slider.setValue(slider.getValue() + mainController.getSettings().getSchrittweite());
+		}		
+	}
+	
+	public static void addTrackingPoint(State state, MouseEvent e, double x, double y, double time) {
+		Slider slider = state.getMainController().getSlider();
+		GraphicsContext gc = state.getMainController().getGc();
+		MainController mainController = state.getMainController();
+		ArrayList<Point> points = state.getPoints();
+		if (slider.getValue() < slider.getMax()) {
+			gc.setFill(Color.rgb(255, 119, 0, 0.80));	
+			Point p;
+			if (mainController.getSettings().isyFixed() && yFix == 0) {
+				yFix = y;
+				p = new Point((int)x, (int)y, time);
+				points.add(p);
+				p.drawPoint(gc);
+			} else if (mainController.getSettings().isyFixed()) {
+				p = new Point((int)x, (int)yFix, time);
+				points.add(p);
+				p.drawPoint(gc);
+			} else if (mainController.getSettings().isxFixed() && xFix == 0) {
+				xFix = x;
+				p = new Point((int)x, (int)y, time);
+				points.add(p);
+				p.drawPoint(gc);
+			} else if (mainController.getSettings().isxFixed()) {
+				p = new Point((int)xFix, (int)y, time);
+				points.add(p);
+				p.drawPoint(gc);
+			} else {
+				p = new Point((int)x, (int)y, time);
+				points.add(p);
+				p.drawPoint(gc);
+			}
+			mainController.getScalingManager().normalizeWithMediaSize(p);
 			state.getMainController().updateLists();
 			for (Point po : points) {
 				po.drawPoint(gc);
