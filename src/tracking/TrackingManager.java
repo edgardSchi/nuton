@@ -200,6 +200,28 @@ public class TrackingManager extends Dialog<String> implements Runnable {
 		AddPointEvents.addPoint(mainController.getStateManager().getCurrentState(), null, cords[0], cords[1]);
 	}
 	
+	public void track(Image frame) {
+		for(Point p : mainController.getStateManager().getPoints()) {
+			if(p.getTime() == mainController.getSlider().getValue()) {
+				return;
+			}
+		}
+		BufferedImage image = SwingFXUtils.fromFXImage(frame, null);
+		int[] cords = kernel.feed(image);
+		mainController.getGc().fillRect(cords[0]-5, cords[1]-5, 10, 10);
+		AddPointEvents.addPoint(mainController.getStateManager().getCurrentState(), null, cords[0], cords[1]);
+	}
+	
+	public void selectTrackingPoint(Image frame, int x, int y) {
+		BufferedImage image = SwingFXUtils.fromFXImage(frame, null);
+		kernel.calibrate(image, x, y);
+		mainController.getGc().setFill(Color.RED);
+		mainController.getGc().fillRect(x-5, y-5, 10, 10);
+		BufferedImage kernelBImage = image.getSubimage(x - radius, y - radius, radius + radius - 1 , radius + radius - 1);
+		Image kernelImage = SwingFXUtils.toFXImage(kernelBImage, null);
+		imageView.setImage(kernelImage);
+	}
+	
 	private BufferedImage loadFrame(int n) {
 		
 		String userPath = System.getProperty("user.home") + "/.nuton/ffmpeg_log";

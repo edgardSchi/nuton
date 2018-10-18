@@ -25,6 +25,7 @@ import javafx.scene.input.MouseEvent;
 import states.circl.CalibrateCircState;
 import states.circl.CircState;
 import states.circl.PostCalibrationCircState;
+import states.stream.StreamState;
 import states.tracking.TrackingState;
 import states.translation.CalibrateTransState;
 import states.translation.PostCalibrationState;
@@ -44,6 +45,7 @@ public class StateManager {
 	public static final int CIRCULAR = 5;
 	public static final int CIRCULAR_POSTCALIBRATION = 6;
 	public static final int TRACKING = 7;
+	public static final int STREAMING = 8;
 	
 	public StateManager(MainController mainController) {
 		this.mainController = mainController;
@@ -62,6 +64,7 @@ public class StateManager {
 		states.add(new CircState(mainController));
 		states.add(new PostCalibrationCircState(mainController));
 		states.add(new TrackingState(mainController));
+		states.add(new StreamState(mainController));
 	}
 	
 	public void init() {

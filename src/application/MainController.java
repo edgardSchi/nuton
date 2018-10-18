@@ -22,7 +22,10 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 import application.settingsPane.SettingsController;
+import camera.CameraController;
 import javafx.application.HostServices;
+import javafx.beans.binding.Bindings;
+import javafx.beans.property.DoubleProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
@@ -49,6 +52,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
@@ -93,6 +97,10 @@ public class MainController implements Initializable{
 	@FXML private ToolBar toolBar;
 	@FXML private StackPane stackPane;
 	@FXML private Label helpLabel;
+	
+	@FXML private MenuItem startCameraMenu;
+	@FXML private MenuItem stopCameraMenu;
+	
 	private GraphicsContext gc;
 	private ToolBarManager tbm;
 	private Stage mainStage;
@@ -127,6 +135,32 @@ public class MainController implements Initializable{
 		gc = canvas.getGraphicsContext2D();
 		
 		pSettings = new ProgramSettingsController(this, themeLoader);
+		
+		
+
+
+		
+		//camera.prepareCanvas(middleAnchorPane);
+		
+		
+		startCameraMenu.setOnAction(new EventHandler<ActionEvent>() {
+
+			@Override
+			public void handle(ActionEvent arg0) {
+				stateManager.setState(StateManager.STREAMING);
+			}
+			
+		});
+		
+		stopCameraMenu.setOnAction(new EventHandler<ActionEvent>() {
+
+			@Override
+			public void handle(ActionEvent arg0) {
+//				canvasW.unbind();
+//				canvasH.unbind();
+			}
+			
+		});
 		
 		openFileMenu.setOnAction(new EventHandler<ActionEvent>() {
 
@@ -253,7 +287,7 @@ public class MainController implements Initializable{
 			
 		});
 		
-		
+		//Verbessern
 		startBtn.setOnAction(new EventHandler<ActionEvent>() {
 
 			@Override
@@ -268,10 +302,13 @@ public class MainController implements Initializable{
 							alert.close();
 						}
 					});
+//				} else if (camera.isRunning()) {
+//					getStartBtn().setDisable(true);
+//					getSettingsController().showDialog();
 				} else {
 					getStartBtn().setDisable(true);
 					getSettingsController().showDialog();
-				}			
+				}		
 			}
 			
 		});
@@ -373,6 +410,9 @@ public class MainController implements Initializable{
 			}
 			
 		});
+		
+		
+
 		
 		setHelpLabel("Video öffnen");
 			
@@ -619,4 +659,5 @@ public class MainController implements Initializable{
 	public void setHelpLabel(String text) {
 		helpLabel.setText(text);
 	}
+
 }

@@ -18,6 +18,8 @@
 package application;
 	
 
+import org.opencv.core.Core;
+
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.event.EventHandler;
@@ -48,6 +50,7 @@ public class Main extends Application {
 	@Override
 	public void start(Stage primaryStage) {
 		try {
+			loadLibraries();
 			propWriter = new PropertiesWriter();
 			stage = primaryStage;
 			stage.getProperties().put("hostServices", this.getHostServices());
@@ -82,6 +85,10 @@ public class Main extends Application {
 	
 	public static void main(String[] args) {
 		launch(args);
+	}
+	
+	private static void loadLibraries() {
+		System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
 	}
 	
 	public static Stage getStage() {

@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
 <!--
   Nuton
   Copyright (C) 2018 Edgard Schiebelbein
@@ -16,6 +17,15 @@
   You should have received a copy of the GNU General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
+
+<?import java.lang.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.canvas.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.media.*?>
+<?import javafx.scene.text.*?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.Cursor?>
 <?import javafx.scene.canvas.Canvas?>
@@ -36,7 +46,7 @@
 <?import javafx.scene.media.MediaView?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane id="mainPane" minHeight="-Infinity" minWidth="-Infinity" prefHeight="517.0" prefWidth="682.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.MainController">
+<BorderPane id="mainPane" minHeight="-Infinity" minWidth="-Infinity" prefHeight="517.0" prefWidth="682.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.MainController">
    <right>
       <AnchorPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="409.0" prefWidth="183.0" BorderPane.alignment="CENTER">
          <children>
@@ -91,6 +101,12 @@
                       <MenuItem fx:id="startTrackingMenu" mnemonicParsing="false" text="Tracking starten (Beta)" />
                     </items>
                   </Menu>
+                  <Menu mnemonicParsing="false" text="Kamera">
+                     <items>
+                     	<MenuItem fx:id="startCameraMenu" mnemonicParsing="false" text="Kamera starten" />
+                     	<MenuItem fx:id="stopCameraMenu" mnemonicParsing="false" text="Kamera stoppen" />
+                     </items>
+                  </Menu>
                 <Menu mnemonicParsing="false" text="Hilfe">
                   <items>
                         <MenuItem fx:id="menuOpenWiki" mnemonicParsing="false" text="Wiki-Seite öffnen..." />
@@ -124,8 +140,8 @@
          <children>
             <StackPane fx:id="stackPane" layoutX="6.0" layoutY="36.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="330.0" prefWidth="487.0" AnchorPane.bottomAnchor="35.0" AnchorPane.leftAnchor="6.0" AnchorPane.rightAnchor="6.0" AnchorPane.topAnchor="36.0" BorderPane.alignment="CENTER">
                <children>
-                  <MediaView fx:id="mv" fitHeight="330.0" fitWidth="487.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" StackPane.alignment="CENTER" />
-                  <Canvas fx:id="canvas" height="330.0" width="487.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" StackPane.alignment="CENTER">
+                  <MediaView fx:id="mv" fitHeight="330.0" fitWidth="487.0" />
+                  <Canvas fx:id="canvas" height="330.0" width="487.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                      <cursor>
                         <Cursor fx:constant="DEFAULT" />
                      </cursor>
