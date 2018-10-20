@@ -30,8 +30,16 @@ public class ScalingManager {
 	}
 	
 	public void setMediaDimension() {
+		if (mainController.getPlayer() == null) {
+			return;
+		}
 		mediaW = mainController.getPlayer().getMedia().getWidth();
 		mediaH = mainController.getPlayer().getMedia().getHeight();
+	}
+	
+	public void setMediaDimension(int width, int height) {
+		mediaW = width;
+		mediaH = height;
 	}
 	
 	public void setCanvasDimension() {

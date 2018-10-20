@@ -151,5 +151,11 @@ public class PostCalibrationState extends CalibrateState{
 		
 	}
 
+	@Override
+	public void onKill() {
+		// TODO Auto-generated method stub
+		
+	}
+
 
 }

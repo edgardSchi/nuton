@@ -48,10 +48,12 @@ public class CameraController {
 	    videoCapture.set(Videoio.CAP_PROP_FOURCC, fourcc);
 	    videoCapture.set(Videoio.CAP_PROP_FPS,30);
 	    
-	    boolean wset = videoCapture.set(Videoio.CV_CAP_PROP_FRAME_WIDTH, 1280);
-	    boolean hset = videoCapture.set(Videoio.CV_CAP_PROP_FRAME_HEIGHT, 720);
+//	    boolean wset = videoCapture.set(Videoio.CV_CAP_PROP_FRAME_WIDTH, 1280);
+//	    boolean hset = videoCapture.set(Videoio.CV_CAP_PROP_FRAME_HEIGHT, 720);
 
-		
+		System.out.println(videoCapture.get(Videoio.CV_CAP_PROP_FRAME_WIDTH));
+		System.out.println(videoCapture.get(Videoio.CV_CAP_PROP_FRAME_HEIGHT));
+
 		timer = new AnimationTimer() {
 			Mat mat = new Mat();
 			int counter = 0;
@@ -171,4 +173,11 @@ public class CameraController {
 		
 	}
 	
+	public int getCameraWidth() {
+		return (int) videoCapture.get(Videoio.CV_CAP_PROP_FRAME_WIDTH);
+	}
+	
+	public int getCameraHeight() {
+		return (int) videoCapture.get(Videoio.CV_CAP_PROP_FRAME_HEIGHT);
+	}
 }

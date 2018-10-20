@@ -110,4 +110,10 @@ public class CalibrateCircState extends CalibrateState{
 		
 	}
 
+	@Override
+	public void onKill() {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

@@ -140,6 +140,7 @@
          <children>
             <StackPane fx:id="stackPane" layoutX="6.0" layoutY="36.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="330.0" prefWidth="487.0" AnchorPane.bottomAnchor="35.0" AnchorPane.leftAnchor="6.0" AnchorPane.rightAnchor="6.0" AnchorPane.topAnchor="36.0" BorderPane.alignment="CENTER">
                <children>
+                  <Canvas fx:id="streamCanvas" height="330.0" width="487.0" />
                   <MediaView fx:id="mv" fitHeight="330.0" fitWidth="487.0" />
                   <Canvas fx:id="canvas" height="330.0" width="487.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                      <cursor>

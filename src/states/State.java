@@ -53,6 +53,7 @@ public abstract class State implements Serializable{
 	public abstract void fertigBtnClick();
 	public abstract void reset();
 	public abstract void redraw();
+	public abstract void onKill();
 	
 	
 	public void setPoints(ArrayList<Point> points) {

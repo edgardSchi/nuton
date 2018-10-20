@@ -75,4 +75,10 @@ public class TrackingState extends State {
 		
 	}
 
+	@Override
+	public void onKill() {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

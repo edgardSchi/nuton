@@ -21,6 +21,7 @@ import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 
 import javax.imageio.ImageIO;
 
@@ -125,14 +126,15 @@ public class TrackingManager extends Dialog<String> implements Runnable {
 		});
 		
 		generateDarkImage();
-		loadBox();
+		//WICHTIG loadBox();
 	}
 	
 	private void loadBox() {
-		for(Point p : mainController.getStateManager().getPoints()) {
-			String t = "Punkt bei " + p.getTime() + " ms";
-			pointBox.getItems().add(t);
-		}
+		if(mainController.getStateManager().getPoints() != null) {
+			for(Point p : mainController.getStateManager().getPoints()) {
+				String t = "Punkt bei " + p.getTime() + " ms";
+				pointBox.getItems().add(t);
+			}
 		
 		pointBox.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
 
@@ -144,6 +146,7 @@ public class TrackingManager extends Dialog<String> implements Runnable {
 			
 		});
 		pointBox.getSelectionModel().selectFirst();
+		}
 	}
 	
 	public void selectTrackingPointFfmpeg(int x, int y) {
@@ -201,15 +204,16 @@ public class TrackingManager extends Dialog<String> implements Runnable {
 	}
 	
 	public void track(Image frame) {
-		for(Point p : mainController.getStateManager().getPoints()) {
-			if(p.getTime() == mainController.getSlider().getValue()) {
-				return;
-			}
-		}
+//		for(Point p : mainController.getStateManager().getPoints()) {
+//			if(p.getTime() == mainController.getSlider().getValue()) {
+//				return;
+//			}
+//		}
 		BufferedImage image = SwingFXUtils.fromFXImage(frame, null);
 		int[] cords = kernel.feed(image);
 		mainController.getGc().fillRect(cords[0]-5, cords[1]-5, 10, 10);
-		AddPointEvents.addPoint(mainController.getStateManager().getCurrentState(), null, cords[0], cords[1]);
+		System.out.println(Arrays.toString(cords));
+		//AddPointEvents.addPoint(mainController.getStateManager().getCurrentState(), null, cords[0], cords[1]);
 	}
 	
 	public void selectTrackingPoint(Image frame, int x, int y) {

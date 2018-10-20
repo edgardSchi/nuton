@@ -88,6 +88,7 @@ public class MainController implements Initializable{
 	@FXML private MenuItem menuAbout;
 	@FXML private MenuItem menuUpdates;
 	@FXML private Canvas canvas; 
+	@FXML private Canvas streamCanvas;
 	@FXML public Slider slider;
 	@FXML public Button startBtn;
 	@FXML public Button restartBtn;
@@ -142,7 +143,6 @@ public class MainController implements Initializable{
 		
 		//camera.prepareCanvas(middleAnchorPane);
 		
-		
 		startCameraMenu.setOnAction(new EventHandler<ActionEvent>() {
 
 			@Override
@@ -158,6 +158,7 @@ public class MainController implements Initializable{
 			public void handle(ActionEvent arg0) {
 //				canvasW.unbind();
 //				canvasH.unbind();
+				stateManager.setState(StateManager.DEFAULT);
 			}
 			
 		});
@@ -352,6 +353,7 @@ public class MainController implements Initializable{
 				scalingManager.setCanvasDimension();
 				if (stateManager.getCurrentState().getPoints() != null) {
 					for (Point p : stateManager.getCurrentState().getPoints()) {
+						System.out.println("X: " + p.getDrawX() + "Y: " + p.getDrawY());
 						scalingManager.updatePointPos(p);
 					}
 					for(Point p : stateManager.getCurrentState().getCalibratePoints()) {
@@ -596,6 +598,10 @@ public class MainController implements Initializable{
 	public Canvas getCanvas() {
 		return canvas;
 	}
+	
+	public Canvas getStreamCanvas() {
+		return streamCanvas;
+	}
 
 
 	public void setCanvas(Canvas canvas) {
@@ -658,6 +664,10 @@ public class MainController implements Initializable{
 	
 	public void setHelpLabel(String text) {
 		helpLabel.setText(text);
+	}
+
+	public TrackingSettingsController getTrackingController() {
+		return trackingController;
 	}
 
 }

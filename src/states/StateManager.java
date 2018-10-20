@@ -96,6 +96,7 @@ public class StateManager {
 	}
 	
 	public void setState(int state) {
+		states.get(currentState).onKill();
 		states.get(state).init();
 		currentState = state;
 		System.out.println("Neuer State: " + currentState);

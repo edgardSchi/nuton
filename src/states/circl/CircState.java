@@ -118,4 +118,10 @@ public class CircState extends PointState{
 		this.origin = origin;
 	}
 
+	@Override
+	public void onKill() {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

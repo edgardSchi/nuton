@@ -97,6 +97,12 @@ public class TranslationState extends PointState {
 			DrawHandler.drawDistance(gc, getCalibratePoints()[0], getCalibratePoints()[1], Double.toString(settings.getEichung()).concat(" cm"));
 		}
 	}
+
+	@Override
+	public void onKill() {
+		// TODO Auto-generated method stub
+		
+	}
 	
 
 }

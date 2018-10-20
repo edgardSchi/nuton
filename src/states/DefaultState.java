@@ -71,5 +71,11 @@ public class DefaultState extends State{
 		
 	}
 
+	@Override
+	public void onKill() {
+		// TODO Auto-generated method stub
+		
+	}
+
 	
 }

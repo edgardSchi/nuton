@@ -10,10 +10,11 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
-import states.State;
-import toolBarEvents.AddPointEvents;
+import javafx.scene.paint.Color;
+import states.PointState;
+import tracking.TrackingManager;
 
-public class StreamState extends State {
+public class StreamState extends PointState {
 
 	/**
 	 * 
@@ -22,16 +23,22 @@ public class StreamState extends State {
 
 	private CameraController camera;
 	private Canvas canvas;
-	private Image frame;
 	private AnimationTimer timer;
-	private GraphicsContext g2d;
+	private GraphicsContext g2dStream;
+	private Image frame = null;
 	double frameRate = 0;
+	private TrackingManager trackingManager;
+	private boolean trackingReady = false;
+	
+	
+	private static final int FRAMESKIP = 6;
 	
 	public StreamState(MainController mainController) {
 		super(mainController);
-		canvas = mainController.getCanvas();
-		g2d = canvas.getGraphicsContext2D();
+		canvas = mainController.getStreamCanvas();
+		g2dStream = canvas.getGraphicsContext2D();
 		camera = new CameraController(canvas);
+		trackingManager = new TrackingManager(mainController, mainController.getThemeLoader(), 5, 3, 1);
 		
 		timer = new AnimationTimer() {
 			final long[] frameTimes = new long[100];
@@ -54,11 +61,16 @@ public class StreamState extends State {
                     //System.out.println(String.format("Current frame rate: %.3f", frameRate));
                 }
                 
-                if(counter == 6) {
+                if(counter % FRAMESKIP == 0) {
+                	frame = camera.grabFrame();
                 	redraw();
-                	counter = 0;
                 }
 				
+                if(trackingReady == true && counter % (2 *FRAMESKIP) == 0) {
+                	//System.out.println("Track");
+                	trackingManager.track(frame);
+                	counter = 0;
+                }
 				
 				counter++;
 			}
@@ -68,16 +80,32 @@ public class StreamState extends State {
 
 	@Override
 	public void init() {
-		DoubleProperty canvasW = canvas.widthProperty();
-		DoubleProperty canvasH = canvas.heightProperty();
+		camera = new CameraController(canvas);
+//		trackingManager = new TrackingManager(mainController, mainController.getThemeLoader(), 7, 2, 1);
+		initCanvasBounds();
+		timer.start();
+	}
+	
+	private void initCanvasBounds() {
+		DoubleProperty canvasSW = canvas.widthProperty();
+		DoubleProperty canvasSH = canvas.heightProperty();
+		canvasSW.bind(Bindings.selectDouble(mainController.getStackPane().widthProperty()));
+		canvasSH.bind(Bindings.selectDouble(mainController.getStackPane().heightProperty()));
+		DoubleProperty canvasW = mainController.getCanvas().widthProperty();
+		DoubleProperty canvasH = mainController.getCanvas().heightProperty();
 		canvasW.bind(Bindings.selectDouble(mainController.getStackPane().widthProperty()));
 		canvasH.bind(Bindings.selectDouble(mainController.getStackPane().heightProperty()));
-		timer.start();
+		mainController.getScalingManager().setMediaDimension(camera.getCameraWidth(), camera.getCameraHeight());
 	}
 
 	@Override
 	public void onClick(MouseEvent e) {
-		AddPointEvents.addRectangle(this, e);
+		mainController.getToolBarManager().pointButtonEvent(this, e);
+		if(points.size() != 0) {
+			trackingManager.selectTrackingPoint(frame, points.get(0).getDrawX(), points.get(0).getDrawY());
+			trackingReady = true;
+		}
+
 	}
 
 	@Override
@@ -106,11 +134,19 @@ public class StreamState extends State {
 
 	@Override
 	public void redraw() {
-		g2d.drawImage(camera.grabFrame(), 0, 0, canvas.getWidth(), canvas.getHeight());
-		g2d.fillText(Integer.toString((int)frameRate), 20, 20);
-		for(Point p : this.getPoints()) {
-			p.drawPoint(g2d);
+		g2dStream.drawImage(frame, 0, 0, canvas.getWidth(), canvas.getHeight());
+		g2dStream.setStroke(Color.RED);
+		g2dStream.fillText(Integer.toString((int)frameRate), 20, 20);
+		gc.clearRect(0, 0, mainController.getCanvas().getWidth(), mainController.getCanvas().getHeight());
+		for (Point p : points) {
+			p.drawPoint(gc);
 		}
+	}
+
+	@Override
+	public void onKill() {
+		timer.stop();
+		camera.stopCamera();
 	}
 	
 }
