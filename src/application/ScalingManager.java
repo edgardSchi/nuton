@@ -87,6 +87,18 @@ public class ScalingManager {
 		return norm;
 	}
 	
+	public static int[] getCordRelativeToMedia(int x, int y, double canvasWidth, double canvasHeight, double mediaWidth, double mediaHeight) {
+		int[] cords = new int[2];
+		cords[0] = (int)((x/canvasWidth)*mediaWidth);
+		cords[1] = (int)((y/canvasHeight)*mediaHeight);
+		return cords;
+	}
 	
+	public int[] getCordRelativeToMedia(int x, int y) {
+		int[] cords = new int[2];
+		cords[0] = (int)((x/mediaW)*canvasW);
+		cords[1] = (int)((y/mediaH)*canvasH);
+		return cords;
+	}
 	
 }

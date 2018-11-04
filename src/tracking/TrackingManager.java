@@ -65,6 +65,7 @@ public class TrackingManager extends Dialog<String> implements Runnable {
 	
 	private Point calibratePoint;
 	
+	
 	public TrackingManager(MainController mainController, ThemeLoader themeLoader, int radius, int stepsize, int scale) {
 		this.mainController = mainController;
 		this.radius = radius;	
@@ -126,7 +127,7 @@ public class TrackingManager extends Dialog<String> implements Runnable {
 		});
 		
 		generateDarkImage();
-		//WICHTIG loadBox();
+		loadBox();
 	}
 	
 	private void loadBox() {
@@ -147,6 +148,10 @@ public class TrackingManager extends Dialog<String> implements Runnable {
 		});
 		pointBox.getSelectionModel().selectFirst();
 		}
+	}
+	
+	public void calibrateKernel(int width, int height) {
+		kernel = new Kernel(width, height);
 	}
 	
 	public void selectTrackingPointFfmpeg(int x, int y) {
@@ -211,7 +216,9 @@ public class TrackingManager extends Dialog<String> implements Runnable {
 //		}
 		BufferedImage image = SwingFXUtils.fromFXImage(frame, null);
 		int[] cords = kernel.feed(image);
-		mainController.getGc().fillRect(cords[0]-5, cords[1]-5, 10, 10);
+		mainController.getScalingManager().setCanvasDimension();
+		int[] drawCords = mainController.getScalingManager().getCordRelativeToMedia(cords[0], cords[1]);
+		mainController.getGc().fillRect(drawCords[0]-5, drawCords[1]-5, 10, 10);
 		System.out.println(Arrays.toString(cords));
 		//AddPointEvents.addPoint(mainController.getStateManager().getCurrentState(), null, cords[0], cords[1]);
 	}
@@ -223,6 +230,7 @@ public class TrackingManager extends Dialog<String> implements Runnable {
 		mainController.getGc().fillRect(x-5, y-5, 10, 10);
 		BufferedImage kernelBImage = image.getSubimage(x - radius, y - radius, radius + radius - 1 , radius + radius - 1);
 		Image kernelImage = SwingFXUtils.toFXImage(kernelBImage, null);
+		mainController.getCanvas().getGraphicsContext2D().drawImage(kernelImage, 0.0, 0.0);
 		imageView.setImage(kernelImage);
 	}
 	

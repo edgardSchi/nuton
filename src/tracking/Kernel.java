@@ -29,20 +29,29 @@ public class Kernel {
 	private int x;
 	private int y;
 	private int stepsize;
+	private int width;
+	private int height;
 	
 	public Kernel(int radius, int stepsize) {
 		this.radius = radius;
 		this.stepsize = stepsize;
 		data = new Vector3[radius + radius - 1][radius + radius - 1];
+		width = 2 * radius;
+		height = 2 * radius;
+	}
+	
+	public Kernel(int width, int height, int stepsize) {
+		this.stepsize = stepsize;
+		data = new Vector3[width - 1][height - 1];
 	}
 	
 	public void calibrate(BufferedImage image, int x, int y) {
 		int xCor = 0;
 		int yCor = 0;
-		for(int i = 0; i < 2 * radius - 1; i++) {
-			for(int j = 0; j < 2 * radius - 1; j++) {
-				xCor = x + i - (radius -1);
-				yCor = y + j - (radius - 1);
+		for(int i = 0; i < width - 1; i++) {
+			for(int j = 0; j < height - 1; j++) {
+				xCor = x + i - (width);
+				yCor = y + j - (height);
 				if(xCor >= 0 && xCor < image.getWidth() && yCor >= 0 && yCor < image.getHeight()) {
 					Color c = new Color(image.getRGB(xCor, yCor));
 					data[i][j] = new Vector3(c.getRed(), c.getGreen(), c.getBlue());
@@ -72,13 +81,13 @@ public class Kernel {
 		int xCor = 0;
 		int yCor = 0;
 		double diff = 0;
-		Vector3[][] feedData = new Vector3[radius + radius - 1][radius + radius - 1];
+		Vector3[][] feedData = new Vector3[width - 1][height - 1];
 		for(int x = 0; x < image.getWidth(); x += stepsize) {
 			for(int y = 0; y < image.getHeight(); y += stepsize) {
-				for(int i = 0; i < 2 * radius - 1; i++) {
-					for(int j = 0; j < 2 * radius - 1; j++) {
-						xCor = x + i - (radius -1);
-						yCor = y + j - (radius - 1);
+				for(int i = 0; i < width - 1; i++) {
+					for(int j = 0; j < height - 1; j++) {
+						xCor = x + i - (width -1);
+						yCor = y + j - (height - 1);
 						if(xCor >= 0 && xCor < image.getWidth() && yCor >= 0 && yCor < image.getHeight()) {
 							Color c = new Color(image.getRGB(xCor, yCor));
 							feedData[i][j] = new Vector3(c.getRed(), c.getGreen(), c.getBlue());

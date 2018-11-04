@@ -29,6 +29,19 @@ public class StreamState extends PointState {
 	double frameRate = 0;
 	private TrackingManager trackingManager;
 	private boolean trackingReady = false;
+	private boolean readyForNextFrame = false;
+	
+	//Test
+	private static double x = 0;
+	private static double y = 0;
+	private static double dragX = 0;
+	private static double dragY = 0;
+	private static double x2 = 0;
+	private static double y2 = 0;
+	private static boolean leftClicked = false;
+	
+	private int rectangleWidth = 0;
+	private int rectangleHeight = 0;
 	
 	
 	private static final int FRAMESKIP = 6;
@@ -38,7 +51,7 @@ public class StreamState extends PointState {
 		canvas = mainController.getStreamCanvas();
 		g2dStream = canvas.getGraphicsContext2D();
 		camera = new CameraController(canvas);
-		trackingManager = new TrackingManager(mainController, mainController.getThemeLoader(), 5, 3, 1);
+
 		
 		timer = new AnimationTimer() {
 			final long[] frameTimes = new long[100];
@@ -61,14 +74,16 @@ public class StreamState extends PointState {
                     //System.out.println(String.format("Current frame rate: %.3f", frameRate));
                 }
                 
-                if(counter % FRAMESKIP == 0) {
+                if((counter % FRAMESKIP == 0 && readyForNextFrame == true) || trackingReady == false) {
                 	frame = camera.grabFrame();
                 	redraw();
+                	readyForNextFrame = false;
                 }
 				
                 if(trackingReady == true && counter % (2 *FRAMESKIP) == 0) {
                 	//System.out.println("Track");
                 	trackingManager.track(frame);
+                	readyForNextFrame = true;
                 	counter = 0;
                 }
 				
@@ -81,6 +96,7 @@ public class StreamState extends PointState {
 	@Override
 	public void init() {
 		camera = new CameraController(canvas);
+		trackingManager = new TrackingManager(mainController, mainController.getThemeLoader(), 5, 3, 1);
 //		trackingManager = new TrackingManager(mainController, mainController.getThemeLoader(), 7, 2, 1);
 		initCanvasBounds();
 		timer.start();
@@ -100,12 +116,18 @@ public class StreamState extends PointState {
 
 	@Override
 	public void onClick(MouseEvent e) {
-		mainController.getToolBarManager().pointButtonEvent(this, e);
-		if(points.size() != 0) {
-			trackingManager.selectTrackingPoint(frame, points.get(0).getDrawX(), points.get(0).getDrawY());
+		
+		if (points.size() == 0 && e.getEventType() == MouseEvent.MOUSE_CLICKED) {	
+			mainController.getToolBarManager().pointButtonEvent(this, e);
+			trackingManager.selectTrackingPoint(frame, points.get(0).getX(), points.get(0).getY());
+			//createRectangle(e);
 			trackingReady = true;
 		}
 
+	}
+	
+	private void track() {
+		
 	}
 
 	@Override
@@ -147,6 +169,64 @@ public class StreamState extends PointState {
 	public void onKill() {
 		timer.stop();
 		camera.stopCamera();
+	}
+	
+	private void createRectangle(MouseEvent e) {
+		gc.setStroke(Color.RED);
+		gc.setFill(Color.rgb(255, 119, 0, 0.80));		
+		
+		if (e.getEventType() == MouseEvent.MOUSE_PRESSED && e.isPrimaryButtonDown() && !e.isSecondaryButtonDown()) {
+			x = e.getX();
+			y = e.getY();
+			leftClicked = true;
+		}		
+		
+		if (e.getEventType() == MouseEvent.MOUSE_DRAGGED && e.isPrimaryButtonDown()) {
+			gc.setStroke(Color.RED);
+			gc.clearRect(0, 0, mainController.getCanvas().getWidth(), mainController.getCanvas().getHeight());
+			for(Point p : points) {
+				p.drawPoint(gc);
+			}
+			gc.setStroke(Color.RED);
+			
+			if (e.isSecondaryButtonDown()) {			
+				x = x - dragX + e.getX();
+				x2 = x2 - dragX + e.getX();
+				y = y - dragY + e.getY();
+				y2 = y2 - dragY + e.getY();
+			} else {
+				x2 = e.getX();
+				y2 = e.getY();
+			}
+			
+			gc.strokeLine(x, y, x2, y);
+			gc.strokeLine(x2, y, x2, y2);
+			gc.strokeLine(x, y, x, y2);
+			gc.strokeLine(x, y2, x2, y2);
+			
+			//Kreuz
+			gc.strokeLine(((x2 - x) / 2 + x) - 5, ((y2 - y) / 2 + y), ((x2 - x) / 2 + x) + 5, ((y2 - y) / 2 + y));
+			gc.strokeLine(((x2 - x) / 2 + x), ((y2 - y) / 2 + y) - 5, ((x2 - x) / 2 + x), ((y2 - y) / 2 + y) + 5);
+			
+			//Diagonalen
+//			gc.strokeLine(e.getX(), e.getY(), me.getX(), me.getY());
+//			gc.strokeLine(me.getX(), e.getY(), e.getX(), me.getY());
+			dragX = e.getX();
+			dragY = e.getY();	
+		}
+		
+		if (e.getEventType() == MouseEvent.MOUSE_RELEASED && !e.isPrimaryButtonDown() && leftClicked) {
+			rectangleWidth = (int)(x2 - x);
+			rectangleHeight = (int)(y2 - y);
+			int[] cords = mainController.getScalingManager().getCordRelativeToMedia((int)x, (int)y);
+			trackingManager.calibrateKernel(rectangleWidth, rectangleHeight);
+			trackingManager.selectTrackingPoint(frame, cords[0], cords[1]);
+			gc.clearRect(0, 0, mainController.getCanvas().getWidth(), mainController.getCanvas().getHeight());
+			for(Point p : points) {
+				p.drawPoint(gc);
+			}
+			leftClicked = false;
+		}
 	}
 	
 }

@@ -43,13 +43,14 @@ public class CameraController {
 		
 		videoCapture = new VideoCapture();
 		videoCapture.open(0);
-		videoCapture.set(Videoio.CAP_DSHOW, 0);
+	
+		//videoCapture.set(Videoio.CAP_DSHOW, 1);
 		int fourcc = VideoWriter.fourcc('M', 'J', 'P', 'G');
 	    videoCapture.set(Videoio.CAP_PROP_FOURCC, fourcc);
 	    videoCapture.set(Videoio.CAP_PROP_FPS,30);
 	    
-//	    boolean wset = videoCapture.set(Videoio.CV_CAP_PROP_FRAME_WIDTH, 1280);
-//	    boolean hset = videoCapture.set(Videoio.CV_CAP_PROP_FRAME_HEIGHT, 720);
+	    boolean wset = videoCapture.set(Videoio.CV_CAP_PROP_FRAME_WIDTH, 1920);
+	    boolean hset = videoCapture.set(Videoio.CV_CAP_PROP_FRAME_HEIGHT, 1080);
 
 		System.out.println(videoCapture.get(Videoio.CV_CAP_PROP_FRAME_WIDTH));
 		System.out.println(videoCapture.get(Videoio.CV_CAP_PROP_FRAME_HEIGHT));
@@ -61,10 +62,10 @@ public class CameraController {
 			@Override
 			public void handle(long now) {		
 				 long oldFrameTime = frameTimes[frameTimeIndex] ;
-	                frameTimes[frameTimeIndex] = now ;
+	                frameTimes[frameTimeIndex] = now;
 	                frameTimeIndex = (frameTimeIndex + 1) % frameTimes.length;
 	                if (frameTimeIndex == 0) {
-	                    arrayFilled = true ;
+	                    arrayFilled = true;
 	                }
 	                if (arrayFilled) {
 	                    long elapsedNanos = now - oldFrameTime ;
