@@ -1,19 +1,19 @@
 /*******************************************************************************
  * Nuton
- * Copyright (C) 2018 Edgard Schiebelbein
- * 
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- * 
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *   Copyright (C) 2018-2019 Edgard Schiebelbein
+ *   
+ *   This program is free software: you can redistribute it and/or modify
+ *   it under the terms of the GNU General Public License as published by
+ *   the Free Software Foundation, either version 3 of the License, or
+ *   (at your option) any later version.
+ *   
+ *   This program is distributed in the hope that it will be useful,
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *   GNU General Public License for more details.
+ *   
+ *   You should have received a copy of the GNU General Public License
+ *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 package diagrams;
 
@@ -106,6 +106,7 @@ public class DiagramsController {
 		points = new ArrayList<Point>();
 		xAxis = new NumberAxis();
 		yAxis = new NumberAxis();
+		yAxis.setLabel("s[m]");
 		xAxis.setLabel("t[s]");
 		
 		yAxis.setAutoRanging(true);
@@ -124,7 +125,7 @@ public class DiagramsController {
 		if (motion == Motion.TRANSLATION) {
 			diagramBox.getItems().addAll("Zeit-Weg (X)", "Zeit-Weg (Y)", "Zeit-Geschwindigkeit (X)", "Zeit-Geschwindigkeit (Y)", "T-X", "T-Y", "X-Y");
 		} else if (motion == Motion.CIRCULAR) {
-			diagramBox.getItems().addAll("Zeit-Winkel", "Zeit-Winkelgeschwindigkeit", "Zeit-Bahngeschwindigkeit", "Zeit-Frequenz", "X-Y");
+			diagramBox.getItems().addAll("Zeit-Winkel", "Zeit-Winkelgeschwindigkeit", "Zeit-Frequenz", "X-Y"); //Bahngeschwindigkeit entfernt
 		}
 		
 		
@@ -173,7 +174,7 @@ public class DiagramsController {
 				} else if(motion == Motion.CIRCULAR) {
 					if (diagramBox.getSelectionModel().getSelectedItem() == "Zeit-Winkel") {
 						diagram.getData().clear();
-						yAxis.setLabel("Winkel" + "[�]");
+						yAxis.setLabel("Winkel" + "[°]");
 						xAxis.setUpperBound(mainController.getMediaLength());
 						xAxis.setTickUnit(mainController.getSettings().getSchrittweite());
 						diagram.getData().add(seriesArray[7]);
@@ -183,12 +184,12 @@ public class DiagramsController {
 						xAxis.setUpperBound(mainController.getMediaLength());
 						xAxis.setTickUnit(mainController.getSettings().getSchrittweite());
 						diagram.getData().add(seriesArray[8]);
-					} else if (diagramBox.getSelectionModel().getSelectedItem() == "Zeit-Bahngeschwindigkeit") {
-						diagram.getData().clear();
-						yAxis.setLabel("Bahngeschwindigkeit" + "[m/s]");
-						xAxis.setUpperBound(mainController.getMediaLength());
-						xAxis.setTickUnit(mainController.getSettings().getSchrittweite());
-						diagram.getData().add(seriesArray[9]);
+//					} else if (diagramBox.getSelectionModel().getSelectedItem() == "Zeit-Bahngeschwindigkeit") {
+//						diagram.getData().clear();
+//						yAxis.setLabel("Bahngeschwindigkeit" + "[m/s]");
+//						xAxis.setUpperBound(mainController.getMediaLength());
+//						xAxis.setTickUnit(mainController.getSettings().getSchrittweite());
+//						diagram.getData().add(seriesArray[9]);
 					} else if (diagramBox.getSelectionModel().getSelectedItem() == "Zeit-Frequenz") {
 						diagram.getData().clear();
 						yAxis.setLabel("f" + "[Hz]");
@@ -247,7 +248,7 @@ public class DiagramsController {
 		} else if (motion == Motion.CIRCULAR) {		
 			diagram.getData().add(seriesArray[7]);
 			diagramBox.getItems().clear();
-			diagramBox.getItems().addAll("Zeit-Winkel", "Zeit-Winkelgeschwindigkeit", "Zeit-Bahngeschwindigkeit", "Zeit-Frequenz", "X-Y");
+			diagramBox.getItems().addAll("Zeit-Winkel", "Zeit-Winkelgeschwindigkeit", "Zeit-Frequenz", "X-Y"); //Bahngeschwindigkeit entfernt
 			diagramBox.setValue("Zeit-Winkel");
 		}
 		stage.show();

@@ -1,19 +1,19 @@
 /*******************************************************************************
  * Nuton
- * Copyright (C) 2018 Edgard Schiebelbein
- * 
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- * 
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *   Copyright (C) 2018-2019 Edgard Schiebelbein
+ *   
+ *   This program is free software: you can redistribute it and/or modify
+ *   it under the terms of the GNU General Public License as published by
+ *   the Free Software Foundation, either version 3 of the License, or
+ *   (at your option) any later version.
+ *   
+ *   This program is distributed in the hope that it will be useful,
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *   GNU General Public License for more details.
+ *   
+ *   You should have received a copy of the GNU General Public License
+ *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 package io;
 
@@ -73,15 +73,15 @@ public class CircExportHandler extends MotionExportHandler {
 
 			
 			try (BufferedWriter schreibPuffer = Files.newBufferedWriter(pfadDatei)){
-				String zeile0 = String.format("%s; %s; %s; %s; %s; %s; %s; %s; %s; %s; %s; %s", t, x, y, leer, deltaPhi, angleVelo, velo, freq, leer, mittelPunkt, eich, eichungInPixel);
+				String zeile0 = String.format("%s; %s; %s; %s; %s; %s; %s; %s; %s; %s; %s", t, x, y, leer, deltaPhi, angleVelo, freq, leer, mittelPunkt, eich, eichungInPixel);
 				schreibPuffer.write(zeile0);
 				for (int i = 0; i < points.size(); i++) {
 					schreibPuffer.newLine();
 					String zeile;
 					if (i == 0) {
-						zeile = String.format("%f; %d; %d; %s; %f; %f; %f; %f; %s; %s; %f; %f", points.get(i).getTime()/1000, points.get(i).getX(), points.get(i).getY(), leer, deltaPhiArray.get(i).getX(), pManager.getAngleVelo().get(i).getX(), pManager.getCircVelo().get(i).getX(), pManager.getCircFreq().get(i).getX(), leer, mittelP, eichung, pixelLänge);
+						zeile = String.format("%f; %d; %d; %s; %f; %f; %f; %s; %s; %f; %f", points.get(i).getTime()/1000, points.get(i).getX(), points.get(i).getY(), leer, deltaPhiArray.get(i).getX(), pManager.getAngleVelo().get(i).getX(), pManager.getCircFreq().get(i).getX(), leer, mittelP, eichung, pixelLänge);
 					} else {
-						zeile = String.format("%f; %d; %d; %s; %f; %f; %f; %f", points.get(i).getTime()/1000, points.get(i).getX(), points.get(i).getY(), leer, deltaPhiArray.get(i - 1).getX(), pManager.getAngleVelo().get(i - 1).getX(), pManager.getCircVelo().get(i - 1).getX(), pManager.getCircFreq().get(i - 1).getX());
+						zeile = String.format("%f; %d; %d; %s; %f; %f; %f", points.get(i).getTime()/1000, points.get(i).getX(), points.get(i).getY(), leer, deltaPhiArray.get(i - 1).getX(), pManager.getAngleVelo().get(i - 1).getX(), pManager.getCircFreq().get(i - 1).getX());
 					}		
 					schreibPuffer.write(zeile);
 				}

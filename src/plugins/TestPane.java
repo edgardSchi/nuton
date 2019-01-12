@@ -15,26 +15,29 @@
  *   You should have received a copy of the GNU General Public License
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
-package io;
+package plugins;
 
-import java.util.ArrayList;
+import application.settingsPane.SettingsController;
+import application.settingsPane.SettingsPaneController;
 
-import application.PixelManager;
-import application.Point;
-import javafx.stage.FileChooser;
+public class TestPane extends SettingsPaneController {
 
-public abstract class MotionExportHandler {
-
-	protected FileChooser fileChooser;
-	protected ArrayList<Point> points;
-	protected PixelManager pManager;
-	
-	public MotionExportHandler(ArrayList<Point> points, PixelManager pManager) {
-		this.points = points;
-		this.pManager = pManager;
+	public TestPane(SettingsController settingsController) {
+		super(settingsController, "TestPane.fxml", "TestPlugin");
+		addToController();
+		// TODO Auto-generated constructor stub
 	}
-	
-	public abstract void exportData();
-	
-	
+
+	@Override
+	public void saveSettings() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void reset() {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

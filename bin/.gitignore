@@ -1,3 +1,15 @@
-/states/
+/application/
 /camera/
+/states/
+/diagrams/
+/plugins/
 /tracking/
+/userSettings/
+/ffmpeg/
+/io/
+/math/
+/properties/
+/savingFile/
+/settings/
+/toolBar/
+/toolBarEvents/

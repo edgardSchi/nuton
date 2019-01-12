@@ -1,19 +1,19 @@
 /*******************************************************************************
  * Nuton
- * Copyright (C) 2018 Edgard Schiebelbein
- * 
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- * 
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *   Copyright (C) 2018-2019 Edgard Schiebelbein
+ *   
+ *   This program is free software: you can redistribute it and/or modify
+ *   it under the terms of the GNU General Public License as published by
+ *   the Free Software Foundation, either version 3 of the License, or
+ *   (at your option) any later version.
+ *   
+ *   This program is distributed in the hope that it will be useful,
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *   GNU General Public License for more details.
+ *   
+ *   You should have received a copy of the GNU General Public License
+ *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 package application.settingsPane;
 
@@ -79,6 +79,11 @@ public class SettingsController{
 
 	}
 	
+	public void addMotion(SettingsPaneController spc) {
+		motionController.add(spc);
+		initMotionBox();
+	}
+	
 	private void initMotions() {
 		motionController = new ArrayList<SettingsPaneController>();
 		motionController.add(new SettingsTranslationPaneController(this, "SettingsTranslationPane.fxml"));
@@ -97,9 +102,8 @@ public class SettingsController{
 			mainController.getStateManager().setState(motionController.get(currentMotion).getReturnState());
 			mainController.restartBtn.setDisable(false);
 			mainController.fertigBtn.setDisable(false);
-			mainController.getSlider().setMajorTickUnit(settingsObj.getSchrittweite());
+			//mainController.getSlider().setMajorTickUnit(settingsObj.getSchrittweite());
 			mainController.getSlider().setMax(calcMaxSlider(settingsObj.getSchrittweite(), mainController.getPlayer().getTotalDuration().toMillis()));
-			System.out.println(settingsObj.getSchrittweite());
 	    } else {
 	    	//FIXEN//
 	    	reset();
@@ -117,23 +121,23 @@ public class SettingsController{
 	}
 	
 	private void initMotionBox() {
-		motionBox.getItems().addAll("Translation", "Kreisbewegung");
+		motionBox.getItems().clear();
+		for(SettingsPaneController c : motionController) {
+			motionBox.getItems().add(c.getName());
+		}
 		
 		motionBox.setOnAction(new EventHandler<ActionEvent>() {
 
 			@Override
 			public void handle(ActionEvent event) {
-				if(motionBox.getSelectionModel().getSelectedItem() == "Translation") {
-					contentPane.getChildren().clear();
-					motionController.get(0).reset();
-					contentPane.getChildren().addAll(motionController.get(0).getRootPane());
-					currentMotion = 0;
-				}
-				if (motionBox.getSelectionModel().getSelectedItem() == "Kreisbewegung") {
-					contentPane.getChildren().clear();
-					motionController.get(1).reset();
-					contentPane.getChildren().addAll(motionController.get(1).getRootPane());
-					currentMotion = 1;
+				contentPane.getChildren().clear();
+				for(int i = 0; i < motionController.size(); i++) {
+					if(motionBox.getSelectionModel().getSelectedItem() == motionController.get(i).getName()) {
+						contentPane.getChildren().clear();
+						motionController.get(i).reset();
+						contentPane.getChildren().add(motionController.get(i).getRootPane());
+						currentMotion = i;
+					}
 				}
 				getApplyBtn().setDisable(false);
 			}

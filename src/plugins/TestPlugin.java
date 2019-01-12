@@ -15,26 +15,30 @@
  *   You should have received a copy of the GNU General Public License
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
-package io;
+package plugins;
 
-import java.util.ArrayList;
-
-import application.PixelManager;
-import application.Point;
-import javafx.stage.FileChooser;
-
-public abstract class MotionExportHandler {
-
-	protected FileChooser fileChooser;
-	protected ArrayList<Point> points;
-	protected PixelManager pManager;
+public class TestPlugin implements Plugin {
 	
-	public MotionExportHandler(ArrayList<Point> points, PixelManager pManager) {
-		this.points = points;
-		this.pManager = pManager;
+	private PMInterface manager;
+	
+	public void test() {
 	}
-	
-	public abstract void exportData();
-	
-	
+
+	@Override
+	public boolean load() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean stop() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public void setPluginManager(PMInterface manager) {
+		this.manager = manager;
+	}
+
 }

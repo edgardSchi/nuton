@@ -1,19 +1,19 @@
 /*******************************************************************************
  * Nuton
- * Copyright (C) 2018 Edgard Schiebelbein
- * 
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- * 
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *   Copyright (C) 2018-2019 Edgard Schiebelbein
+ *   
+ *   This program is free software: you can redistribute it and/or modify
+ *   it under the terms of the GNU General Public License as published by
+ *   the Free Software Foundation, either version 3 of the License, or
+ *   (at your option) any later version.
+ *   
+ *   This program is distributed in the hope that it will be useful,
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *   GNU General Public License for more details.
+ *   
+ *   You should have received a copy of the GNU General Public License
+ *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 package states.translation;
 
@@ -34,7 +34,8 @@ public class CalibrateTransState extends CalibrateState {
 	
 	@Override
 	public void init() {
-		resetSlider();
+		//resetSlider();
+		mainController.clearCanvas();
 		mainController.setHelpLabel("Distanz kalibieren");
 	}
 
@@ -50,7 +51,7 @@ public class CalibrateTransState extends CalibrateState {
 				gc.setStroke(Color.RED);
 				gc.strokeLine(calibratePoints[0].getX(), calibratePoints[0].getY(), calibratePoints[1].getX(), calibratePoints[1].getY());				
 				
-				TextInputDialog dialog = createDialog("Distanz für folgenen Wert speichern? (cm):", 1, 0);
+				TextInputDialog dialog = createDialog("Distanz für folgenen Wert speichern? ("+ settings.getLengthUnit().toString().toLowerCase() + "):", 1, 0);
 				
 				Optional<String> result = dialog.showAndWait();
 				if (result.isPresent()){	
@@ -58,11 +59,17 @@ public class CalibrateTransState extends CalibrateState {
 					mainController.getSettings().setEichung(Double.parseDouble(result.get()));
 					pManager.setEichung(Double.parseDouble(result.get()));
 					resetCalibrate();
-					mainController.getStateManager().setState(StateManager.TRANSLATION);
+					
+					//Überprüfen, ob ein State pausiert ist 
+					if (mainController.getStateManager().statePaused()) {
+						mainController.getStateManager().unpauseState();
+					} else {
+						mainController.getStateManager().setState(StateManager.TRANSLATION);
+					}
+
 					mainController.getScalingManager().normalizePoint(calibratePoints[0]);
 					mainController.getScalingManager().normalizePoint(calibratePoints[1]);
 					mainController.getStateManager().getCurrentState().setCalibratePoints(calibratePoints);
-					mainController.getSlider().setSnapToTicks(true);
 				} else {
 					resetCalibrate();
 				}
@@ -103,6 +110,12 @@ public class CalibrateTransState extends CalibrateState {
 
 	@Override
 	public void onKill() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onUnpause() {
 		// TODO Auto-generated method stub
 		
 	}

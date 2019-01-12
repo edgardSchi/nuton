@@ -15,26 +15,19 @@
  *   You should have received a copy of the GNU General Public License
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
-package io;
+package toolBar;
 
-import java.util.ArrayList;
+import states.StateManager;
 
-import application.PixelManager;
-import application.Point;
-import javafx.stage.FileChooser;
-
-public abstract class MotionExportHandler {
-
-	protected FileChooser fileChooser;
-	protected ArrayList<Point> points;
-	protected PixelManager pManager;
+public class CoordSystemButton extends ToolBarButton {
 	
-	public MotionExportHandler(ArrayList<Point> points, PixelManager pManager) {
-		this.points = points;
-		this.pManager = pManager;
+	public CoordSystemButton(ToolBarManager tbm) {
+		this.tbm = tbm;
 	}
-	
-	public abstract void exportData();
-	
-	
+
+	@Override
+	public void onClick() {
+		tbm.getMainController().getStateManager().pauseCurrentState(StateManager.TRANSLATION_CALIBRATION);
+	}
+
 }

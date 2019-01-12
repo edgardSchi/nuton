@@ -1,19 +1,19 @@
 /*******************************************************************************
  * Nuton
- * Copyright (C) 2018 Edgard Schiebelbein
- * 
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- * 
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *   Copyright (C) 2018-2019 Edgard Schiebelbein
+ *   
+ *   This program is free software: you can redistribute it and/or modify
+ *   it under the terms of the GNU General Public License as published by
+ *   the Free Software Foundation, either version 3 of the License, or
+ *   (at your option) any later version.
+ *   
+ *   This program is distributed in the hope that it will be useful,
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *   GNU General Public License for more details.
+ *   
+ *   You should have received a copy of the GNU General Public License
+ *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 package states.circl;
 
@@ -41,9 +41,7 @@ public class CircState extends PointState{
 	@Override
 	public void init() {
 		defaultInit();
-		this.origin = pManager.getOrigin();
-		redraw();
-		mainController.setHelpLabel("Punkte anklicken");
+		onUnpause();
 	}
 
 	@Override
@@ -83,7 +81,7 @@ public class CircState extends PointState{
 			pManager.checkVectorDirection();
 			pManager.calcDeltaPhi();
 			pManager.calcAngleVelo();
-			pManager.calcCircVelo();
+			//pManager.calcCircVelo(); //Radius wird benötigt
 			pManager.calcCircFreq();
 			FertigDialogController fController = new FertigDialogController(mainController, pManager, points, Motion.CIRCULAR);
 			fController.showDialog();
@@ -122,6 +120,13 @@ public class CircState extends PointState{
 	public void onKill() {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public void onUnpause() {
+		this.origin = pManager.getOrigin();
+		redraw();
+		mainController.setHelpLabel("Punkte anklicken");
 	}
 
 }

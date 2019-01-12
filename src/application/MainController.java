@@ -1,19 +1,19 @@
 /*******************************************************************************
  * Nuton
- * Copyright (C) 2018 Edgard Schiebelbein
- * 
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- * 
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *   Copyright (C) 2018-2019 Edgard Schiebelbein
+ *   
+ *   This program is free software: you can redistribute it and/or modify
+ *   it under the terms of the GNU General Public License as published by
+ *   the Free Software Foundation, either version 3 of the License, or
+ *   (at your option) any later version.
+ *   
+ *   This program is distributed in the hope that it will be useful,
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *   GNU General Public License for more details.
+ *   
+ *   You should have received a copy of the GNU General Public License
+ *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 package application;
 
@@ -22,10 +22,7 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 import application.settingsPane.SettingsController;
-import camera.CameraController;
 import javafx.application.HostServices;
-import javafx.beans.binding.Bindings;
-import javafx.beans.property.DoubleProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
@@ -52,14 +49,14 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
 import javafx.stage.FileChooser;
-import javafx.stage.Stage;
 import javafx.util.Duration;
+import math.UnitsHandler.LengthUnit;
+import math.UnitsHandler.TimeUnit;
 import savingFile.LoadHandler;
 import savingFile.SaveHandler;
 import settings.Settings;
@@ -99,12 +96,11 @@ public class MainController implements Initializable{
 	@FXML private StackPane stackPane;
 	@FXML private Label helpLabel;
 	
-	@FXML private MenuItem startCameraMenu;
-	@FXML private MenuItem stopCameraMenu;
+	//@FXML private MenuItem startCameraMenu;
+	//@FXML private MenuItem stopCameraMenu;
 	
 	private GraphicsContext gc;
 	private ToolBarManager tbm;
-	private Stage mainStage;
 	
 	private double mediaLength = 0;
 	
@@ -121,12 +117,22 @@ public class MainController implements Initializable{
 	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		
+		initControllers();
+		initGuiEvents();
+	}
+	
+	/**
+	 * Initialisiert die verschiedenen Controller.
+	 */
+	private void initControllers() {
 		themeLoader = new ThemeLoader();
 		scalingManager = new ScalingManager(this);
 		settings = new Settings();
 		eventHandler = new MainEventHandler(this);
-		setSettingsController(new SettingsController(this, settings, themeLoader));
+		
+		
+		settingsController = new SettingsController(this, settings, themeLoader);
+		
 		trackingController = new TrackingSettingsController(this, themeLoader);
 		
 		pManager = new PixelManager(this);
@@ -136,32 +142,31 @@ public class MainController implements Initializable{
 		gc = canvas.getGraphicsContext2D();
 		
 		pSettings = new ProgramSettingsController(this, themeLoader);
-		
-		
-
-
-		
-		//camera.prepareCanvas(middleAnchorPane);
-		
-		startCameraMenu.setOnAction(new EventHandler<ActionEvent>() {
-
-			@Override
-			public void handle(ActionEvent arg0) {
-				stateManager.setState(StateManager.STREAMING);
-			}
-			
-		});
-		
-		stopCameraMenu.setOnAction(new EventHandler<ActionEvent>() {
-
-			@Override
-			public void handle(ActionEvent arg0) {
-//				canvasW.unbind();
-//				canvasH.unbind();
-				stateManager.setState(StateManager.DEFAULT);
-			}
-			
-		});
+	}
+	
+	/**
+	 * Initialisiert die Eventhandler der verschiedenen GUI-Items.
+	 */
+	private void initGuiEvents() {
+		//Für Livecamera, wurde rausgenommen
+//		startCameraMenu.setOnAction(new EventHandler<ActionEvent>() {
+//
+//			@Override
+//			public void handle(ActionEvent arg0) {
+//				//stateManager.setState(StateManager.STREAMING);
+//			}
+//			
+//		});
+//		
+//		stopCameraMenu.setOnAction(new EventHandler<ActionEvent>() {
+//
+//			@Override
+//			public void handle(ActionEvent arg0) {
+////				canvasW.unbind();
+////				canvasH.unbind();
+//			}
+//			
+//		});
 		
 		openFileMenu.setOnAction(new EventHandler<ActionEvent>() {
 
@@ -421,11 +426,19 @@ public class MainController implements Initializable{
 		
 	}
 	
+	/**
+	 * Der aktuelle Zustand auf dem Canvas neu gezeichnet.
+	 */
 	public void redraw() {
 		stateManager.redraw();
 	}
 	
+	/**
+	 * Setzt den MainController auf den Anfangszustand zurück.
+	 */
 	public void reset() {
+		settings.setLengthUnit(LengthUnit.CM);
+		settings.setTimeUnit(TimeUnit.MS);
 		settings.setSchrittweite(1000);
 		settings.setEichung(100);
 		slider.setValue(0);
@@ -437,6 +450,9 @@ public class MainController implements Initializable{
 		stateManager.setState(StateManager.DEFAULT);
 	}
 	
+	/**
+	 * Initialisiert die Tastenkürzel für die MenuItems in der Menüleiste, sowie die Icons.
+	 */
 	private void initMenuItems() {
 		openFileMenu.setAccelerator(new KeyCodeCombination(KeyCode.O, KeyCombination.CONTROL_DOWN));
 		Image openVideoIcon = new Image(getClass().getResourceAsStream("/openFileIcon.png"));
@@ -455,6 +471,9 @@ public class MainController implements Initializable{
 		saveFileMenu.setGraphic(saveIconView);
 	}
 	
+	/**
+	 * Initialisiert die Spalten der TableView, sowie den Listener.
+	 */
 	private void initTableView() {
 		tableView.setPlaceholder(new Label("Keine Punkte ausgewählt"));
 		tableView.getColumns().clear();
@@ -488,7 +507,9 @@ public class MainController implements Initializable{
 			
 		});
 	}
-	
+	/**
+	 * Aktualisiert die TableView der ausgewählten Punkte.
+	 */
 	public void updateLists() {
 		tableView.getItems().clear();
 		for(Point p : stateManager.getPoints()) {
@@ -496,14 +517,8 @@ public class MainController implements Initializable{
 		}
 	}
 	
-	public void setMainStage(Stage stage) {
-		
-//		
-//		stage.getScene().widthProperty().addListener(new ChangeListener<Number>() {
-//			@Override public void changed(ObservableValue<? extends Number> observableValue, Number oldSceneWidth, Number newSceneWidth) {
-//				System.out.println("Width: " + newSceneWidth);
-//			}
-//		});
+	public void clearCanvas() {
+		gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
 	}
 	
 	public Media getMedia() {

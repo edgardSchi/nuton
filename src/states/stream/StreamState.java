@@ -1,8 +1,24 @@
+/*******************************************************************************
+ * Nuton
+ *   Copyright (C) 2018-2019 Edgard Schiebelbein
+ *   
+ *   This program is free software: you can redistribute it and/or modify
+ *   it under the terms of the GNU General Public License as published by
+ *   the Free Software Foundation, either version 3 of the License, or
+ *   (at your option) any later version.
+ *   
+ *   This program is distributed in the hope that it will be useful,
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *   GNU General Public License for more details.
+ *   
+ *   You should have received a copy of the GNU General Public License
+ *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ ******************************************************************************/
 package states.stream;
 
 import application.MainController;
 import application.Point;
-import camera.CameraController;
 import javafx.animation.AnimationTimer;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.DoubleProperty;
@@ -14,6 +30,11 @@ import javafx.scene.paint.Color;
 import states.PointState;
 import tracking.TrackingManager;
 
+/**
+ * Klasse zuständig für Livecamera, wurde rausgenommen (fürs erste)
+ * @author Edgard
+ *
+ */
 public class StreamState extends PointState {
 
 	/**
@@ -21,7 +42,7 @@ public class StreamState extends PointState {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	private CameraController camera;
+	//private CameraController camera;
 	private Canvas canvas;
 	private AnimationTimer timer;
 	private GraphicsContext g2dStream;
@@ -44,13 +65,15 @@ public class StreamState extends PointState {
 	private int rectangleHeight = 0;
 	
 	
+	private boolean playing = true;
+	
 	private static final int FRAMESKIP = 6;
 	
 	public StreamState(MainController mainController) {
 		super(mainController);
 		canvas = mainController.getStreamCanvas();
 		g2dStream = canvas.getGraphicsContext2D();
-		camera = new CameraController(canvas);
+		//camera = new CameraController(canvas);
 
 		
 		timer = new AnimationTimer() {
@@ -75,7 +98,7 @@ public class StreamState extends PointState {
                 }
                 
                 if((counter % FRAMESKIP == 0 && readyForNextFrame == true) || trackingReady == false) {
-                	frame = camera.grabFrame();
+                	//frame = camera.grabFrame();
                 	redraw();
                 	readyForNextFrame = false;
                 }
@@ -95,11 +118,11 @@ public class StreamState extends PointState {
 
 	@Override
 	public void init() {
-		camera = new CameraController(canvas);
-		trackingManager = new TrackingManager(mainController, mainController.getThemeLoader(), 5, 3, 1);
-//		trackingManager = new TrackingManager(mainController, mainController.getThemeLoader(), 7, 2, 1);
+		//camera = new CameraController(canvas);
+		trackingManager = new TrackingManager(mainController, mainController.getThemeLoader(), 5, 3, false);
 		initCanvasBounds();
 		timer.start();
+		playing = true;
 	}
 	
 	private void initCanvasBounds() {
@@ -111,19 +134,30 @@ public class StreamState extends PointState {
 		DoubleProperty canvasH = mainController.getCanvas().heightProperty();
 		canvasW.bind(Bindings.selectDouble(mainController.getStackPane().widthProperty()));
 		canvasH.bind(Bindings.selectDouble(mainController.getStackPane().heightProperty()));
-		mainController.getScalingManager().setMediaDimension(camera.getCameraWidth(), camera.getCameraHeight());
+		//mainController.getScalingManager().setMediaDimension(camera.getCameraWidth(), camera.getCameraHeight());
 	}
 
 	@Override
 	public void onClick(MouseEvent e) {
 		
-		if (points.size() == 0 && e.getEventType() == MouseEvent.MOUSE_CLICKED) {	
-			mainController.getToolBarManager().pointButtonEvent(this, e);
-			trackingManager.selectTrackingPoint(frame, points.get(0).getX(), points.get(0).getY());
-			//createRectangle(e);
-			trackingReady = true;
+//		if (points.size() == 0 && e.getEventType() == MouseEvent.MOUSE_CLICKED) {	
+//			mainController.getToolBarManager().pointButtonEvent(this, e);
+//			trackingManager.selectTrackingPoint(frame, points.get(0).getX(), points.get(0).getY());
+//			//createRectangle(e);
+//			trackingReady = true;
+//		}
+		
+		if (e.getEventType() == MouseEvent.MOUSE_CLICKED) {	
+			if(playing) {
+				timer.stop();
+				System.out.println("Stop");
+				playing = false;
+			} else {
+				timer.start();
+				System.out.println("Play");
+				playing = true;
+			}
 		}
-
 	}
 	
 	private void track() {
@@ -168,7 +202,7 @@ public class StreamState extends PointState {
 	@Override
 	public void onKill() {
 		timer.stop();
-		camera.stopCamera();
+		//camera.stopCamera();
 	}
 	
 	private void createRectangle(MouseEvent e) {
@@ -219,14 +253,20 @@ public class StreamState extends PointState {
 			rectangleWidth = (int)(x2 - x);
 			rectangleHeight = (int)(y2 - y);
 			int[] cords = mainController.getScalingManager().getCordRelativeToMedia((int)x, (int)y);
-			trackingManager.calibrateKernel(rectangleWidth, rectangleHeight);
-			trackingManager.selectTrackingPoint(frame, cords[0], cords[1]);
+			//trackingManager.calibrateKernel(rectangleWidth, rectangleHeight);
+			//trackingManager.selectTrackingPoint(frame, cords[0], cords[1]);
 			gc.clearRect(0, 0, mainController.getCanvas().getWidth(), mainController.getCanvas().getHeight());
 			for(Point p : points) {
 				p.drawPoint(gc);
 			}
 			leftClicked = false;
 		}
+	}
+
+	@Override
+	public void onUnpause() {
+		// TODO Auto-generated method stub
+		
 	}
 	
 }

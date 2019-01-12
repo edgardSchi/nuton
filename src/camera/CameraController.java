@@ -1,4 +1,22 @@
-package camera;
+/*******************************************************************************
+ * Nuton
+ *   Copyright (C) 2018-2019 Edgard Schiebelbein
+ *   
+ *   This program is free software: you can redistribute it and/or modify
+ *   it under the terms of the GNU General Public License as published by
+ *   the Free Software Foundation, either version 3 of the License, or
+ *   (at your option) any later version.
+ *   
+ *   This program is distributed in the hope that it will be useful,
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *   GNU General Public License for more details.
+ *   
+ *   You should have received a copy of the GNU General Public License
+ *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ ******************************************************************************/
+//Klasse ist zuständig für OpenCV, wurde rausgenommen
+/*package camera;
 
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferByte;
@@ -41,16 +59,15 @@ public class CameraController {
 		
 		g2d = canvas.getGraphicsContext2D();
 		
-		videoCapture = new VideoCapture();
-		videoCapture.open(0);
+		//videoCapture = new VideoCapture("C:/Users/Edgar/Desktop/Translation.mp4");
 	
 		//videoCapture.set(Videoio.CAP_DSHOW, 1);
 		int fourcc = VideoWriter.fourcc('M', 'J', 'P', 'G');
 	    videoCapture.set(Videoio.CAP_PROP_FOURCC, fourcc);
 	    videoCapture.set(Videoio.CAP_PROP_FPS,30);
 	    
-	    boolean wset = videoCapture.set(Videoio.CV_CAP_PROP_FRAME_WIDTH, 1920);
-	    boolean hset = videoCapture.set(Videoio.CV_CAP_PROP_FRAME_HEIGHT, 1080);
+//	    boolean wset = videoCapture.set(Videoio.CV_CAP_PROP_FRAME_WIDTH, 1920);
+//	    boolean hset = videoCapture.set(Videoio.CV_CAP_PROP_FRAME_HEIGHT, 1080);
 
 		System.out.println(videoCapture.get(Videoio.CV_CAP_PROP_FRAME_WIDTH));
 		System.out.println(videoCapture.get(Videoio.CV_CAP_PROP_FRAME_HEIGHT));
@@ -61,33 +78,30 @@ public class CameraController {
 			
 			@Override
 			public void handle(long now) {		
-				 long oldFrameTime = frameTimes[frameTimeIndex] ;
-	                frameTimes[frameTimeIndex] = now;
-	                frameTimeIndex = (frameTimeIndex + 1) % frameTimes.length;
-	                if (frameTimeIndex == 0) {
-	                    arrayFilled = true;
-	                }
-	                if (arrayFilled) {
-	                    long elapsedNanos = now - oldFrameTime ;
-	                    long elapsedNanosPerFrame = elapsedNanos / frameTimes.length;
-	                    double frameRate = 1_000_000_000.0 / elapsedNanosPerFrame ;
-	                    System.out.println(String.format("Current frame rate: %.3f", frameRate));
-	                }
-
-	                if(counter == 5) {
+//				 long oldFrameTime = frameTimes[frameTimeIndex] ;
+//	                frameTimes[frameTimeIndex] = now;
+//	                frameTimeIndex = (frameTimeIndex + 1) % frameTimes.length;
+//	                if (frameTimeIndex == 0) {
+//	                    arrayFilled = true;
+//	                }
+//	                if (arrayFilled) {
+//	                    long elapsedNanos = now - oldFrameTime ;
+//	                    long elapsedNanosPerFrame = elapsedNanos / frameTimes.length;
+//	                    double frameRate = 1_000_000_000.0 / elapsedNanosPerFrame ;
+//	                    System.out.println(String.format("Current frame rate: %.3f", frameRate));
+//	                }
 						videoCapture.read(mat);
 						
 						Image image = mat2Image(mat);
 						
 						frame = image;
 						//g2d.drawImage(image, 0, 0, canvas.getWidth(), canvas.getHeight());
-						counter = 0;
-	                }
-	
-					
+						counter = 0;				
 					counter++;
 			}
 		};
+		
+		
 	}
 	
 	public Image grabFrame() {
@@ -109,6 +123,11 @@ public class CameraController {
 		
 		System.out.println("Camera is open: " + videoCapture.isOpened());
 		timer.start();
+	}
+	
+	public void stopVideo() {
+		System.out.println("Camera stopped");
+		timer.stop();
 	}
 	
 	public void stopCamera() {
@@ -182,3 +201,4 @@ public class CameraController {
 		return (int) videoCapture.get(Videoio.CV_CAP_PROP_FRAME_HEIGHT);
 	}
 }
+*/
