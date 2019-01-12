@@ -1,19 +1,19 @@
 /*******************************************************************************
  * Nuton
- * Copyright (C) 2018 Edgard Schiebelbein
- * 
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- * 
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *   Copyright (C) 2018-2019 Edgard Schiebelbein
+ *   
+ *   This program is free software: you can redistribute it and/or modify
+ *   it under the terms of the GNU General Public License as published by
+ *   the Free Software Foundation, either version 3 of the License, or
+ *   (at your option) any later version.
+ *   
+ *   This program is distributed in the hope that it will be useful,
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *   GNU General Public License for more details.
+ *   
+ *   You should have received a copy of the GNU General Public License
+ *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 package tracking;
 
@@ -21,6 +21,7 @@ import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 
 import javax.imageio.ImageIO;
 
@@ -62,13 +63,26 @@ public class TrackingManager extends Dialog<String> implements Runnable {
 	private @FXML Button seekBtn;
 	private @FXML ChoiceBox<String> pointBox;
 	
+	
 	private Point calibratePoint;
 	
-	public TrackingManager(MainController mainController, ThemeLoader themeLoader, int radius, int stepsize, int scale) {
+	private KernelManager kernelManager;
+	
+	private boolean multiThreading = false;
+	
+	public TrackingManager(MainController mainController, ThemeLoader themeLoader, int radius, int stepsize, boolean multiThreading) {
+		System.out.println("Neuer Tracking Manager");
 		this.mainController = mainController;
 		this.radius = radius;	
-		kernel = new Kernel(radius, stepsize);
+		this.multiThreading = multiThreading;
+		if(multiThreading) {
+			kernelManager = new KernelManager(radius, stepsize);
+		} else {
+			kernel = new Kernel(radius, stepsize);
+		}
+		
 		calibratePoint = new Point(0, 0, 0);
+		
 		try {
 			FXMLLoader loader;
 			loader = new FXMLLoader(getClass().getResource("TrackingManagerPane.fxml"));
@@ -129,10 +143,11 @@ public class TrackingManager extends Dialog<String> implements Runnable {
 	}
 	
 	private void loadBox() {
-		for(Point p : mainController.getStateManager().getPoints()) {
-			String t = "Punkt bei " + p.getTime() + " ms";
-			pointBox.getItems().add(t);
-		}
+		if(mainController.getStateManager().getPoints() != null) {
+			for(Point p : mainController.getStateManager().getPoints()) {
+				String t = "Punkt bei " + p.getTime() + " ms";
+				pointBox.getItems().add(t);
+			}
 		
 		pointBox.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
 
@@ -144,11 +159,16 @@ public class TrackingManager extends Dialog<String> implements Runnable {
 			
 		});
 		pointBox.getSelectionModel().selectFirst();
+		}
 	}
+	
+//	public void calibrateKernel(int width, int height) {
+//		kernel = new Kernel(width, height);
+//	}
 	
 	public void selectTrackingPointFfmpeg(int x, int y) {
 		BufferedImage image = loadFrame(0);
-		kernel.calibrate(image, x, y);
+		//kernel.calibrate(image, x, y);
 		System.out.println(x + " " + y);
 		mainController.getGc().setFill(Color.RED);
 		mainController.getGc().fillRect(x-5, y-5, 10, 10);
@@ -163,10 +183,10 @@ public class TrackingManager extends Dialog<String> implements Runnable {
 		int frames = (int)(max / delta) - (int)(mainController.getStateManager().getPoints().get(0).getTime() / mainController.getSettings().getSchrittweite());
 		for(int i = 1; i < frames; i++) {
 			BufferedImage image = loadFrame(i);
-			int[] cords = kernel.feed(image);
-			mainController.getGc().fillRect(cords[0]-5, cords[1]-5, 10, 10);
-			double time = mainController.getStateManager().getPoints().get(0).getTime() + i * mainController.getSettings().getSchrittweite();
-			AddPointEvents.addTrackingPoint(mainController.getStateManager().getCurrentState(), null, cords[0], cords[1], time);
+			//int[] cords = kernel.feed(image);
+//			mainController.getGc().fillRect(cords[0]-5, cords[1]-5, 10, 10);
+//			double time = mainController.getStateManager().getPoints().get(0).getTime() + i * mainController.getSettings().getSchrittweite();
+//			AddPointEvents.addTrackingPoint(mainController.getStateManager().getCurrentState(), null, cords[0], cords[1], time);
 		}		
 	}
 	
@@ -176,7 +196,11 @@ public class TrackingManager extends Dialog<String> implements Runnable {
 		WritableImage wImage = new WritableImage((int)width, (int)height);
 		mainController.getMv().snapshot(null, wImage);
 		BufferedImage image = SwingFXUtils.fromFXImage(wImage, null);
-		kernel.calibrate(image, x, y);
+		if(multiThreading) {
+			kernelManager.calibrate(image, x, y);
+		} else {
+			kernel.calibrate(image, x, y);
+		}
 		mainController.getGc().setFill(Color.RED);
 		mainController.getGc().fillRect(x-5, y-5, 10, 10);
 		BufferedImage kernelBImage = image.getSubimage(x - radius, y - radius, radius + radius - 1 , radius + radius - 1);
@@ -195,10 +219,46 @@ public class TrackingManager extends Dialog<String> implements Runnable {
 		WritableImage wImage = new WritableImage((int)width, (int)height);
 		mainController.getMv().snapshot(null, wImage);
 		BufferedImage image = SwingFXUtils.fromFXImage(wImage, null);
-		int[] cords = kernel.feed(image);
+		int[] cords;
+		if(multiThreading ) {
+			cords = kernelManager.runKernels(image);
+		} else {
+			cords = kernel.feed(image, 0);
+		}
 		mainController.getGc().fillRect(cords[0]-5, cords[1]-5, 10, 10);
 		AddPointEvents.addPoint(mainController.getStateManager().getCurrentState(), null, cords[0], cords[1]);
+		
 	}
+	
+	public void track(Image frame) {
+//		for(Point p : mainController.getStateManager().getPoints()) {
+//			if(p.getTime() == mainController.getSlider().getValue()) {
+//				return;
+//			}
+//		}
+		
+		
+//		BufferedImage image = SwingFXUtils.fromFXImage(frame, null);
+//		int[] cords = kernel.feed(image);
+//		mainController.getScalingManager().setCanvasDimension();
+//		int[] drawCords = mainController.getScalingManager().getCordRelativeToMedia(cords[0], cords[1]);
+//		mainController.getGc().fillRect(drawCords[0]-5, drawCords[1]-5, 10, 10);
+//		System.out.println(Arrays.toString(cords));
+		
+		
+		//AddPointEvents.addPoint(mainController.getStateManager().getCurrentState(), null, cords[0], cords[1]);
+	}
+	
+//	public void selectTrackingPoint(Image frame, int x, int y) {
+//		BufferedImage image = SwingFXUtils.fromFXImage(frame, null);
+//		kernel.calibrate(image, x, y);
+//		mainController.getGc().setFill(Color.RED);
+//		mainController.getGc().fillRect(x-5, y-5, 10, 10);
+//		BufferedImage kernelBImage = image.getSubimage(x - radius, y - radius, radius + radius - 1 , radius + radius - 1);
+//		Image kernelImage = SwingFXUtils.toFXImage(kernelBImage, null);
+//		mainController.getCanvas().getGraphicsContext2D().drawImage(kernelImage, 0.0, 0.0);
+//		imageView.setImage(kernelImage);
+//	}
 	
 	private BufferedImage loadFrame(int n) {
 		

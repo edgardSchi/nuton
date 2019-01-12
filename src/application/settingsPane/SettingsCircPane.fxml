@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
   Nuton
-  Copyright (C) 2018 Edgard Schiebelbein
-  
-  This program is free software: you can redistribute it and/or modify
-  it under the terms of the GNU General Public License as published by
-  the Free Software Foundation, either version 3 of the License, or
-  (at your option) any later version.
-  
-  This program is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  GNU General Public License for more details.
-  
-  You should have received a copy of the GNU General Public License
-  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+    Copyright (C) 2018-2019 Edgard Schiebelbein
+    
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+    
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+    
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <?import java.lang.*?>
 <?import javafx.scene.control.*?>
@@ -22,15 +22,15 @@
 <?import javafx.scene.text.*?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<Pane fx:id="rootPane" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<Pane fx:id="rootPane" prefHeight="119.0" prefWidth="366.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <TextField fx:id="eichungsField" alignment="CENTER_RIGHT" layoutX="166.0" layoutY="87.0" prefHeight="25.0" prefWidth="120.0" text="100" />
-      <Label layoutX="2.0" layoutY="43.0" text="Schrittweite (ms)">
+      <Label layoutX="2.0" layoutY="43.0" text="Schrittweite">
          <font>
             <Font size="18.0" />
          </font>
       </Label>
-      <Label layoutY="86.0" text="Eichungsgröße (cm)">
+      <Label layoutY="86.0" text="Eichungsgröße">
          <font>
             <Font size="18.0" />
          </font>
@@ -42,5 +42,7 @@
          </font>
       </Label>
       <ComboBox fx:id="richtungsBox" layoutX="166.0" layoutY="1.0" prefHeight="25.0" prefWidth="120.0" />
+      <ComboBox fx:id="laengeBox" layoutX="302.0" layoutY="87.0" prefWidth="62.0" />
+      <ComboBox fx:id="zeitBox" layoutX="302.0" layoutY="44.0" prefWidth="62.0" />
    </children>
 </Pane>

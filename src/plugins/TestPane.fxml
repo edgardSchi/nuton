@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Nuton
+    Copyright (C) 2018-2019 Edgard Schiebelbein
+    
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+    
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+    
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<Pane fx:id="rootPane" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <TextField fx:id="eichungsField" alignment="CENTER_RIGHT" layoutX="166.0" layoutY="44.0" prefHeight="25.0" prefWidth="120.0" text="100" />
+      <Label layoutX="2.0" text="Schrittweite (ms)">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Label>
+      <Label layoutY="43.0" text="Eichungsgröße (cm)">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Label>
+      <ComboBox layoutX="166.0" layoutY="129.0" prefHeight="25.0" prefWidth="120.0" fx:id="xNullPunktBox" />
+      <ComboBox fx:id="yNullPunktBox" layoutX="166.0" layoutY="173.0" prefHeight="25.0" prefWidth="120.0" />
+      <TextField fx:id="schrittweiteField" alignment="CENTER_RIGHT" layoutX="166.0" layoutY="1.0" prefHeight="25.0" prefWidth="120.0" text="1000" />
+      <Label layoutX="2.0" layoutY="172.0" text="Y Nullpunkt">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Label>
+      <Label layoutY="86.0" text="Achsen fixieren">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Label>
+      <ComboBox fx:id="achsenBox" layoutX="166.0" layoutY="87.0" prefHeight="25.0" prefWidth="120.0" promptText="Keine" />
+      <Label layoutX="2.0" layoutY="128.0" text="X Nullpunkt">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Label>
+   </children>
+</Pane>

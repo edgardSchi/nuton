@@ -1,19 +1,19 @@
 /*******************************************************************************
  * Nuton
- * Copyright (C) 2018 Edgard Schiebelbein
- * 
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- * 
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *   Copyright (C) 2018-2019 Edgard Schiebelbein
+ *   
+ *   This program is free software: you can redistribute it and/or modify
+ *   it under the terms of the GNU General Public License as published by
+ *   the Free Software Foundation, either version 3 of the License, or
+ *   (at your option) any later version.
+ *   
+ *   This program is distributed in the hope that it will be useful,
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *   GNU General Public License for more details.
+ *   
+ *   You should have received a copy of the GNU General Public License
+ *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 package application;
 
@@ -74,7 +74,7 @@ public class PixelManager {
 	}
 	
 	public void calcMeter(ArrayList<Point> pointArray) {
-		double eichungMeter = mainController.getSettings().getEichung()/100;
+		double eichungMeter = mainController.getSettings().getEichung();
 		double tmp = eichungMeter/LAENGEPIXEL;
 		double xNull = points.get(0).getX();
 		double yNull = points.get(0).getY();
@@ -172,7 +172,7 @@ public class PixelManager {
 	}
 	
 	public double calcCircum() {
-		double eichungMeter = EICHUNG/100;
+		double eichungMeter = EICHUNG;
 		double circum = 2 * Math.PI * eichungMeter;
 		return circum;
 	}
@@ -185,7 +185,7 @@ public class PixelManager {
 	}
 	
 	public void calcCircVelo() { 
-		double eichungMeter = EICHUNG/100;
+		double eichungMeter = EICHUNG;
 		for(int i = 0; i < angleVelo.size(); i++) {
 			circVelo.add(new Vector2(angleVelo.get(i).getX() * eichungMeter, angleVelo.get(i).getY()));
 		}
@@ -199,10 +199,6 @@ public class PixelManager {
 	
 	public ArrayList<Vector2> getDeltaPhi() {
 		return deltaPhi;
-	}
-	
-	public static void calcRectangleMiddle() {
-		
 	}
 	
 	public void reset() {

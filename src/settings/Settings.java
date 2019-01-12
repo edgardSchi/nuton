@@ -1,23 +1,27 @@
 /*******************************************************************************
  * Nuton
- * Copyright (C) 2018 Edgard Schiebelbein
- * 
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- * 
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *   Copyright (C) 2018-2019 Edgard Schiebelbein
+ *   
+ *   This program is free software: you can redistribute it and/or modify
+ *   it under the terms of the GNU General Public License as published by
+ *   the Free Software Foundation, either version 3 of the License, or
+ *   (at your option) any later version.
+ *   
+ *   This program is distributed in the hope that it will be useful,
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *   GNU General Public License for more details.
+ *   
+ *   You should have received a copy of the GNU General Public License
+ *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 package settings;
 
 import java.io.Serializable;
+
+import math.UnitsHandler;
+import math.UnitsHandler.LengthUnit;
+import math.UnitsHandler.TimeUnit;
 
 public class Settings implements Serializable{
 
@@ -43,6 +47,10 @@ public class Settings implements Serializable{
 	private double schrittweite;
 	private double eichung;
 	
+	//Einheiten
+	private TimeUnit timeUnit = TimeUnit.MS;
+	private LengthUnit lengthUnit = LengthUnit.CM;
+	
 	//Translation
 	private int direction;
 	private int xNull;
@@ -65,12 +73,16 @@ public class Settings implements Serializable{
 
 
 	public void setEichung(double eichung) {
-		this.eichung = eichung;
+		this.eichung = UnitsHandler.convertLengthToMeters(eichung, this);
 	}
 
 
 	public double getSchrittweite() {
 		return schrittweite;
+	}
+	
+	public void setSchrittweite(double schrittweite) {
+		this.schrittweite = UnitsHandler.convertTimeToMilliseconds(schrittweite, this);
 	}
 
 
@@ -86,11 +98,6 @@ public class Settings implements Serializable{
 
 	public int getyNull() {
 		return yNull;
-	}
-
-
-	public void setSchrittweite(double schrittweite) {
-		this.schrittweite = schrittweite;
 	}
 
 	public void setxNull(int xNull) {
@@ -130,12 +137,27 @@ public class Settings implements Serializable{
 		return circleDirection;
 	}
 
+	public TimeUnit getTimeUnit() {
+		return timeUnit;
+	}
+	
+	public void setTimeUnit(TimeUnit unit) {
+		this.timeUnit = unit;
+	}
+	
+	public LengthUnit getLengthUnit() {
+		return lengthUnit;
+	}
+	
+	public void setLengthUnit(LengthUnit unit) {
+		this.lengthUnit = unit;
+	}
 	
 	@Override
 	public String toString() {
 		return "Settings [motion=" + motion + ", schrittweite=" + schrittweite + ", eichung=" + eichung + ", direction="
 				+ direction + ", xNull=" + xNull + ", yNull=" + yNull + ", xFixed=" + xFixed + ", yFixed=" + yFixed
-				+ ", circleDirection=" + circleDirection + "]";
+				+ ", circleDirection=" + circleDirection + ", timeUnit=" + timeUnit + ", lengthUnit=" + lengthUnit + "]";
 	}
 
 
@@ -148,6 +170,14 @@ public class Settings implements Serializable{
 	}
 	
 	public void overloadSettings(Settings newSettings) {
+		//Einheiten werden überprüft, für alte Dateien
+		if(newSettings.getTimeUnit() == null || newSettings.getLengthUnit() == null) {
+			this.timeUnit = TimeUnit.MS;
+			this.lengthUnit = LengthUnit.CM;
+		} else {
+			this.timeUnit = newSettings.getTimeUnit();
+			this.lengthUnit = newSettings.getLengthUnit();
+		}
 		this.eichung = newSettings.getEichung();
 		this.schrittweite = newSettings.getSchrittweite();
 		this.direction = newSettings.getDirection();
@@ -157,5 +187,6 @@ public class Settings implements Serializable{
 		this.yFixed = newSettings.isyFixed();
 		this.circleDirection = newSettings.getCircleDirection();
 		this.motion = newSettings.getMotion();
+
 	}
 }

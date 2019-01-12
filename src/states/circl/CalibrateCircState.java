@@ -1,19 +1,19 @@
 /*******************************************************************************
  * Nuton
- * Copyright (C) 2018 Edgard Schiebelbein
- * 
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- * 
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *   Copyright (C) 2018-2019 Edgard Schiebelbein
+ *   
+ *   This program is free software: you can redistribute it and/or modify
+ *   it under the terms of the GNU General Public License as published by
+ *   the Free Software Foundation, either version 3 of the License, or
+ *   (at your option) any later version.
+ *   
+ *   This program is distributed in the hope that it will be useful,
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *   GNU General Public License for more details.
+ *   
+ *   You should have received a copy of the GNU General Public License
+ *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 package states.circl;
 
@@ -38,7 +38,12 @@ public class CalibrateCircState extends CalibrateState{
 
 	@Override
 	public void init() {
-		resetSlider();
+		//resetSlider();
+		mainController.clearCanvas();
+		origin = pManager.getOrigin();
+		if(origin != null && mainController.getStateManager().statePaused()) {
+			origin.drawPoint(gc);
+		}
 		mainController.setHelpLabel("Distanz kalibieren");
 	}
 
@@ -60,7 +65,7 @@ public class CalibrateCircState extends CalibrateState{
 				TextInputDialog dialog = createDialog("Mittelpunkt und Distanz mit folgendem Wert speichern? (cm):", 1, 0);
 				
 				Optional<String> result = dialog.showAndWait();
-				if (result.isPresent()){
+				if (result.isPresent()) {
 					origin = calibratePoints[2];
 					mainController.getScalingManager().normalizePoint(origin);
 					mainController.getScalingManager().normalizePoint(calibratePoints[1]);
@@ -68,9 +73,15 @@ public class CalibrateCircState extends CalibrateState{
 					mainController.getSettings().setEichung(Double.parseDouble(result.get()));
 					pManager.setEichung(Double.parseDouble(result.get()));
 					pManager.setOrigin(origin);
-					gc.clearRect(0, 0, mainController.getCanvas().getWidth(), mainController.getCanvas().getWidth());
+					mainController.clearCanvas();
 					clickCounter = 0;
-					mainController.getStateManager().setState(StateManager.CIRCULAR);
+					
+					if(mainController.getStateManager().statePaused()) {
+						mainController.getStateManager().unpauseState();
+					} else {
+						mainController.getStateManager().setState(StateManager.CIRCULAR);
+					}
+					
 					mainController.getSlider().setSnapToTicks(true);
 					mainController.getStateManager().getCurrentState().setCalibratePoints(calibratePoints);
 				} else {
@@ -106,6 +117,18 @@ public class CalibrateCircState extends CalibrateState{
 
 	@Override
 	public void redraw() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onKill() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onUnpause() {
 		// TODO Auto-generated method stub
 		
 	}

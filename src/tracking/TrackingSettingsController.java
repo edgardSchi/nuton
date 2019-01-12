@@ -1,19 +1,19 @@
 /*******************************************************************************
  * Nuton
- * Copyright (C) 2018 Edgard Schiebelbein
- * 
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- * 
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *   Copyright (C) 2018-2019 Edgard Schiebelbein
+ *   
+ *   This program is free software: you can redistribute it and/or modify
+ *   it under the terms of the GNU General Public License as published by
+ *   the Free Software Foundation, either version 3 of the License, or
+ *   (at your option) any later version.
+ *   
+ *   This program is distributed in the hope that it will be useful,
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *   GNU General Public License for more details.
+ *   
+ *   You should have received a copy of the GNU General Public License
+ *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 package tracking;
 
@@ -27,11 +27,12 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.TextField;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import userSettings.ThemeLoader;
@@ -43,6 +44,8 @@ public class TrackingSettingsController extends Dialog<ButtonType> {
 	private TextField stepsizeField;
 	//@FXML
 	//private TextField scaleField;
+	@FXML
+	private CheckBox multiThreadingBox;
 	
 	private MainController mainController;
 	private ThemeLoader themeLoader;
@@ -75,7 +78,7 @@ public class TrackingSettingsController extends Dialog<ButtonType> {
 		Optional<ButtonType> result = showAndWait();
 	    if (result.get() == ButtonType.APPLY) {
 	    	if(mainController.getStateManager().getPoints().size() != 0) {
-		    	TrackingManager tm = new TrackingManager(mainController, themeLoader, Integer.parseInt(radiusField.getText()),  Integer.parseInt(stepsizeField.getText()),  1);
+		    	TrackingManager tm = new TrackingManager(mainController, themeLoader, Integer.parseInt(radiusField.getText()),  Integer.parseInt(stepsizeField.getText()), multiThreadingBox.isSelected());
 		    	tm.openDialog();
 	    	} else {
 	    		showErrorDialog();
