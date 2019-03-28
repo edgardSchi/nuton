@@ -21,7 +21,15 @@ import java.io.File;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import org.openimaj.image.MBFImage;
+import org.openimaj.image.processing.edges.CannyEdgeDetector;
+import org.openimaj.video.Video;
+import org.openimaj.video.VideoDisplay;
+import org.openimaj.video.VideoDisplayListener;
+import org.openimaj.video.xuggle.XuggleVideo;
+
 import application.settingsPane.SettingsController;
+import camera.CameraController;
 import javafx.application.HostServices;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -96,8 +104,8 @@ public class MainController implements Initializable{
 	@FXML private StackPane stackPane;
 	@FXML private Label helpLabel;
 	
-	//@FXML private MenuItem startCameraMenu;
-	//@FXML private MenuItem stopCameraMenu;
+	@FXML private MenuItem startCameraMenu;
+	@FXML private MenuItem stopCameraMenu;
 	
 	private GraphicsContext gc;
 	private ToolBarManager tbm;
@@ -114,6 +122,7 @@ public class MainController implements Initializable{
 	private ScalingManager scalingManager;
 	private HostServices hostServices;
 	private TrackingSettingsController trackingController;
+	private CameraController cameraController;
 	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
@@ -142,6 +151,7 @@ public class MainController implements Initializable{
 		gc = canvas.getGraphicsContext2D();
 		
 		pSettings = new ProgramSettingsController(this, themeLoader);
+		
 	}
 	
 	/**
@@ -149,24 +159,24 @@ public class MainController implements Initializable{
 	 */
 	private void initGuiEvents() {
 		//Für Livecamera, wurde rausgenommen
-//		startCameraMenu.setOnAction(new EventHandler<ActionEvent>() {
-//
-//			@Override
-//			public void handle(ActionEvent arg0) {
-//				//stateManager.setState(StateManager.STREAMING);
-//			}
-//			
-//		});
-//		
-//		stopCameraMenu.setOnAction(new EventHandler<ActionEvent>() {
-//
-//			@Override
-//			public void handle(ActionEvent arg0) {
-////				canvasW.unbind();
-////				canvasH.unbind();
-//			}
-//			
-//		});
+		startCameraMenu.setOnAction(new EventHandler<ActionEvent>() {
+
+			@Override
+			public void handle(ActionEvent arg0) {
+				stateManager.setState(StateManager.STREAMING);
+			}
+			
+		});
+		
+		stopCameraMenu.setOnAction(new EventHandler<ActionEvent>() {
+
+			@Override
+			public void handle(ActionEvent arg0) {
+//				canvasW.unbind();
+//				canvasH.unbind();
+			}
+			
+		});
 		
 		openFileMenu.setOnAction(new EventHandler<ActionEvent>() {
 

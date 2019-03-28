@@ -16,30 +16,10 @@
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 //Klasse ist zuständig für OpenCV, wurde rausgenommen
-/*package camera;
-
-import java.awt.image.BufferedImage;
-import java.awt.image.DataBufferByte;
-import java.io.ByteArrayInputStream;
-
-import org.opencv.core.Core;
-import org.opencv.core.Mat;
-import org.opencv.core.MatOfByte;
-import org.opencv.imgcodecs.Imgcodecs;
-import org.opencv.videoio.VideoCapture;
-import org.opencv.videoio.VideoWriter;
-import org.opencv.videoio.Videoio;
-
-import javafx.animation.AnimationTimer;
-import javafx.embed.swing.SwingFXUtils;
-import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.image.Image;
-import javafx.scene.layout.AnchorPane;
-
+package camera;
 public class CameraController {
 
-	private Canvas canvas;
+	/*private Canvas canvas;
 	
 	private VideoCapture videoCapture;
 	private GraphicsContext g2d;
@@ -59,7 +39,7 @@ public class CameraController {
 		
 		g2d = canvas.getGraphicsContext2D();
 		
-		//videoCapture = new VideoCapture("C:/Users/Edgar/Desktop/Translation.mp4");
+		videoCapture = new VideoCapture("/home/edgard/Desktop/Translation.mp4");
 	
 		//videoCapture.set(Videoio.CAP_DSHOW, 1);
 		int fourcc = VideoWriter.fourcc('M', 'J', 'P', 'G');
@@ -69,8 +49,8 @@ public class CameraController {
 //	    boolean wset = videoCapture.set(Videoio.CV_CAP_PROP_FRAME_WIDTH, 1920);
 //	    boolean hset = videoCapture.set(Videoio.CV_CAP_PROP_FRAME_HEIGHT, 1080);
 
-		System.out.println(videoCapture.get(Videoio.CV_CAP_PROP_FRAME_WIDTH));
-		System.out.println(videoCapture.get(Videoio.CV_CAP_PROP_FRAME_HEIGHT));
+//		System.out.println(videoCapture.get(Videoio.CV_CAP_PROP_FRAME_WIDTH));
+//		System.out.println(videoCapture.get(Videoio.CV_CAP_PROP_FRAME_HEIGHT));
 
 		timer = new AnimationTimer() {
 			Mat mat = new Mat();
@@ -107,6 +87,10 @@ public class CameraController {
 	public Image grabFrame() {
 		mat = new Mat();
 		videoCapture.read(mat);
+		if(mat.empty()) {
+			stopCamera();
+			return null;
+		}
 		//System.out.println("Bildgröße: " + mat.cols() + " x " + mat.rows());
 		
 		Image image = mat2Image2(mat);
@@ -115,8 +99,8 @@ public class CameraController {
 	}
 	
 	public void startCamera() {
-		videoCapture = new VideoCapture(0);
-		videoCapture.open(0);
+//		videoCapture = new VideoCapture(0);
+//		videoCapture.open(0);
 
 		
 //		canvas.widthProperty().bind(pane.widthProperty());
@@ -193,12 +177,13 @@ public class CameraController {
 		
 	}
 	
-	public int getCameraWidth() {
-		return (int) videoCapture.get(Videoio.CV_CAP_PROP_FRAME_WIDTH);
-	}
-	
-	public int getCameraHeight() {
-		return (int) videoCapture.get(Videoio.CV_CAP_PROP_FRAME_HEIGHT);
-	}
+//	public int getCameraWidth() {
+//		return (int) videoCapture.get(Videoio.CV_CAP_PROP_FRAME_WIDTH);
+//	}
+//	
+//	public int getCameraHeight() {
+//		return (int) videoCapture.get(Videoio.CV_CAP_PROP_FRAME_HEIGHT);
+//	}
+ 
+ */
 }
-*/

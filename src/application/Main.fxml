@@ -99,14 +99,13 @@
                       <MenuItem fx:id="startTrackingMenu" mnemonicParsing="false" text="Tracking starten" />
                     </items>
                   </Menu>
-                  <!--  Kameramenü, wurde rausgenommen
+                  <!--  Kameramenü, wurde rausgenommen-->
                   <Menu mnemonicParsing="false" text="Kamera">
                      <items>
                      	<MenuItem fx:id="startCameraMenu" mnemonicParsing="false" text="Kamera starten" />
                      	<MenuItem fx:id="stopCameraMenu" mnemonicParsing="false" text="Kamera stoppen" />
                      </items>
-                  </Menu>
-                  -->
+                  </Menu>               
                 <Menu mnemonicParsing="false" text="Hilfe">
                   <items>
                         <MenuItem fx:id="menuOpenWiki" mnemonicParsing="false" text="Wiki-Seite öffnen..." />
