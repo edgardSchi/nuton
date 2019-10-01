@@ -22,7 +22,7 @@
 <?import javafx.scene.text.*?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<Pane fx:id="rootPane" prefHeight="199.0" prefWidth="366.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<Pane fx:id="rootPane" prefHeight="199.0" prefWidth="372.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <TextField fx:id="eichungsField" alignment="CENTER_RIGHT" layoutX="166.0" layoutY="44.0" prefHeight="25.0" prefWidth="120.0" text="100" />
       <Label layoutX="2.0" text="Schrittweite">
@@ -54,7 +54,7 @@
             <Font size="18.0" />
          </font>
       </Label>
-      <ComboBox fx:id="zeitBox" layoutX="302.0" layoutY="2.0" prefHeight="25.0" prefWidth="62.0" promptText="" />
-      <ComboBox fx:id="laengeBox" layoutX="302.0" layoutY="44.0" prefHeight="25.0" prefWidth="62.0" promptText="" />
+      <ComboBox fx:id="zeitBox" layoutX="302.0" layoutY="2.0" prefHeight="25.0" prefWidth="75.0" promptText="" />
+      <ComboBox fx:id="laengeBox" layoutX="302.0" layoutY="44.0" prefHeight="25.0" prefWidth="75.0" promptText="" />
    </children>
 </Pane>
