@@ -55,14 +55,14 @@ public class MathFunctions {
 		Vector3 testCross = Vector3.crossProduct(testDiff, test1);
 		System.out.println("TEST: " + testCross.toString());
 		for(int i = 0; i < vectors.size()- 1; i++) {
-			System.out.println("Vektor1: " + vectors.get(i).toString());
-			System.out.println("Vektor2: " + vectors.get(i + 1).toString());
+//			System.out.println("Vektor1: " + vectors.get(i).toString());
+//			System.out.println("Vektor2: " + vectors.get(i + 1).toString());
 			Vector3 diff = new Vector3(Vector2.subtract(vectors.get(i + 1), vectors.get(i)));
-			System.out.println("Subvektor: " + diff.toString());
+//			System.out.println("Subvektor: " + diff.toString());
 			Vector3 v1 = new Vector3(vectors.get(i));
-			System.out.println(v1.toString());
+//			System.out.println(v1.toString());
 			Vector3 cross = Vector3.crossProduct(diff, v1);
-			System.out.println(cross.toString());
+//			System.out.println(cross.toString());
 			if(cross.getZ() >= 0) {
 				pos++;
 			} else {

@@ -42,7 +42,7 @@
          </font>
       </Label>
       <ComboBox fx:id="richtungsBox" layoutX="166.0" layoutY="1.0" prefHeight="25.0" prefWidth="120.0" />
-      <ComboBox fx:id="laengeBox" layoutX="302.0" layoutY="87.0" prefWidth="62.0" />
-      <ComboBox fx:id="zeitBox" layoutX="302.0" layoutY="44.0" prefWidth="62.0" />
+      <ComboBox fx:id="laengeBox" layoutX="302.0" layoutY="87.0" prefWidth="75.0" />
+      <ComboBox fx:id="zeitBox" layoutX="302.0" layoutY="44.0" prefWidth="75.0" />
    </children>
 </Pane>
