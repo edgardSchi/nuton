@@ -77,6 +77,8 @@ public class FertigDialogController {
 			dialog.initModality(Modality.WINDOW_MODAL);
 			
 			dialog.getDialogPane().setContent(root);
+			
+			
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

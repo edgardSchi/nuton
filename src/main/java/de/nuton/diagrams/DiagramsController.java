@@ -87,7 +87,7 @@ public class DiagramsController {
 			seriesArray = new XYChart.Series[11];
 			//settings = mainController.getSettings();
 			FXMLLoader loader;
-			loader = new FXMLLoader(getClass().getResource("Diagrams.fxml"));
+			loader = new FXMLLoader(getClass().getResource("/fxml/Diagrams.fxml"));
 			loader.setController(this);
 			Parent root = (Parent) loader.load();
 	

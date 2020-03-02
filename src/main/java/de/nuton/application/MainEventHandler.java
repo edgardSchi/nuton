@@ -270,7 +270,7 @@ public class MainEventHandler {
 	
 	public void openAboutDialog() {
 		try {
-			Parent loader = FXMLLoader.load(getClass().getResource("About.fxml"));
+			Parent loader = FXMLLoader.load(getClass().getResource("/fxml/About.fxml"));
 			Scene scene = new Scene(loader);
 			Stage stage = new Stage();
 			stage.setTitle("Über Nuton");
@@ -284,7 +284,7 @@ public class MainEventHandler {
 
 	}
 
-	public void closeProgram() {
+	static public void closeProgram() {
 		Platform.exit();
 		System.exit(0);
 	}

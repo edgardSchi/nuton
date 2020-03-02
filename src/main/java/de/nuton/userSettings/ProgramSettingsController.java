@@ -26,6 +26,7 @@ import java.util.Optional;
 import de.nuton.application.MainController;
 import de.nuton.properties.PropertiesReader;
 import de.nuton.properties.PropertiesWriter;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -115,6 +116,12 @@ public class ProgramSettingsController extends Dialog<ButtonType> {
 			
 			initFfmpegPart();
 			initAppearancePart();
+			
+			//Workaround for Linux KDE Systems. Bug shows window way too small
+			this.setResizable(true);
+			this.onShownProperty().addListener(e -> { 
+			    Platform.runLater(() -> this.setResizable(false)); 
+			});
 		} catch (IOException e) {
 			e.printStackTrace();
 			Alert alert = new Alert(AlertType.ERROR);

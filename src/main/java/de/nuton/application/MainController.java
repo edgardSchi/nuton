@@ -190,7 +190,7 @@ public class MainController implements Initializable{
 
 			@Override
 			public void handle(ActionEvent event) {
-				eventHandler.closeProgram();
+				MainEventHandler.closeProgram();
 			}
 			
 		});

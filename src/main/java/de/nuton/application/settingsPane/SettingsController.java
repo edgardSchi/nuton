@@ -73,6 +73,8 @@ public class SettingsController{
 			
 			initMotions();
 			initMotionBox();
+			
+			
 		} catch (IOException e) {
 			e.printStackTrace();
 		}		
