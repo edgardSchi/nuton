@@ -24,7 +24,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 
-import de.nuton.application.Main;
+import de.nuton.application.MainFX;
 import de.nuton.application.PixelManager;
 import de.nuton.application.Point;
 import de.nuton.math.Vector2;
@@ -67,7 +67,7 @@ public class CircExportHandler extends MotionExportHandler {
 		FileChooser.ExtensionFilter exFilter = new FileChooser.ExtensionFilter("CSV Dateien (*.csv)", "*.csv");
 		fileChooser.getExtensionFilters().add(exFilter);
 		
-		String pfad = fileChooser.showSaveDialog(Main.getStage()).getAbsolutePath();
+		String pfad = fileChooser.showSaveDialog(MainFX.getStage()).getAbsolutePath();
 		if (pfad != null) {
 			Path pfadDatei = Paths.get(pfad);
 

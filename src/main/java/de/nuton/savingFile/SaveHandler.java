@@ -24,7 +24,7 @@ import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 
-import de.nuton.application.Main;
+import de.nuton.application.MainFX;
 import de.nuton.application.MainController;
 import de.nuton.application.Point;
 import de.nuton.settings.Settings;
@@ -108,7 +108,7 @@ public class SaveHandler {
 		FileChooser.ExtensionFilter exFilter = new FileChooser.ExtensionFilter("nuton Dateien (*.ntn)", "*.ntn");
 		fileChooser.getExtensionFilters().add(exFilter);
 		
-		file = fileChooser.showSaveDialog(Main.getStage());
+		file = fileChooser.showSaveDialog(MainFX.getStage());
 	}
 	
 	public void setSaveAs(boolean saveAs) {

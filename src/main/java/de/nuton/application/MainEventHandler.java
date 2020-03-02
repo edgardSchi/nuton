@@ -117,7 +117,7 @@ public class MainEventHandler {
 		FileChooser.ExtensionFilter filter = new FileChooser.ExtensionFilter(
 				"Video Dateien (*.fxm), (*.flv), (*.mp4), (*.m4v)", "*.fxm", "*.flv", "*.mp4", "*.m4v");
 		fileChooser.getExtensionFilters().add(filter);
-		File mediaFile = fileChooser.showOpenDialog(Main.getStage());
+		File mediaFile = fileChooser.showOpenDialog(MainFX.getStage());
 
 		if (mediaFile != null) {
 			openMedia(mediaFile);
@@ -143,7 +143,7 @@ public class MainEventHandler {
 		}
 
 		File video;
-		video = chooser.showOpenDialog(Main.getStage());
+		video = chooser.showOpenDialog(MainFX.getStage());
 
 		loadMediaWithFfmpeg(video);
 
@@ -209,7 +209,7 @@ public class MainEventHandler {
 		FileChooser.ExtensionFilter filter = new FileChooser.ExtensionFilter(
 				"Video Dateien (*.fxm), (*.flv), (*.mp4), (*.m4v)", "*.fxm", "*.flv", "*.mp4", "*.m4v");
 		fileChooser.getExtensionFilters().add(filter);
-		File mediaFile = fileChooser.showOpenDialog(Main.getStage());
+		File mediaFile = fileChooser.showOpenDialog(MainFX.getStage());
 
 		if (mediaFile != null) {
 			mainController.setPlayer(new MediaPlayer(new Media(mediaFile.toURI().toString())));

@@ -73,7 +73,7 @@ public class FertigDialogController {
 			
 			btnType = new ButtonType("Schließen", ButtonData.FINISH);
 			dialog.getDialogPane().getButtonTypes().add(btnType);
-			dialog.initOwner(Main.getStage());
+			dialog.initOwner(MainFX.getStage());
 			dialog.initModality(Modality.WINDOW_MODAL);
 			
 			dialog.getDialogPane().setContent(root);

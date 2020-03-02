@@ -137,7 +137,7 @@ public class MainController implements Initializable{
 		
 		pManager = new PixelManager(this);
 		
-		hostServices = (HostServices)Main.getStage().getProperties().get("hostServices");
+		hostServices = (HostServices)MainFX.getStage().getProperties().get("hostServices");
 
 		gc = canvas.getGraphicsContext2D();
 		
@@ -219,7 +219,7 @@ public class MainController implements Initializable{
 				FileChooser chooser = new FileChooser();
 				FileChooser.ExtensionFilter filter = new FileChooser.ExtensionFilter("Nuton Datein (*.ntn)", "*.ntn");
 				chooser.getExtensionFilters().add(filter);
-				File file = chooser.showOpenDialog(Main.getStage());
+				File file = chooser.showOpenDialog(MainFX.getStage());
 				loadHandler.load(file);
 			}
 			
@@ -399,7 +399,7 @@ public class MainController implements Initializable{
 
 			@Override
 			public void handle(ActionEvent event) {
-				UpdateChecker checker = new UpdateChecker("https://edgardschi.github.io/nuton-website/version.html", Main.getVersion());
+				UpdateChecker checker = new UpdateChecker("https://edgardschi.github.io/nuton-website/version.html", MainFX.getVersion());
 				if(checker.readData()) {
 					checker.checkVersion();
 				} else {
