@@ -17,11 +17,13 @@
  ******************************************************************************/
 package de.nuton.application;
 
+/**
+ * Class that handles the correct coordinates of points due to scaling of the window
+ */
 public class ScalingManager {
 
 	private static ScalingManager instance;
 
-	private MainController mainController;
 	private double mediaW;
 	private double mediaH;
 	private double canvasW;
@@ -32,6 +34,10 @@ public class ScalingManager {
 		
 	}
 
+	/**
+	 * Get an instance of the scaling manager
+	 * @return instance of scaling manager
+	 */
 	public static ScalingManager getInstance() {
 		if (instance == null) {
 			instance = new ScalingManager();
@@ -39,24 +45,30 @@ public class ScalingManager {
 		return instance;
 	}
 	
-	// public void setMediaDimension() {
-	// 	if (mainController.getPlayer() == null) {
-	// 		return;
-	// 	}
-	// 	mediaW = mainController.getPlayer().getMedia().getWidth();
-	// 	mediaH = mainController.getPlayer().getMedia().getHeight();
-	// }
-	
+	/**
+	 * Set the dimension of the current media
+	 * @param width width of the media
+	 * @param height height of the media
+	 */
 	public void setMediaDimension(int width, int height) {
 		mediaW = width;
 		mediaH = height;
 	}
 	
+	/**
+	 * Set the dimension of the canvas. Should be called everytime the dimension of the canvas changes
+	 * @param width width of the canvas
+	 * @param height height of the canvas
+	 */
 	public void setCanvasDimension(double width, double height) {
 		canvasW = width;
 		canvasH = height;
 	}
 	
+	/**
+	 * Calculates and sets the coordinates of the point on the media using the normal coordinates
+	 * @param p point
+	 */
 	public void calcMediaCordWithNorm(Point p) {
 		double x = p.getNormX() * mediaW;
 		double y = p.getNormY() * mediaH;
@@ -64,6 +76,10 @@ public class ScalingManager {
 		p.setMediaY((int)y);
 	}
 	
+	/**
+	 * Calculates and sets the normalized coordinates of a point. It uses the canvas size for normalization
+	 * @param p point that needs to be normalized
+	 */
 	public void normalizePoint(Point p) {
 		//setCanvasDimension();
 		//setMediaDimension();
@@ -74,6 +90,10 @@ public class ScalingManager {
 		p.setY((int)(mediaH * normY));
 	}
 	
+	/**
+	 * Calculates and sets the normalized coordinates of a point. It uses the media size for normalization
+	 * @param p point that needs to be normalized
+	 */
 	public void normalizeWithMediaSize(Point p) {
 		double normX = p.getX()/mediaW;
 		double normY = p.getY()/mediaH;
@@ -81,15 +101,23 @@ public class ScalingManager {
 		updatePointPos(p);
 	}
 	
+	/**
+	 * Updates the draw coordinates of the point using the normal coordinates and the canvas size
+	 * @param p point that needs to be updated
+	 */
 	public void updatePointPos(Point p) {
-		//setCanvasDimension();
-		//setMediaDimension();
 		double x = p.getNormX() * canvasW;
 		double y = p.getNormY() * canvasH;
 		p.setDrawX((int)x);
 		p.setDrawY((int)y);
 	}
 	
+	/**
+	 * Calculates the normalized coordinates of a point. It uses the canvas size for normalization
+	 * @param x x coordinate
+	 * @param y y coordinate
+	 * @return array with normalized x at index 0 and normalized y at index 1
+	 */
 	public double[] calcNormalize(int x, int y) {
 		double[] norm = new double[2];
 		norm[0] = x/canvasW;
@@ -97,6 +125,16 @@ public class ScalingManager {
 		return norm;
 	}
 	
+	/**
+	 * Calculates the relative coordinates of a point on the media with respect to the canvas size
+	 * @param x x coordinate of the point on the canvas
+	 * @param y y coordinate of the point on the canvas
+	 * @param canvasWidth width of the canvas
+	 * @param canvasHeight height of the canvas
+	 * @param mediaWidth width of the media
+	 * @param mediaHeight height of the media
+	 * @return array with the coordinates on the media with x at index 0 and y at index 1
+	 */
 	public static int[] getCordRelativeToMedia(int x, int y, double canvasWidth, double canvasHeight, double mediaWidth, double mediaHeight) {
 		int[] cords = new int[2];
 		cords[0] = (int)((x/canvasWidth)*mediaWidth);
@@ -104,11 +142,12 @@ public class ScalingManager {
 		return cords;
 	}
 	
+	/*
 	public int[] getCordRelativeToMedia(int x, int y) {
 		int[] cords = new int[2];
 		cords[0] = (int)((x/mediaW)*canvasW);
 		cords[1] = (int)((y/mediaH)*canvasH);
 		return cords;
 	}
-	
+	*/
 }
