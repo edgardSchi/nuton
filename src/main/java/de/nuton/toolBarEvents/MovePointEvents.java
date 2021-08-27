@@ -18,6 +18,7 @@
 package de.nuton.toolBarEvents;
 
 import de.nuton.application.MainController;
+import de.nuton.application.ScalingManager;
 import de.nuton.application.Point;
 import javafx.scene.input.MouseEvent;
 
@@ -47,8 +48,8 @@ public class MovePointEvents {
 				dragX = e.getX();
 				dragY = e.getY();	
 				
-				mainController.getScalingManager().normalizePoint(p);
-				mainController.getScalingManager().updatePointPos(p);
+				ScalingManager.getInstance().normalizePoint(p);
+				ScalingManager.getInstance().updatePointPos(p);
 				mainController.redraw();
 				mainController.updateLists();
 				//System.out.println(p.toString());

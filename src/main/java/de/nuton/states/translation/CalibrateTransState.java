@@ -20,6 +20,7 @@ package de.nuton.states.translation;
 import java.util.Optional;
 
 import de.nuton.application.MainController;
+import de.nuton.application.ScalingManager;
 import de.nuton.states.CalibrateState;
 import de.nuton.states.StateManager;
 import javafx.scene.control.TextInputDialog;
@@ -67,8 +68,8 @@ public class CalibrateTransState extends CalibrateState {
 						mainController.getStateManager().setState(StateManager.TRANSLATION);
 					}
 
-					mainController.getScalingManager().normalizePoint(calibratePoints[0]);
-					mainController.getScalingManager().normalizePoint(calibratePoints[1]);
+					ScalingManager.getInstance().normalizePoint(calibratePoints[0]);
+					ScalingManager.getInstance().normalizePoint(calibratePoints[1]);
 					mainController.getStateManager().getCurrentState().setCalibratePoints(calibratePoints);
 				} else {
 					resetCalibrate();

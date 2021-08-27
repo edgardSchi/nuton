@@ -20,6 +20,7 @@ package de.nuton.states.stream;
 import de.nuton.application.MainController;
 import de.nuton.application.Point;
 import de.nuton.states.PointState;
+import de.nuton.application.ScalingManager;
 import de.nuton.tracking.TrackingManager;
 import javafx.animation.AnimationTimer;
 import javafx.beans.binding.Bindings;
@@ -252,7 +253,7 @@ public class StreamState extends PointState {
 		if (e.getEventType() == MouseEvent.MOUSE_RELEASED && !e.isPrimaryButtonDown() && leftClicked) {
 			rectangleWidth = (int)(x2 - x);
 			rectangleHeight = (int)(y2 - y);
-			int[] cords = mainController.getScalingManager().getCordRelativeToMedia((int)x, (int)y);
+			int[] cords = ScalingManager.getInstance().getCordRelativeToMedia((int)x, (int)y);
 			//trackingManager.calibrateKernel(rectangleWidth, rectangleHeight);
 			//trackingManager.selectTrackingPoint(frame, cords[0], cords[1]);
 			gc.clearRect(0, 0, mainController.getCanvas().getWidth(), mainController.getCanvas().getHeight());

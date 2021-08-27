@@ -21,6 +21,7 @@ import java.util.Optional;
 
 import de.nuton.application.MainController;
 import de.nuton.application.Point;
+import de.nuton.application.ScalingManager;
 import de.nuton.states.CalibrateState;
 import de.nuton.states.StateManager;
 import javafx.scene.control.TextInputDialog;
@@ -67,8 +68,8 @@ public class CalibrateCircState extends CalibrateState{
 				Optional<String> result = dialog.showAndWait();
 				if (result.isPresent()) {
 					origin = calibratePoints[2];
-					mainController.getScalingManager().normalizePoint(origin);
-					mainController.getScalingManager().normalizePoint(calibratePoints[1]);
+					ScalingManager.getInstance().normalizePoint(origin);
+					ScalingManager.getInstance().normalizePoint(calibratePoints[1]);
 					pManager.setCalibratePoints(calibratePoints);
 					mainController.getSettings().setEichung(Double.parseDouble(result.get()));
 					pManager.setEichung(Double.parseDouble(result.get()));

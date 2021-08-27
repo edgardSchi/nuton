@@ -19,32 +19,42 @@ package de.nuton.application;
 
 public class ScalingManager {
 
+	private static ScalingManager instance;
+
 	private MainController mainController;
 	private double mediaW;
 	private double mediaH;
 	private double canvasW;
 	private double canvasH;
 	
-	public ScalingManager(MainController mainController) {
-		this.mainController = mainController;
+
+	private ScalingManager() {
+		
+	}
+
+	public static ScalingManager getInstance() {
+		if (instance == null) {
+			instance = new ScalingManager();
+		}
+		return instance;
 	}
 	
-	public void setMediaDimension() {
-		if (mainController.getPlayer() == null) {
-			return;
-		}
-		mediaW = mainController.getPlayer().getMedia().getWidth();
-		mediaH = mainController.getPlayer().getMedia().getHeight();
-	}
+	// public void setMediaDimension() {
+	// 	if (mainController.getPlayer() == null) {
+	// 		return;
+	// 	}
+	// 	mediaW = mainController.getPlayer().getMedia().getWidth();
+	// 	mediaH = mainController.getPlayer().getMedia().getHeight();
+	// }
 	
 	public void setMediaDimension(int width, int height) {
 		mediaW = width;
 		mediaH = height;
 	}
 	
-	public void setCanvasDimension() {
-		canvasW = mainController.getCanvas().getWidth();
-		canvasH = mainController.getCanvas().getHeight();	
+	public void setCanvasDimension(double width, double height) {
+		canvasW = width;
+		canvasH = height;
 	}
 	
 	public void calcMediaCordWithNorm(Point p) {
@@ -55,8 +65,8 @@ public class ScalingManager {
 	}
 	
 	public void normalizePoint(Point p) {
-		setCanvasDimension();
-		setMediaDimension();
+		//setCanvasDimension();
+		//setMediaDimension();
 		double normX = p.getX()/canvasW;
 		double normY = p.getY()/canvasH;
 		p.setNormCord(normX, normY);
@@ -72,8 +82,8 @@ public class ScalingManager {
 	}
 	
 	public void updatePointPos(Point p) {
-		setCanvasDimension();
-		setMediaDimension();
+		//setCanvasDimension();
+		//setMediaDimension();
 		double x = p.getNormX() * canvasW;
 		double y = p.getNormY() * canvasH;
 		p.setDrawX((int)x);

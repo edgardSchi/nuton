@@ -126,7 +126,7 @@ public class MainController implements Initializable{
 	 */
 	private void initControllers() {
 		themeLoader = new ThemeLoader();
-		scalingManager = new ScalingManager(this);
+		scalingManager = ScalingManager.getInstance();
 		settings = new Settings();
 		eventHandler = new MainEventHandler(this);
 		
@@ -355,7 +355,7 @@ public class MainController implements Initializable{
 
 			@Override
 			public void changed(ObservableValue<? extends Bounds> observable, Bounds oldValue, Bounds newValue) {
-				scalingManager.setCanvasDimension();
+				scalingManager.setCanvasDimension(getCanvas().getWidth(), getCanvas().getHeight());
 				if (stateManager.getCurrentState().getPoints() != null) {
 					for (Point p : stateManager.getCurrentState().getPoints()) {
 						System.out.println("X: " + p.getDrawX() + "Y: " + p.getDrawY());
@@ -661,9 +661,9 @@ public class MainController implements Initializable{
 		return stackPane;
 	}
 	
-	public ScalingManager getScalingManager() {
-		return scalingManager;
-	}
+	// public ScalingManager getScalingManager() {
+	// 	return scalingManager;
+	// }
 	
 	public void setThemeLoader(ThemeLoader themeLoader) {
 		this.themeLoader = themeLoader;

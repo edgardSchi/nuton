@@ -21,6 +21,7 @@ import java.util.Optional;
 
 import de.nuton.application.MainController;
 import de.nuton.states.CalibrateState;
+import de.nuton.application.ScalingManager;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
@@ -62,8 +63,8 @@ public class CalibratePendelState extends CalibrateState{
 				TextInputDialog dialog = createDialog("Mittelpunkt und Distanz mit folgendem Wert speichern? (cm):", 1, 0);
 				Optional<String> result = dialog.showAndWait();
 				if (result.isPresent()) {
-					mainController.getScalingManager().normalizePoint(calibratePoints[2]);
-					mainController.getScalingManager().normalizePoint(calibratePoints[1]);
+					ScalingManager.getInstance().normalizePoint(calibratePoints[2]);
+					ScalingManager.getInstance().normalizePoint(calibratePoints[1]);
 					pManager.setCalibratePoints(calibratePoints);
 					mainController.getSettings().setEichung(Double.parseDouble(result.get()));
 					pManager.setEichung(Double.parseDouble(result.get()));

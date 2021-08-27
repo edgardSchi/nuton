@@ -27,6 +27,7 @@ import java.util.Optional;
 
 import de.nuton.application.MainController;
 import de.nuton.application.Point;
+import de.nuton.application.ScalingManager;
 import de.nuton.application.settingsPane.SettingsController;
 import de.nuton.settings.Settings;
 import javafx.application.Platform;
@@ -127,14 +128,14 @@ public class LoadHandler {
 		mainController.updateLists();
 		mainController.getStartBtn().setDisable(true);
 		mainController.getRestartBtn().setDisable(false);
-		mainController.getScalingManager().setCanvasDimension();
+		//mainController.getScalingManager().setCanvasDimension();
 		mainController.getSlider().setMinorTickCount(0);
 		mainController.getSlider().setMajorTickUnit(mainController.getSettings().getSchrittweite());
 		mainController.getSlider().setSnapToTicks(true);
 		
 		mainController.getSlider().setMax(SettingsController.calcMaxSlider(saveFile.getSettings().getSchrittweite(), mainController.getPlayer().getTotalDuration().toMillis()));
-		mainController.getScalingManager().setCanvasDimension();
-		mainController.getScalingManager().setMediaDimension();
+		ScalingManager.getInstance().setMediaDimension(mainController.getPlayer().getMedia().getWidth(), mainController.getPlayer().getMedia().getHeight());
+		ScalingManager.getInstance().setCanvasDimension(mainController.getCanvas().getWidth(), mainController.getCanvas().getHeight());
 		updatePoints();
 		TempSaving.setURL(saveFile.getVideoURL());
 		System.out.println("LOADED");
@@ -174,7 +175,7 @@ public class LoadHandler {
 	
 	private ArrayList<Point> convertPoints(ArrayList<SerializablePoint> sPoints) {
 		ArrayList<Point> points = new ArrayList<Point>();
-		mainController.getScalingManager().setMediaDimension();
+		ScalingManager.getInstance().setMediaDimension(mainController.getPlayer().getMedia().getWidth(), mainController.getPlayer().getMedia().getHeight());
 		for(SerializablePoint sPoint : sPoints) {
 			Point p = new Point(sPoint.getX(), sPoint.getY(), sPoint.getTime());
 			p.setNormCord(sPoint.getNormX(), sPoint.getNormY());
@@ -184,7 +185,7 @@ public class LoadHandler {
 			p.setEntfernungMeterY(sPoint.getEntfernungMeterY());
 			p.setMediaX(sPoint.getX());
 			p.setMediaY(sPoint.getY());
-			mainController.getScalingManager().updatePointPos(p);
+			ScalingManager.getInstance().updatePointPos(p);
 			points.add(p);
 			System.out.println(p.toString());
 		}
@@ -197,19 +198,19 @@ public class LoadHandler {
 		o.setNormY(sPoint.getNormY());
 		o.setMediaX(sPoint.getMediaX());
 		o.setMediaY(sPoint.getMediaY());
-		mainController.getScalingManager().updatePointPos(o);
+		ScalingManager.getInstance().updatePointPos(o);
 		return o;
 	}
 	
 	private void updatePoints() {
 		for(Point p : mainController.getStateManager().getPoints()) {
-			mainController.getScalingManager().updatePointPos(p);
+			ScalingManager.getInstance().updatePointPos(p);
 		}
 		for(Point p : mainController.getStateManager().getCurrentState().getCalibratePoints()) {
-			mainController.getScalingManager().updatePointPos(p);
+			ScalingManager.getInstance().updatePointPos(p);
 		}
 		if(mainController.getPManager().getOrigin() != null) {
-			mainController.getScalingManager().updatePointPos(mainController.getPManager().getOrigin());
+			ScalingManager.getInstance().updatePointPos(mainController.getPManager().getOrigin());
 		}
 	}
 }

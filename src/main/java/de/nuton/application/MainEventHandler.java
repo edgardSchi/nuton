@@ -52,7 +52,7 @@ public class MainEventHandler {
 	public MainEventHandler(MainController mainController) {
 		this.mainController = mainController;
 		propWriter = new PropertiesWriter();
-		scalingManager = mainController.getScalingManager();
+		scalingManager = ScalingManager.getInstance();
 	}
 
 	public void openMedia(File media) {
@@ -83,8 +83,9 @@ public class MainEventHandler {
 					mainController.getSlider().setMax(mainController.getPlayer().getTotalDuration().toMillis());
 					mainController.setMediaLength(mainController.getPlayer().getTotalDuration().toMillis());
 
-					scalingManager.setMediaDimension();
-					scalingManager.setCanvasDimension();
+					//Fix for changing the dimensions in the scaling manager when a video is opened
+					scalingManager.setMediaDimension(mainController.getPlayer().getMedia().getWidth(), mainController.getPlayer().getMedia().getHeight());
+					scalingManager.setCanvasDimension(mainController.getCanvas().getWidth(), mainController.getCanvas().getHeight());
 				}
 
 			});

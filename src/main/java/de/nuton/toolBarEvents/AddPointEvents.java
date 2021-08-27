@@ -20,6 +20,7 @@ package de.nuton.toolBarEvents;
 import java.util.ArrayList;
 
 import de.nuton.application.MainController;
+import de.nuton.application.ScalingManager;
 import de.nuton.application.Point;
 import de.nuton.states.State;
 import javafx.scene.canvas.GraphicsContext;
@@ -188,7 +189,7 @@ public class AddPointEvents {
 				points.add(p);
 				p.drawPoint(gc);
 			}
-			mainController.getScalingManager().normalizePoint(p);
+			ScalingManager.getInstance().normalizePoint(p);
 			state.getMainController().updateLists();
 			for (Point po : points) {
 				po.drawPoint(gc);
@@ -228,7 +229,7 @@ public class AddPointEvents {
 				points.add(p);
 				p.drawPoint(gc);
 			}
-			mainController.getScalingManager().normalizeWithMediaSize(p);
+			ScalingManager.getInstance().normalizeWithMediaSize(p);
 			state.getMainController().updateLists();
 			for (Point po : points) {
 				po.drawPoint(gc);
@@ -268,7 +269,7 @@ public class AddPointEvents {
 				points.add(p);
 				p.drawPoint(gc);
 			}
-			mainController.getScalingManager().normalizePoint(p);
+			ScalingManager.getInstance().normalizePoint(p);
 			state.getMainController().updateLists();
 			slider.setValue(slider.getValue() + mainController.getSettings().getSchrittweite());
 		}
