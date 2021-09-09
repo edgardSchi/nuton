@@ -23,7 +23,6 @@ import de.nuton.application.MainController;
 import de.nuton.application.Point;
 import de.nuton.states.circl.CalibrateCircState;
 import de.nuton.states.circl.CircState;
-import de.nuton.states.stream.StreamState;
 import de.nuton.states.tracking.TrackingState;
 import de.nuton.states.translation.CalibrateTransState;
 import de.nuton.states.translation.TranslationState;
@@ -64,7 +63,6 @@ public class StateManager {
 		states.add(new CalibrateCircState(mainController));
 		states.add(new CircState(mainController));
 		states.add(new TrackingState(mainController));
-		states.add(new StreamState(mainController));
 	}
 	
 	public void init() {
