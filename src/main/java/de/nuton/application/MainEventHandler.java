@@ -45,7 +45,6 @@ import javafx.stage.StageStyle;
 public class MainEventHandler {
 
 	private MainController mainController;
-	private PropertiesReader propReader;
 	private PropertiesWriter propWriter;
 	private ScalingManager scalingManager;
 
@@ -103,7 +102,7 @@ public class MainEventHandler {
 	}
 
 	public void openFileDialog() {
-		propReader = new PropertiesReader();
+		PropertiesReader propReader = PropertiesReader.getInstance();
 		propWriter = new PropertiesWriter();
 		FileChooser fileChooser = new FileChooser();
 
@@ -131,7 +130,7 @@ public class MainEventHandler {
 	}
 
 	public void ffmpegOpenFileDialog() {
-		propReader = new PropertiesReader();
+		PropertiesReader propReader = PropertiesReader.getInstance();
 		propWriter = new PropertiesWriter();
 		FileChooser chooser = new FileChooser();
 
@@ -151,7 +150,7 @@ public class MainEventHandler {
 	}
 
 	public boolean loadMediaWithFfmpeg(File video) {
-		propReader = new PropertiesReader();
+		PropertiesReader propReader = PropertiesReader.getInstance();
 		Alert waitAlert = new Alert(Alert.AlertType.NONE);
 		waitAlert.setHeaderText("Ffmpeg verabeitet das Video.");
 		waitAlert.setContentText("Das Video wird importiert.");
@@ -196,7 +195,7 @@ public class MainEventHandler {
 	}
 
 	public void openMediaDialogWithoutReset() {
-		propReader = new PropertiesReader();
+		PropertiesReader propReader = PropertiesReader.getInstance();
 		FileChooser fileChooser = new FileChooser();
 
 		if (!propReader.getLastPath().isEmpty()) {

@@ -21,6 +21,18 @@ import de.nuton.properties.PropertiesReader;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
+/*
+	TODOS:
+	- PropertiesReader als der Klasse nehmen
+	- Die ganzen Colors als static machen, sofern sie nicht woanders geändert werden können
+	- Seitenlänge auch static final machen
+	- Variablen ins Englische umbenennen
+	- Gucken, ob man einige Attribute weglassen / zusammenfügen kann
+	- Nach time und deltaTime schauen, vielleicht reicht nur ein Timestamp an jedem Punkt
+	- Point und SerializablePoint zusammenfassen zu einer Klasse
+*/
+
+
 public class Point {
 	
 	private int x;
@@ -32,7 +44,6 @@ public class Point {
 	private Color color;
 	private Color highlightColor;
 	private Color normalColor;
-	private PropertiesReader propReader;
 	private double normX;
 	private double normY;
 	private int mediaX;
@@ -47,8 +58,8 @@ public class Point {
 		this.drawX = x;
 		this.drawY = y;
 		this.time = time;
-		propReader = new PropertiesReader();
-		normalColor = propReader.getPointColor();
+		//propReader = new PropertiesReader();
+		normalColor = PropertiesReader.getInstance().getPointColor();
 		highlightColor = normalColor.invert();
 		color = normalColor;
 	}
@@ -104,8 +115,7 @@ public class Point {
 	public String toString() {
 		return "Point [x=" + x + ", y=" + y + ", SEITENLAENGE=" + SEITENLAENGE + ", time=" + time
 				+ ", entfernungMeterX=" + entfernungMeterX + ", entfernungMeterY=" + entfernungMeterY + ", color="
-				+ color + ", highlightColor=" + highlightColor + ", normalColor=" + normalColor + ", propReader="
-				+ propReader + ", normX=" + normX + ", normY=" + normY + ", mediaX=" + mediaX + ", mediaY=" + mediaY
+				+ color + ", highlightColor=" + highlightColor + ", normalColor=" + normalColor + ", normX=" + normX + ", normY=" + normY + ", mediaX=" + mediaX + ", mediaY=" + mediaY
 				+ ", drawX=" + drawX + ", drawY=" + drawY + ", deltaTime=" + deltaTime + "]";
 	}
 
@@ -126,8 +136,8 @@ public class Point {
 	}
 	
 	public void updateColor() {
-		propReader.update();
-		normalColor = propReader.getPointColor();
+		PropertiesReader.getInstance().update();
+		normalColor = PropertiesReader.getInstance().getPointColor();
 		highlightColor = normalColor.invert();
 	}
 	

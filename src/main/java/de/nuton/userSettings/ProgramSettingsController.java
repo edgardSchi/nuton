@@ -78,7 +78,6 @@ public class ProgramSettingsController extends Dialog<ButtonType> {
 	private @FXML Button helpSavePath;
 	private @FXML Button helpArguments;
 	private PropertiesWriter propWriter;
-	private PropertiesReader propReader;
 	
 	//ffmpeg EventHandler Wiki
 	private EventHandler<ActionEvent> ffmpegWikiEvent;
@@ -90,7 +89,6 @@ public class ProgramSettingsController extends Dialog<ButtonType> {
 		try {
 			this.mainController = mainController;
 			propWriter = new PropertiesWriter();
-			propReader = new PropertiesReader();
 			this.themeLoader = themeLoader;
 			FXMLLoader loader;
 			loader = new FXMLLoader(getClass().getResource("/fxml/ProgramSettings.fxml"));
@@ -171,6 +169,7 @@ public class ProgramSettingsController extends Dialog<ButtonType> {
 	}
 	
 	private void initFfmpegPart() {
+		PropertiesReader propReader = PropertiesReader.getInstance();
 		formatBox.getItems().addAll("*.mp4", "*.m4v");
 		formatBox.setValue("*." + propReader.getPrefVideoFormat());
 		pathField.setText(propReader.getFfmpegPath());
@@ -212,7 +211,7 @@ public class ProgramSettingsController extends Dialog<ButtonType> {
 	
 	private void initAppearancePart() {
 		loadThemeBox(themeLoader.getFileNames());
-		colorPicker.setValue(propReader.getPointColor());	
+		colorPicker.setValue(PropertiesReader.getInstance().getPointColor());	
 	}
 	
 	private void loadThemeBox(String[] themes) {
@@ -220,7 +219,7 @@ public class ProgramSettingsController extends Dialog<ButtonType> {
 			themeBox.getItems().add(themes[i]);
 			System.out.println(themes[i]);
 		}
-		themeBox.setValue(propReader.getTheme());
+		themeBox.setValue(PropertiesReader.getInstance().getTheme());
 	}
 	
 	

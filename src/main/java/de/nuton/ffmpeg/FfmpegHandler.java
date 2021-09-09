@@ -32,7 +32,6 @@ import java.util.Calendar;
 import java.util.List;
 
 import de.nuton.properties.PropertiesReader;
-import de.nuton.settings.Settings;
 import javafx.concurrent.Task;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
@@ -46,7 +45,6 @@ public class FfmpegHandler {
 
 	Task<Void> task;
 
-	private PropertiesReader propReader;
 	private File outputFile;
 	private String outputPath;
 	private static File logFolder;
@@ -60,7 +58,7 @@ public class FfmpegHandler {
 	private Alert alert;
 
 	public FfmpegHandler(String videoPath, String outputPath, String outputName) {
-		propReader = new PropertiesReader();
+		PropertiesReader propReader = PropertiesReader.getInstance();
 		outputName = genFileName(outputName);
 		ffmpegArguments = new ArrayList<String>();
 		ffmpegPath = propReader.getFfmpegPath();
@@ -170,6 +168,7 @@ public class FfmpegHandler {
 	}
 
 	private void loadFfmpegArguments() {
+		PropertiesReader propReader = PropertiesReader.getInstance();
 		ffmpegArguments.clear();
 		propReader.update();
 		ffmpegArguments.add(ffmpegPath + "/ffmpeg");
@@ -232,9 +231,7 @@ public class FfmpegHandler {
 	}
 	
 	public static boolean checkForFfmpeg() {
-		PropertiesReader reader = new PropertiesReader();
-		String path = reader.getFfmpegPath() + "/ffprobe.exe";
-//		String ffmpegString = path.substring(0, path.lastIndexOf("."));
+		String path = PropertiesReader.getInstance().getFfmpegPath() + "/ffprobe.exe";
 		if(new File(path).exists()) {
 			return true;
 		} else {
@@ -244,8 +241,7 @@ public class FfmpegHandler {
 	
 	public static void getFrame(String inputPath, double time) {
 		checkLogFolder();
-		PropertiesReader reader = new PropertiesReader();
-		String path = reader.getFfmpegPath();
+		String path = PropertiesReader.getInstance().getFfmpegPath();
 		try {
 				ProcessBuilder pb = new ProcessBuilder(path + "/ffmpeg", "-ss", Double.toString((time/1000)), "-i", inputPath, "-vframes", "1", "-q:v", "1", /*"-vf", "\"transpose=2\"",*/ logFolder.getAbsolutePath() + "/frame.png");
 				Process p = pb.start();

@@ -43,7 +43,6 @@ public class PropertiesWriter {
 	private String ffmpegSameOutput;
 	private String ffmpegSameOutputPath;
 	private OutputStream output;
-	private PropertiesReader propReader;
 	private Color pointColor;
 	private String lastPath;
 	private String userPath;
@@ -55,7 +54,6 @@ public class PropertiesWriter {
 		userPath = System.getProperty("user.home");
 		propertiesPath = userPath + "/.nuton/Properties";
 		checkFiles();
-		propReader = new PropertiesReader();
 		reset();
 	}
 	
@@ -78,14 +76,14 @@ public class PropertiesWriter {
 			makeNewFile();
 		}
 		
-		ffmpegPath = propReader.getFfmpegPath();
-		prefVideoFormat =  propReader.getPrefVideoFormat();
-		theme =  propReader.getTheme();
-		ffmpegSameOutput = propReader.getFfmpegSameOutput();
-		ffmpegSameOutputPath = propReader.getFfmpegSameOutputPath();
-		pointColor = propReader.getPointColor();
-		lastPath = propReader.getLastPath();
-		ffmpegArguments = convertFfmpegArguments(propReader.getFfmpegArguments());
+		ffmpegPath = PropertiesReader.getInstance().getFfmpegPath();
+		prefVideoFormat =  PropertiesReader.getInstance().getPrefVideoFormat();
+		theme =  PropertiesReader.getInstance().getTheme();
+		ffmpegSameOutput = PropertiesReader.getInstance().getFfmpegSameOutput();
+		ffmpegSameOutputPath = PropertiesReader.getInstance().getFfmpegSameOutputPath();
+		pointColor = PropertiesReader.getInstance().getPointColor();
+		lastPath = PropertiesReader.getInstance().getLastPath();
+		ffmpegArguments = convertFfmpegArguments(PropertiesReader.getInstance().getFfmpegArguments());
 	}
 	
 	public void confirm() {

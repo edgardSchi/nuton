@@ -25,7 +25,6 @@ import de.nuton.properties.PropertiesReader;
 public class ThemeLoader {
 	
 	private File[] listOfFiles;
-	private PropertiesReader propReader;
 	private String path;
 	private File defaultTheme;
 	private File themesFolder;
@@ -63,8 +62,7 @@ public class ThemeLoader {
 	}
 	
 	public String getTheme() {
-		propReader = new PropertiesReader();
-		File pathToTheme = new File(path + "\\" + propReader.getTheme());
+		File pathToTheme = new File(path + "\\" + PropertiesReader.getInstance().getTheme());
 		return "file:///" + pathToTheme.getAbsolutePath().replace("\\", "/");
 	}
 	

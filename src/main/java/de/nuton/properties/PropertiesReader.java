@@ -27,11 +27,12 @@ import javafx.scene.paint.Color;
 
 public class PropertiesReader {
 	
+	private static PropertiesReader instance;
 	private Properties prop;
 	private String userPath;
 	private String propertiesPath;
 	
-	public PropertiesReader() {
+	private PropertiesReader() {
 		userPath = System.getProperty("user.home");
 		propertiesPath = userPath + "/.nuton/Properties";
 		prop = new Properties();
@@ -45,6 +46,11 @@ public class PropertiesReader {
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
+	}
+
+	public static PropertiesReader getInstance() {
+		if (instance == null) instance = new PropertiesReader();
+		return instance;
 	}
 	
 	public void update() {
