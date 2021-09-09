@@ -36,11 +36,9 @@ import javafx.scene.paint.Color;
  * @author Edgard
  *
  */
+/*
 public class StreamState extends PointState {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
 	//private CameraController camera;
@@ -253,7 +251,7 @@ public class StreamState extends PointState {
 		if (e.getEventType() == MouseEvent.MOUSE_RELEASED && !e.isPrimaryButtonDown() && leftClicked) {
 			rectangleWidth = (int)(x2 - x);
 			rectangleHeight = (int)(y2 - y);
-			int[] cords = ScalingManager.getInstance().getCordRelativeToMedia((int)x, (int)y);
+			//int[] cords = ScalingManager.getInstance().getCordRelativeToMedia((int)x, (int)y);
 			//trackingManager.calibrateKernel(rectangleWidth, rectangleHeight);
 			//trackingManager.selectTrackingPoint(frame, cords[0], cords[1]);
 			gc.clearRect(0, 0, mainController.getCanvas().getWidth(), mainController.getCanvas().getHeight());
@@ -271,3 +269,4 @@ public class StreamState extends PointState {
 	}
 	
 }
+*/
