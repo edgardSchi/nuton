@@ -19,6 +19,8 @@ package de.nuton.toolBarEvents;
 
 import java.util.ArrayList;
 
+import de.nuton.draw.DrawController;
+import de.nuton.draw.DrawController;
 import de.nuton.application.MainController;
 import de.nuton.application.ScalingManager;
 import de.nuton.application.Point;
@@ -65,7 +67,7 @@ public class AddPointEvents {
 			gc.setStroke(Color.RED);
 			gc.clearRect(0, 0, mainController.getCanvas().getWidth(), mainController.getCanvas().getHeight());
 			for(Point p : points) {
-				p.drawPoint(gc);
+				DrawController.getInstance().drawPoint(p);
 			}
 			gc.setStroke(Color.RED);
 			
@@ -99,7 +101,7 @@ public class AddPointEvents {
 			addPoint(state, e, (x2 - x) / 2 + x, (y2 - y) / 2 + y);
 			gc.clearRect(0, 0, mainController.getCanvas().getWidth(), mainController.getCanvas().getHeight());
 			for(Point p : points) {
-				p.drawPoint(gc);
+				DrawController.getInstance().drawPoint(p);
 			}
 			leftClicked = false;
 		}
@@ -121,7 +123,7 @@ public class AddPointEvents {
 		if (e.getEventType() == MouseEvent.MOUSE_DRAGGED && e.isPrimaryButtonDown()) {			
 			gc.clearRect(0, 0, mainController.getCanvas().getWidth(), mainController.getCanvas().getHeight());
 			for(Point p : points) {
-				p.drawPoint(gc);
+				DrawController.getInstance().drawPoint(p);
 			}
 			gc.setStroke(Color.RED);
 			
@@ -152,7 +154,7 @@ public class AddPointEvents {
 				addPoint(state, e, (x2 - x) / 2 + x, (y2 - y) / 2 + y);
 				gc.clearRect(0, 0, mainController.getCanvas().getWidth(), mainController.getCanvas().getHeight());
 				for(Point p : points) {
-					p.drawPoint(gc);
+					DrawController.getInstance().drawPoint(p);
 				}
 				leftClicked = false;
 		}
@@ -170,29 +172,29 @@ public class AddPointEvents {
 				yFix = y;
 				p = new Point((int)x, (int)y, slider.getValue());
 				points.add(p);
-				p.drawPoint(gc);
+				DrawController.getInstance().drawPoint(p);
 			} else if (mainController.getSettings().isyFixed()) {
 				p = new Point((int)x, (int)yFix, slider.getValue());
 				points.add(p);
-				p.drawPoint(gc);
+				DrawController.getInstance().drawPoint(p);
 			} else if (mainController.getSettings().isxFixed() && xFix == 0) {
 				xFix = x;
 				p = new Point((int)x, (int)y, slider.getValue());
 				points.add(p);
-				p.drawPoint(gc);
+				DrawController.getInstance().drawPoint(p);
 			} else if (mainController.getSettings().isxFixed()) {
 				p = new Point((int)xFix, (int)y, slider.getValue());
 				points.add(p);
-				p.drawPoint(gc);
+				DrawController.getInstance().drawPoint(p);
 			} else {
 				p = new Point((int)x, (int)y, slider.getValue());
 				points.add(p);
-				p.drawPoint(gc);
+				DrawController.getInstance().drawPoint(p);
 			}
 			ScalingManager.getInstance().normalizePoint(p);
 			state.getMainController().updateLists();
 			for (Point po : points) {
-				po.drawPoint(gc);
+				DrawController.getInstance().drawPoint(po);
 			}
 			slider.setValue(slider.getValue() + mainController.getSettings().getSchrittweite());
 		}		
@@ -210,29 +212,29 @@ public class AddPointEvents {
 				yFix = y;
 				p = new Point((int)x, (int)y, time);
 				points.add(p);
-				p.drawPoint(gc);
+				DrawController.getInstance().drawPoint(p);
 			} else if (mainController.getSettings().isyFixed()) {
 				p = new Point((int)x, (int)yFix, time);
 				points.add(p);
-				p.drawPoint(gc);
+				DrawController.getInstance().drawPoint(p);
 			} else if (mainController.getSettings().isxFixed() && xFix == 0) {
 				xFix = x;
 				p = new Point((int)x, (int)y, time);
 				points.add(p);
-				p.drawPoint(gc);
+				DrawController.getInstance().drawPoint(p);
 			} else if (mainController.getSettings().isxFixed()) {
 				p = new Point((int)xFix, (int)y, time);
 				points.add(p);
-				p.drawPoint(gc);
+				DrawController.getInstance().drawPoint(p);
 			} else {
 				p = new Point((int)x, (int)y, time);
 				points.add(p);
-				p.drawPoint(gc);
+				DrawController.getInstance().drawPoint(p);
 			}
 			ScalingManager.getInstance().normalizeWithMediaSize(p);
 			state.getMainController().updateLists();
 			for (Point po : points) {
-				po.drawPoint(gc);
+				DrawController.getInstance().drawPoint(po);
 			}
 			slider.setValue(slider.getValue() + mainController.getSettings().getSchrittweite());
 		}		
@@ -240,34 +242,32 @@ public class AddPointEvents {
 	
 	private static void addPoint(State state, MouseEvent e) {
 		Slider slider = state.getMainController().getSlider();
-		GraphicsContext gc = state.getMainController().getGc();
 		MainController mainController = state.getMainController();
 		ArrayList<Point> points = state.getPoints();
 		if (slider.getValue() < slider.getMax()) {
-			gc.setFill(Color.rgb(255, 119, 0, 0.80));	
 			Point p;
 			if (mainController.getSettings().isyFixed() && yFix == 0) {
 				yFix = e.getY();
 				p = new Point((int)e.getX(), (int)e.getY(), slider.getValue());
 				points.add(p);
-				p.drawPoint(gc);
+				DrawController.getInstance().drawPoint(p);
 			} else if (mainController.getSettings().isyFixed() == true) {
 				p = new Point((int)e.getX(), (int)yFix, slider.getValue());
 				points.add(p);
-				p.drawPoint(gc);
+				DrawController.getInstance().drawPoint(p);
 			} else if (mainController.getSettings().isxFixed() && xFix == 0) {
 				xFix = e.getX();
 				p = new Point((int)e.getX(), (int)e.getY(), slider.getValue());
 				points.add(p);
-				p.drawPoint(gc);
+				DrawController.getInstance().drawPoint(p);
 			} else if (mainController.getSettings().isxFixed() == true) {
 				p = new Point((int)xFix, (int)e.getY(), slider.getValue());
 				points.add(p);
-				p.drawPoint(gc);
+				DrawController.getInstance().drawPoint(p);
 			} else {
 				p = new Point((int)e.getX(), (int)e.getY(), slider.getValue());
 				points.add(p);
-				p.drawPoint(gc);
+				DrawController.getInstance().drawPoint(p);
 			}
 			ScalingManager.getInstance().normalizePoint(p);
 			state.getMainController().updateLists();

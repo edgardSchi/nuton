@@ -47,7 +47,7 @@ public abstract class State implements Serializable{
 		points = new ArrayList<Point>();
 	}
 	
-	public abstract void init();
+	public abstract void init(); //Wieso ist das public?
 	public abstract void onClick(MouseEvent e);
 	public abstract void keyPressed(int k);
 	public abstract void keyReleased(int k);
