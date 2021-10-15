@@ -23,13 +23,14 @@ import javafx.scene.paint.Color;
 
 /*
 	TODOS:
-	- PropertiesReader als der Klasse nehmen
-	- Die ganzen Colors als static machen, sofern sie nicht woanders geändert werden können
-	- Seitenlänge auch static final machen
+	- PropertiesReader als der Klasse nehmen ✓
 	- Variablen ins Englische umbenennen
 	- Gucken, ob man einige Attribute weglassen / zusammenfügen kann
 	- Nach time und deltaTime schauen, vielleicht reicht nur ein Timestamp an jedem Punkt
 	- Point und SerializablePoint zusammenfassen zu einer Klasse
+	- Point Daten und das eigentliche Zeichnen trennen
+		- Die ganzen Colors als static machen, sofern sie nicht woanders geändert werden können
+		- Seitenlänge auch static final machen
 */
 
 

@@ -17,6 +17,8 @@
  ******************************************************************************/
 package de.nuton.application;
 
+
+import de.nuton.properties.PropertiesReader;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
@@ -32,4 +34,15 @@ public class DrawHandler {
 		gc.strokeText(label, a.getDrawX() + d, a.getDrawY() + d);
 	}
 	
+	public static void drawPoint(GraphicsContext gc, Point p, boolean highlight) {
+		int drawX = p.getDrawX();
+		int drawY = p.getDrawY();
+		Color color = PropertiesReader.getInstance().getPointColor();
+		if (highlight) {
+			color = color.invert();
+		}
+		gc.setStroke(color);
+		gc.strokeLine(drawX + 5, drawY, drawX - 5, drawY);
+		gc.strokeLine(drawX, drawY + 5, drawX, drawY - 5);
+	}
 }
