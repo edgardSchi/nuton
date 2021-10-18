@@ -22,6 +22,8 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 import de.nuton.application.settingsPane.SettingsController;
+import de.nuton.draw.DrawController;
+import de.nuton.draw.DrawHandler;
 import de.nuton.math.UnitsHandler.LengthUnit;
 import de.nuton.math.UnitsHandler.TimeUnit;
 import de.nuton.savingFile.LoadHandler;
@@ -99,7 +101,7 @@ public class MainController implements Initializable{
 	//@FXML private MenuItem startCameraMenu;
 	//@FXML private MenuItem stopCameraMenu;
 	
-	private GraphicsContext gc;
+	//private GraphicsContext gc;
 	private ToolBarManager tbm;
 	
 	private double mediaLength = 0;
@@ -129,7 +131,7 @@ public class MainController implements Initializable{
 		scalingManager = ScalingManager.getInstance();
 		settings = new Settings();
 		eventHandler = new MainEventHandler(this);
-		
+		DrawController.init(this);
 		
 		settingsController = new SettingsController(this, settings, themeLoader);
 		
@@ -138,10 +140,9 @@ public class MainController implements Initializable{
 		pManager = new PixelManager(this);
 		
 		hostServices = (HostServices)MainFX.getStage().getProperties().get("hostServices");
-
-		gc = canvas.getGraphicsContext2D();
 		
 		pSettings = new ProgramSettingsController(this, themeLoader);
+
 	}
 	
 	/**
@@ -444,7 +445,7 @@ public class MainController implements Initializable{
 		slider.setValue(0);
 		slider.setDisable(false);
 		slider.setSnapToTicks(false);
-		gc.clearRect(0, 0, canvas.getWidth(), canvas.getWidth());
+		DrawController.getInstance().clearScreen();
 		startBtn.setDisable(false);
 		pManager.reset();
 		stateManager.setState(StateManager.DEFAULT);
@@ -517,9 +518,9 @@ public class MainController implements Initializable{
 		}
 	}
 	
-	public void clearCanvas() {
+/*	public void clearCanvas() {
 		gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
-	}
+	}*/
 	
 	public Media getMedia() {
 		return media;
@@ -634,7 +635,7 @@ public class MainController implements Initializable{
 
 
 	public GraphicsContext getGc() {
-		return gc;
+		return this.canvas.getGraphicsContext2D();
 	}
 
 	public ToolBarManager getToolBarManager() {

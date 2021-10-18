@@ -17,6 +17,8 @@
  ******************************************************************************/
 package de.nuton.states;
 
+import de.nuton.draw.DrawController;
+import de.nuton.draw.DrawHandler;
 import de.nuton.application.MainController;
 import de.nuton.application.Point;
 import de.nuton.math.UnitsHandler;
@@ -31,16 +33,18 @@ import javafx.stage.Stage;
 
 public abstract class CalibrateState extends State{
 
-	protected GraphicsContext gc;
 	protected Point[] calibratePoints;
 	protected int clickCounter;
 	
 	public CalibrateState(MainController mainController) {
 		super(mainController);
 		clickCounter = 0;
-		gc = mainController.getGc();
 		mainController.getFertigBtn().setDisable(true);
 		calibratePoints = new Point[2];
+	}
+
+	public void init() {
+		DrawController.getInstance().clearScreen();
 	}
 	
 	public void resetSlider() {
@@ -104,7 +108,7 @@ public abstract class CalibrateState extends State{
 	}
 	
 	protected void resetCalibrate() {
-		gc.clearRect(0, 0, mainController.getCanvas().getWidth(), mainController.getCanvas().getHeight());
+		DrawController.getInstance().clearScreen();
 		clickCounter = 0;
 	}
 

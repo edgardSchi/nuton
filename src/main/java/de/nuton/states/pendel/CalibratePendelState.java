@@ -20,6 +20,7 @@ package de.nuton.states.pendel;
 import java.util.Optional;
 
 import de.nuton.application.MainController;
+import de.nuton.draw.DrawController;
 import de.nuton.states.CalibrateState;
 import de.nuton.application.ScalingManager;
 import javafx.scene.control.TextInputDialog;
@@ -48,15 +49,12 @@ public class CalibratePendelState extends CalibrateState{
 	@Override
 	public void onClick(MouseEvent e) {
 		if (e.getEventType() == MouseEvent.MOUSE_CLICKED) {
-			gc.setFill(Color.rgb(255, 119, 0, 0.80));
-			gc.fillRect(e.getX() - 5, e.getY() - 5, 10, 10);
-			
+			DrawController.getInstance().drawCalibratePoint( e.getX() - 5, e.getY() - 5);
 			
 			addPointByMouse(e);
 			
 			if(clickCounter == 2) {
-				gc.setStroke(Color.RED);
-				gc.strokeLine(calibratePoints[0].getX(), calibratePoints[0].getY(), calibratePoints[1].getX(), calibratePoints[1].getY());
+				DrawController.getInstance().drawDistance(calibratePoints[0], calibratePoints[1], Color.RED);
 			}
 			
 			if(clickCounter == 3) {
@@ -69,7 +67,7 @@ public class CalibratePendelState extends CalibrateState{
 					mainController.getSettings().setEichung(Double.parseDouble(result.get()));
 					pManager.setEichung(Double.parseDouble(result.get()));
 					pManager.setOrigin(calibratePoints[2]);
-					gc.clearRect(0, 0, mainController.getCanvas().getWidth(), mainController.getCanvas().getHeight());
+					DrawController.getInstance().clearScreen();
 					clickCounter = 0;
 					mainController.getStateManager().getCurrentState().setCalibratePoints(calibratePoints);
 				} else {

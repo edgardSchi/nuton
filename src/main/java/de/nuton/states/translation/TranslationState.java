@@ -17,11 +17,11 @@
  ******************************************************************************/
 package de.nuton.states.translation;
 
-import de.nuton.application.DrawHandler;
+import de.nuton.draw.DrawController;
+import de.nuton.draw.DrawHandler;
 import de.nuton.application.FertigDialogController;
 import de.nuton.application.MainController;
 import de.nuton.application.Point;
-import de.nuton.diagrams.DiagramsController;
 import de.nuton.savingFile.TempSaving;
 import de.nuton.settings.Settings;
 import de.nuton.states.Motion;
@@ -87,14 +87,14 @@ public class TranslationState extends PointState {
 
 	@Override
 	public void redraw() {
-		gc.clearRect(0, 0, mainController.getCanvas().getWidth(), mainController.getCanvas().getHeight());
+		DrawController.getInstance().clearScreen();
 		if(TempSaving.isShowPoints()) {
 			for(Point p : points) {
-				p.drawPoint(gc);
+				DrawController.getInstance().drawPoint(p);
 			}
 		}
 		if(TempSaving.isShowDistance()) {
-			DrawHandler.drawDistance(gc, getCalibratePoints()[0], getCalibratePoints()[1], Double.toString(settings.getEichung()).concat(" cm"));
+			DrawController.getInstance().drawCalibrationDistance(getCalibratePoints()[0], getCalibratePoints()[1], Double.toString(settings.getEichung()).concat(" cm"));
 		}
 	}
 

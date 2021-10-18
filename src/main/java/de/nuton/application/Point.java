@@ -17,34 +17,13 @@
  ******************************************************************************/
 package de.nuton.application;
 
-import de.nuton.properties.PropertiesReader;
-import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.paint.Color;
-
-/*
-	TODOS:
-	- PropertiesReader als der Klasse nehmen ✓
-	- Variablen ins Englische umbenennen
-	- Gucken, ob man einige Attribute weglassen / zusammenfügen kann
-	- Nach time und deltaTime schauen, vielleicht reicht nur ein Timestamp an jedem Punkt
-	- Point und SerializablePoint zusammenfassen zu einer Klasse
-	- Point Daten und das eigentliche Zeichnen trennen
-		- Die ganzen Colors als static machen, sofern sie nicht woanders geändert werden können
-		- Seitenlänge auch static final machen
-*/
-
-
 public class Point {
 	
 	private int x;
 	private int y;
-	private int SEITENLAENGE = 16;
 	private double time;
 	private double entfernungMeterX;
 	private double entfernungMeterY;
-	private Color color;
-	private Color highlightColor;
-	private Color normalColor;
 	private double normX;
 	private double normY;
 	private int mediaX;
@@ -52,6 +31,7 @@ public class Point {
 	private int drawX;
 	private int drawY;
 	private double deltaTime;
+	private boolean highlight;
 	
 	public Point(int x, int y, double time) {
 		this.x = x;
@@ -59,10 +39,7 @@ public class Point {
 		this.drawX = x;
 		this.drawY = y;
 		this.time = time;
-		//propReader = new PropertiesReader();
-		normalColor = PropertiesReader.getInstance().getPointColor();
-		highlightColor = normalColor.invert();
-		color = normalColor;
+		this.highlight = false;
 	}
 
 	public int getX() {
@@ -72,24 +49,14 @@ public class Point {
 	public int getY() {
 		return y;
 	}
-	
-	public void drawPoint(GraphicsContext gc) {
-		gc.setStroke(color);
-		gc.strokeLine(drawX + 5, drawY, drawX - 5, drawY);
-		gc.strokeLine(drawX, drawY + 5, drawX, drawY - 5);
-	}
-	
+
+	//Dirty Hack for highlighting point
 	public void highlightPoint(boolean highlight) {
-		if (highlight) {
-			color = highlightColor;
-		} else {
-			color = normalColor;
-		}
-		
+		this.highlight = highlight;
 	}
-	
-	public void removePoint(GraphicsContext gc) {
-		gc.clearRect(x - SEITENLAENGE/2, y - SEITENLAENGE/2, SEITENLAENGE, SEITENLAENGE);
+
+	public boolean isHighlight() {
+		return highlight;
 	}
 	
 	public double getTime() {
@@ -114,9 +81,8 @@ public class Point {
 
 	@Override
 	public String toString() {
-		return "Point [x=" + x + ", y=" + y + ", SEITENLAENGE=" + SEITENLAENGE + ", time=" + time
-				+ ", entfernungMeterX=" + entfernungMeterX + ", entfernungMeterY=" + entfernungMeterY + ", color="
-				+ color + ", highlightColor=" + highlightColor + ", normalColor=" + normalColor + ", normX=" + normX + ", normY=" + normY + ", mediaX=" + mediaX + ", mediaY=" + mediaY
+		return "Point [x=" + x + ", y=" + y + ", time=" + time
+				+ ", entfernungMeterX=" + entfernungMeterX + ", entfernungMeterY=" + entfernungMeterY + ", highlightColor=" + ", normX=" + normX + ", normY=" + normY + ", mediaX=" + mediaX + ", mediaY=" + mediaY
 				+ ", drawX=" + drawX + ", drawY=" + drawY + ", deltaTime=" + deltaTime + "]";
 	}
 
@@ -134,12 +100,6 @@ public class Point {
 	
 	public void setTime(double time) {
 		this.time = time;
-	}
-	
-	public void updateColor() {
-		PropertiesReader.getInstance().update();
-		normalColor = PropertiesReader.getInstance().getPointColor();
-		highlightColor = normalColor.invert();
 	}
 	
 	public void setNormCord(double x, double y) {
@@ -202,8 +162,5 @@ public class Point {
 	public void setDeltaTime(double deltaTime) {
 		this.deltaTime = deltaTime;
 	}
-	
-	
-	
 
 }
