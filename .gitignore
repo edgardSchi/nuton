@@ -2,4 +2,8 @@
 /.classpath
 /README.md
 /target/
+<<<<<<< HEAD
 nuton.iml
+=======
+/.vscode/
+>>>>>>> 4cdd427c9a7458ce082d82a308269eb2457e6ca4
