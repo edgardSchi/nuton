@@ -19,6 +19,7 @@ package de.nuton.states;
 
 import de.nuton.application.MainController;
 import de.nuton.application.Point;
+import de.nuton.draw.DrawController;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.canvas.GraphicsContext;
@@ -28,7 +29,6 @@ import javafx.scene.input.MouseEvent;
 
 public abstract class PointState extends State{
 
-	protected GraphicsContext gc;
 	protected Slider slider;
 	protected Button fertigBtn;
 	protected boolean pointSelected = false;
@@ -37,7 +37,6 @@ public abstract class PointState extends State{
 	
 	public PointState(MainController mainController) {
 		super(mainController);
-		this.gc = mainController.getGc();
 		this.slider = mainController.getSlider();
 		this.fertigBtn = mainController.getFertigBtn();
 		fertigBtn.setDisable(false);	
@@ -65,7 +64,7 @@ public abstract class PointState extends State{
 		slider.setValue(0);
 		slider.setDisable(false);
 		slider.setSnapToTicks(true);
-		gc.clearRect(0, 0, mainController.getCanvas().getWidth(), mainController.getCanvas().getWidth());
+		DrawController.getInstance().clearScreen();
 		pManager.reset();
 	}
 	

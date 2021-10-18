@@ -47,6 +47,9 @@ public class DrawController {
         return instance;
     }
 
+    /**
+     * Clears a rectangular section of the canvas
+     */
     public void clearScreen() {
         drawHandler.clearRect(0, 0, mainController.getCanvas().getWidth(), mainController.getCanvas().getHeight());
     }
@@ -136,7 +139,7 @@ public class DrawController {
      * @param height Height
      */
     public void drawCalibratePoint(Color color, double x, double y, double width, double height) {
-        drawHandler.drawCalibratePoint(color, x, y, width, height);
+        drawHandler.drawCalibratePoint(color, x, y);
     }
 
     /**
@@ -145,6 +148,58 @@ public class DrawController {
      * @param y Y Coordinate
      */
     public void drawCalibratePoint(double x, double y) {
-        drawHandler.drawCalibratePoint(CALIBRATION_POINT_COLOR, x, y, 10, 10);
+        drawHandler.drawCalibratePoint(CALIBRATION_POINT_COLOR, x, y);
+    }
+
+    /**
+     * Draws a rectangle with a cross in the middle on the canvas above the video player
+     * @param color Color of the rectangle
+     * @param x1 X Coordinate of the top left corner
+     * @param y1 Y Coordinate of the top left corner
+     * @param x2 X Coordinate of the bottom right corner
+     * @param y2 Y Coordinate of the bottom right corner
+     */
+    public void drawSelectionRectangle(Color color, double x1, double y1, double x2, double y2) {
+        drawHandler.drawSelectionRectangle(color, x1, y1, x2, y2);
+    }
+
+    /**
+     * Draws a rectangle with a cross in the middle on the canvas above the video player
+     * @param x1 X Coordinate of the top left corner
+     * @param y1 Y Coordinate of the top left corner
+     * @param x2 X Coordinate of the bottom right corner
+     * @param y2 Y Coordinate of the bottom right corner
+     */
+    public void drawSelectionRectangle(double x1, double y1, double x2, double y2) {
+        drawHandler.drawSelectionRectangle(POINT_COLOR, x1, y1, x2, y2);
+    }
+
+    //TODO: Ordentliche Doku schreiben
+    /**
+     * Draws an oval with a cross in the middle on the canvas above the video player
+     * @param color Color of the oval
+     * @param x1
+     * @param y1
+     * @param x2
+     * @param y2
+     * @param width
+     * @param height
+     */
+    public void drawSelectionOval(Color color, double x1, double y1, double x2, double y2, double width, double height) {
+        drawHandler.drawSelectionOval(color, x1, y1, x2, y2, width, height);
+    }
+
+    //TODO: Ordentliche Doku schreiben
+    /**
+     * Draws an oval with a cross in the middle on the canvas above the video player
+     * @param x1
+     * @param y1
+     * @param x2
+     * @param y2
+     * @param width
+     * @param height
+     */
+    public void drawSelectionOval(double x1, double y1, double x2, double y2, double width, double height) {
+        drawHandler.drawSelectionOval(POINT_COLOR, x1, y1, x2, y2, width, height);
     }
 }
