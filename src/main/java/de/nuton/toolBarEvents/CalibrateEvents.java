@@ -18,13 +18,13 @@
 package de.nuton.toolBarEvents;
 
 import de.nuton.application.MainController;
+import de.nuton.draw.DrawController;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 public class CalibrateEvents {
@@ -38,8 +38,7 @@ public class CalibrateEvents {
 	
 	public static void calibrate(MouseEvent e, MainController mainController) {
 		if (e.getEventType() == MouseEvent.MOUSE_CLICKED) {
-			mainController.getGc().setFill(Color.rgb(255, 119, 0, 0.80));
-			mainController.getGc().fillRect(e.getX() - 5, e.getY() - 5, 10, 10);
+			DrawController.getInstance().drawCalibrationPoint(e.getX(), e.getY());
 			
 			if (clickCounter == 0) {
 				x1 = e.getX();
@@ -54,9 +53,9 @@ public class CalibrateEvents {
 			clickCounter++;
 			
 			if (clickCounter == 2) {
-				mainController.getGc().setStroke(Color.RED);
-				mainController.getGc().strokeLine(x1, y1, x2, y2);
-				
+				DrawController.getInstance().drawCalibrationPoint(x2, y2);
+				DrawController.getInstance().drawDistance(x1, y1, x2, y2);
+
 				TextInputDialog dialog = createCalibWindow((int)mainController.getSettings().getEichung(), "Distanz für folgenen Wert speichern? (cm):");
 			}
 		}

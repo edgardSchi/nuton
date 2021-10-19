@@ -633,7 +633,7 @@ public class MainController implements Initializable{
 		return pManager;
 	}
 
-
+	@Deprecated
 	public GraphicsContext getGc() {
 		return this.canvas.getGraphicsContext2D();
 	}

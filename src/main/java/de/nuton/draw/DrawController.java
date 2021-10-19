@@ -60,7 +60,7 @@ public class DrawController {
      * @param b Point b
      */
     public void drawCalibrationDistance(Point a, Point b) {
-        drawHandler.drawCalibrationDistance(a, b, CALIBRATION_DISTANCE_COLOR, "");
+        drawHandler.drawCalibrationDistance(a.getDrawX(), a.getDrawY(), b.getDrawX(), b.getDrawY(), CALIBRATION_DISTANCE_COLOR, "");
     }
 
     /**
@@ -70,7 +70,11 @@ public class DrawController {
      * @param label Text above the line
      */
     public void drawCalibrationDistance(Point a, Point b, String label) {
-        drawHandler.drawCalibrationDistance(a, b, CALIBRATION_DISTANCE_COLOR, label);
+        drawHandler.drawCalibrationDistance(a.getDrawX(), a.getDrawY(), b.getDrawX(), b.getDrawY(), CALIBRATION_DISTANCE_COLOR, label);
+    }
+
+    public void drawCalibrationDistance(double x1, double y1, double x2, double y2, Color color, String label) {
+
     }
 
     /**
@@ -80,7 +84,7 @@ public class DrawController {
      * @param color Color of the line
      */
     public void drawCalibrationDistance(Point a, Point b, Color color) {
-        drawHandler.drawCalibrationDistance(a, b, color, "");
+        drawHandler.drawCalibrationDistance(a.getDrawX(), a.getDrawY(), b.getDrawX(), b.getDrawY(), color, "");
     }
 
     /**
@@ -91,7 +95,7 @@ public class DrawController {
      * @param label Label of the line
      */
     public void drawCalibrationDistance(Point a, Point b, Color color, String label) {
-        drawHandler.drawCalibrationDistance(a, b, color, label);
+        drawHandler.drawCalibrationDistance(a.getDrawX(), a.getDrawY(), b.getDrawX(), b.getDrawY(), color, label);
     }
 
     /**
@@ -100,7 +104,7 @@ public class DrawController {
      * @param b Point b
      */
     public void drawDistance(Point a, Point b) {
-        drawHandler.drawDistance(a, b, POINT_COLOR);
+        drawHandler.drawDistance(a.getDrawX(), a.getDrawY(), b.getDrawX(), b.getDrawY(), POINT_COLOR);
     }
 
     /**
@@ -110,7 +114,31 @@ public class DrawController {
      * @param color Color of the line
      */
     public void drawDistance(Point a, Point b, Color color) {
-        drawHandler.drawDistance(a, b, color);
+        drawHandler.drawDistance(a.getDrawX(), a.getDrawY(), b.getDrawX(), b.getDrawY(), color);
+    }
+
+    /**
+     * Draws a straight line between two points
+     * @param x1 X Coordinate of the first point
+     * @param y1 Y Corrdinate of the first point
+     * @param x2 X Coordinate of the second point
+     * @param y2 Y Coordinate of the second point
+     * @param color Color of the line
+     */
+    public void drawDistance(double x1, double y1, double x2, double y2, Color color) {
+        drawHandler.drawDistance(x1, y1, x2, y2, color);
+    }
+
+    /**
+     * Draws a straight line between two points
+     * @param x1 X Coordinate of the first point
+     * @param y1 Y Corrdinate of the first point
+     * @param x2 X Coordinate of the second point
+     * @param y2 Y Coordinate of the second point
+     * @param color Color of the line
+     */
+    public void drawDistance(double x1, double y1, double x2, double y2) {
+        drawHandler.drawDistance(x1, y1, x2, y2, POINT_COLOR);
     }
 
     /**
@@ -119,7 +147,7 @@ public class DrawController {
      * @param highlight Whether or not the point should be highlighted (inverse color)
      */
     public void drawPoint(Point p, boolean highlight) {
-        drawHandler.drawPoint(p, POINT_COLOR, highlight);
+        drawHandler.drawPoint(p.getDrawX(), p.getDrawY(), POINT_COLOR, highlight);
     }
 
     /**
@@ -127,7 +155,7 @@ public class DrawController {
      * @param p Point that needs to be drawn
      */
     public void drawPoint(Point p) {
-        drawHandler.drawPoint(p, POINT_COLOR, p.isHighlight());
+        drawHandler.drawPoint(p.getDrawX(), p.getDrawY(), POINT_COLOR, p.isHighlight());
     }
 
     /**
@@ -138,8 +166,8 @@ public class DrawController {
      * @param width Width
      * @param height Height
      */
-    public void drawCalibratePoint(Color color, double x, double y, double width, double height) {
-        drawHandler.drawCalibratePoint(color, x, y);
+    public void drawCalibrationPoint(Color color, double x, double y, double width, double height) {
+        drawHandler.drawCalibrationPoint(color, x, y);
     }
 
     /**
@@ -147,8 +175,8 @@ public class DrawController {
      * @param x X Coordinate
      * @param y Y Coordinate
      */
-    public void drawCalibratePoint(double x, double y) {
-        drawHandler.drawCalibratePoint(CALIBRATION_POINT_COLOR, x, y);
+    public void drawCalibrationPoint(double x, double y) {
+        drawHandler.drawCalibrationPoint(CALIBRATION_POINT_COLOR, x, y);
     }
 
     /**

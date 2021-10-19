@@ -49,7 +49,7 @@ public class CalibratePendelState extends CalibrateState{
 	@Override
 	public void onClick(MouseEvent e) {
 		if (e.getEventType() == MouseEvent.MOUSE_CLICKED) {
-			DrawController.getInstance().drawCalibratePoint( e.getX() - 5, e.getY() - 5);
+			DrawController.getInstance().drawCalibrationPoint(e.getX(), e.getY());
 			
 			addPointByMouse(e);
 			

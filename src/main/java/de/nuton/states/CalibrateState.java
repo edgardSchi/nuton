@@ -18,13 +18,11 @@
 package de.nuton.states;
 
 import de.nuton.draw.DrawController;
-import de.nuton.draw.DrawHandler;
 import de.nuton.application.MainController;
 import de.nuton.application.Point;
 import de.nuton.math.UnitsHandler;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.image.Image;

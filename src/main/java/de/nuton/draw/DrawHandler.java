@@ -1,7 +1,5 @@
 package de.nuton.draw;
 
-
-import de.nuton.application.Point;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
@@ -12,6 +10,7 @@ public class DrawHandler {
 
 	private static final int LINE_WIDTH = 2;
 	private static final int CALIBRATION_RECT_SIZE = 12;
+	private static final int POINT_LENGTH = 5;
 
 	private GraphicsContext gc;
 
@@ -42,20 +41,22 @@ public class DrawHandler {
 
 	/**
 	 * Draws a straight line between two calibration points
-	 * @param a Point a
-	 * @param b Point b
+	 * @param x1 X Coordinate of the first point
+	 * @param y1 Y Coordinate of the first point
+	 * @param x2 X Coordinate of the second point
+	 * @param y2 Y Coordinate of the second point
 	 * @param color Color of the line
 	 * @param label Label of the line
 	 */
-	public void drawCalibrationDistance(Point a, Point b, Color color, String label) {
+	public void drawCalibrationDistance(double x1, double y1, double x2, double y2, Color color, String label) {
 		gc.setFill(color);
 		gc.setStroke(color);
-		int rectCenter = CALIBRATION_RECT_SIZE / 2;
-		drawCalibratePoint(color,a.getDrawX() - rectCenter, a.getDrawY() - rectCenter);
-		drawCalibratePoint(color,b.getDrawX() - rectCenter, b.getDrawY() - rectCenter);
-		gc.strokeLine(a.getDrawX(), a.getDrawY(), b.getDrawX(), b.getDrawY());
+
+		drawCalibrationPoint(color, x1, y1);
+		drawCalibrationPoint(color, x2, y2);
+		gc.strokeLine(x1, y1, x2, y2);
 		int textOffset = 15;
-		gc.strokeText(label, a.getDrawX() + textOffset, a.getDrawY() + textOffset);
+		gc.strokeText(label, x1 + textOffset, y1 + textOffset);
 	}
 
 	/**
@@ -64,38 +65,38 @@ public class DrawHandler {
 	 * @param b Point b
 	 * @param color Color of the line
 	 */
-	public void drawDistance(Point a, Point b, Color color) {
+	public void drawDistance(double x1, double y1, double x2, double y2, Color color) {
 		gc.setFill(color);
 		gc.setStroke(color);
-		gc.strokeLine(a.getDrawX(), a.getDrawY(), b.getDrawX(), b.getDrawY());
+		gc.strokeLine(x1, y1, x2, y2);
 	}
 
 	/**
 	 * Draws a point on the canvas above the video player
-	 * @param p Point that needs to be drawn
+	 * @param x X Coordinate of the point
+	 * @param y Y Coordinate of the point
 	 * @param color Color of the point
 	 * @param highlight Whether or not the point should be highlighted (inverse color)
 	 */
-	public void drawPoint(Point p, Color color, boolean highlight) {
-		int drawX = p.getDrawX();
-		int drawY = p.getDrawY();
+	public void drawPoint(double x, double y, Color color, boolean highlight) {
 		if (highlight) {
 			color = color.invert();
 		}
 		gc.setStroke(color);
-		gc.strokeLine(drawX + 5, drawY, drawX - 5, drawY);
-		gc.strokeLine(drawX, drawY + 5, drawX, drawY - 5);
+		gc.strokeLine(x + POINT_LENGTH, y, x - POINT_LENGTH, y);
+		gc.strokeLine(x, y + POINT_LENGTH, x, y - POINT_LENGTH);
 	}
 
 	/**
 	 * Draws a rectangle on the canvas above the video player, typically used for calibrations
 	 * @param color Color of the rectangle
-	 * @param x X Coordinate
-	 * @param y Y Coordinate
+	 * @param x X Coordinate of the middle of the rectangle
+	 * @param y Y Coordinate of the middle of the rectangle
 	 */
-	public void drawCalibratePoint(Color color, double x, double y) {
+	public void drawCalibrationPoint(Color color, double x, double y) {
 		gc.setFill(color);
-		gc.fillRect(x, y, CALIBRATION_RECT_SIZE, CALIBRATION_RECT_SIZE);
+		double rectCenter = CALIBRATION_RECT_SIZE / 2;
+		gc.fillRect(x - rectCenter, y - rectCenter, CALIBRATION_RECT_SIZE, CALIBRATION_RECT_SIZE);
 	}
 
 	/**
