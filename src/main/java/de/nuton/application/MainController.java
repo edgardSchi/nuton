@@ -20,10 +20,8 @@ package de.nuton.application;
 import java.io.File;
 import java.net.URL;
 import java.util.ResourceBundle;
-
 import de.nuton.application.settingsPane.SettingsController;
 import de.nuton.draw.DrawController;
-import de.nuton.draw.DrawHandler;
 import de.nuton.math.UnitsHandler.LengthUnit;
 import de.nuton.math.UnitsHandler.TimeUnit;
 import de.nuton.savingFile.LoadHandler;
