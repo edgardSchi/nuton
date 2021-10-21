@@ -18,6 +18,7 @@
 package de.nuton.application;
 	
 
+import de.nuton.ffmpeg.FfmpegHandler;
 import de.nuton.properties.PropertiesWriter;
 import de.nuton.userSettings.ThemeLoader;
 import javafx.application.Application;
@@ -48,6 +49,9 @@ public class MainFX extends Application {
 	@Override
 	public void start(Stage primaryStage) {
 		try {
+
+			System.out.println("ffmpeg found: " + FfmpegHandler.ffmpegInPath());
+
 			propWriter = new PropertiesWriter();
 			stage = primaryStage;
 			stage.getProperties().put("hostServices", this.getHostServices());

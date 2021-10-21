@@ -238,6 +238,20 @@ public class FfmpegHandler {
 			return false;
 		}
 	}
+
+	public static boolean ffmpegInPath() {
+		try {
+			ProcessBuilder pb = new ProcessBuilder("ffmpeg", "-version");
+			Process p = pb.start();
+			
+			int exitCode = p.waitFor();
+
+			if (exitCode != 0) return false;
+		} catch (IOException | InterruptedException e) {
+			e.printStackTrace();
+		}
+		return true;
+	}
 	
 	public static void getFrame(String inputPath, double time) {
 		checkLogFolder();
