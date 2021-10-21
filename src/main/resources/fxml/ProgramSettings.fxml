@@ -48,7 +48,7 @@
                      <graphic>
                         <ImageView id="helpIcon" fitHeight="19.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="/hilfe_25.png" />
+                              <Image url="@../hilfe_25.png" />
                            </image>
                         </ImageView>
                      </graphic>
@@ -60,7 +60,7 @@
                      <graphic>
                         <ImageView id="helpIcon" fitHeight="19.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="/hilfe_25.png" />
+                              <Image url="@../hilfe_25.png" />
                            </image>
                         </ImageView>
                      </graphic>
@@ -106,7 +106,7 @@
                      <graphic>
                         <ImageView id="helpIcon" fitHeight="19.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="/hilfe_25.png" />
+                              <Image url="@../hilfe_25.png" />
                            </image>
                         </ImageView>
                      </graphic>
@@ -118,7 +118,7 @@
                      <graphic>
                         <ImageView id="helpIcon" fitHeight="19.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="/hilfe_25.png" />
+                              <Image url="@../hilfe_25.png" />
                            </image>
                         </ImageView>
                      </graphic>
@@ -130,7 +130,7 @@
                      <graphic>
                         <ImageView id="helpIcon" fitHeight="19.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="/hilfe_25.png" />
+                              <Image url="@../hilfe_25.png" />
                            </image>
                         </ImageView>
                      </graphic>
@@ -142,7 +142,7 @@
                      <graphic>
                         <ImageView id="helpIcon" fitHeight="19.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="/hilfe_25.png" />
+                              <Image url="@../hilfe_25.png" />
                            </image>
                         </ImageView>
                      </graphic>
