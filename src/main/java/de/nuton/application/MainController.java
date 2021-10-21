@@ -398,7 +398,7 @@ public class MainController implements Initializable{
 
 			@Override
 			public void handle(ActionEvent event) {
-				UpdateChecker checker = new UpdateChecker("https://edgardschi.github.io/nuton-website/version.html", MainFX.getVersion());
+				UpdateChecker checker = new UpdateChecker("https://edgardschi.github.io/nuton-website/version.html", MainFX.VERSION);
 				if(checker.readData()) {
 					checker.checkVersion();
 				} else {

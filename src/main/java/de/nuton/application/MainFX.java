@@ -43,7 +43,7 @@ public class MainFX extends Application {
 	@SuppressWarnings("unused")
 	private PropertiesWriter propWriter;
 	
-	private static final String VERSION = "1.3";
+	public static final String VERSION = "2.0";
 	
 	@Override
 	public void start(Stage primaryStage) {
@@ -87,10 +87,6 @@ public class MainFX extends Application {
 	
 	public static Stage getStage() {
 		return stage;
-	}
-	
-	public static String getVersion() {
-		return VERSION;
 	}
 
 }
