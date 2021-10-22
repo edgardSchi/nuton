@@ -19,8 +19,7 @@ package de.nuton.states.circl;
 
 import java.util.Optional;
 
-import de.nuton.draw.DrawController;
-import de.nuton.draw.DrawHandler;
+import de.nuton.draw.VideoPainter;
 import de.nuton.application.MainController;
 import de.nuton.application.Point;
 import de.nuton.application.ScalingManager;
@@ -45,7 +44,7 @@ public class CalibrateCircState extends CalibrateState{
 		super.init();
 		origin = pManager.getOrigin();
 		if(origin != null && mainController.getStateManager().statePaused()) {
-			DrawController.getInstance().drawPoint(origin);
+			VideoPainter.getInstance().drawPoint(origin);
 		}
 		mainController.setHelpLabel("Distanz kalibieren");
 	}
@@ -53,12 +52,12 @@ public class CalibrateCircState extends CalibrateState{
 	@Override
 	public void onClick(MouseEvent e) {
 		if (e.getEventType() == MouseEvent.MOUSE_CLICKED) {
-			DrawController.getInstance().drawCalibrationPoint(e.getX(), e.getY());
+			VideoPainter.getInstance().drawCalibrationPoint(e.getX(), e.getY());
 			
 			addPointByMouse(e);
 			
 			if (clickCounter == 2) {
-				DrawController.getInstance().drawDistance(calibratePoints[0], calibratePoints[1], Color.RED);
+				VideoPainter.getInstance().drawDistance(calibratePoints[0], calibratePoints[1], Color.RED);
 				mainController.setHelpLabel("Mittelpunkt auswählen");
 			}
 			
@@ -74,7 +73,7 @@ public class CalibrateCircState extends CalibrateState{
 					mainController.getSettings().setEichung(Double.parseDouble(result.get()));
 					pManager.setEichung(Double.parseDouble(result.get()));
 					pManager.setOrigin(origin);
-					DrawController.getInstance().clearScreen();
+					VideoPainter.getInstance().clearScreen();
 					clickCounter = 0;
 					
 					if(mainController.getStateManager().statePaused()) {

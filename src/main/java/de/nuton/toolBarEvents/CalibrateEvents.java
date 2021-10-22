@@ -18,7 +18,7 @@
 package de.nuton.toolBarEvents;
 
 import de.nuton.application.MainController;
-import de.nuton.draw.DrawController;
+import de.nuton.draw.VideoPainter;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.control.ButtonType;
@@ -38,7 +38,7 @@ public class CalibrateEvents {
 	
 	public static void calibrate(MouseEvent e, MainController mainController) {
 		if (e.getEventType() == MouseEvent.MOUSE_CLICKED) {
-			DrawController.getInstance().drawCalibrationPoint(e.getX(), e.getY());
+			VideoPainter.getInstance().drawCalibrationPoint(e.getX(), e.getY());
 			
 			if (clickCounter == 0) {
 				x1 = e.getX();
@@ -53,8 +53,8 @@ public class CalibrateEvents {
 			clickCounter++;
 			
 			if (clickCounter == 2) {
-				DrawController.getInstance().drawCalibrationPoint(x2, y2);
-				DrawController.getInstance().drawDistance(x1, y1, x2, y2);
+				VideoPainter.getInstance().drawCalibrationPoint(x2, y2);
+				VideoPainter.getInstance().drawDistance(x1, y1, x2, y2);
 
 				TextInputDialog dialog = createCalibWindow((int)mainController.getSettings().getEichung(), "Distanz für folgenen Wert speichern? (cm):");
 			}

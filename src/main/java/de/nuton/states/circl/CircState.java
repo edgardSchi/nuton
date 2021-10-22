@@ -17,8 +17,7 @@
  ******************************************************************************/
 package de.nuton.states.circl;
 
-import de.nuton.draw.DrawController;
-import de.nuton.draw.DrawHandler;
+import de.nuton.draw.VideoPainter;
 import de.nuton.application.FertigDialogController;
 import de.nuton.application.MainController;
 import de.nuton.application.Point;
@@ -95,21 +94,21 @@ public class CircState extends PointState{
 	}
 	
 	private void drawVector(Point p) {
-		DrawController.getInstance().drawDistance(origin, p);
+		VideoPainter.getInstance().drawDistance(origin, p);
 	}
 
 	@Override
 	public void redraw() {
-		DrawController.getInstance().clearScreen();
+		VideoPainter.getInstance().clearScreen();
 		if(TempSaving.isShowPoints()) {
-			DrawController.getInstance().drawPoint(origin);
+			VideoPainter.getInstance().drawPoint(origin);
 			for(Point p : points) {
-				DrawController.getInstance().drawPoint(p);
+				VideoPainter.getInstance().drawPoint(p);
 				drawVector(p);
 			}
 		}
 		if(TempSaving.isShowDistance()) {
-			DrawController.getInstance().drawCalibrationDistance(getCalibratePoints()[0], getCalibratePoints()[1], Double.toString(settings.getEichung()).concat(" cm"));
+			VideoPainter.getInstance().drawCalibrationDistance(getCalibratePoints()[0], getCalibratePoints()[1], Double.toString(settings.getEichung()).concat(" cm"));
 		}
 	}
 	

@@ -8,17 +8,17 @@ import javafx.scene.paint.Color;
 /**
  * This class is responsible for the communication between the main controller and the draw handler. Everything that should be drawn on the canvas must be called here.
  */
-public class DrawController {
+public class VideoPainter {
 
     private static final Color CALIBRATION_DISTANCE_COLOR = Color.AQUAMARINE;
     private static final Color POINT_COLOR = PropertiesReader.getInstance().getPointColor();
     private static final Color CALIBRATION_POINT_COLOR = Color.rgb(255, 119, 0, 0.80);
 
-    private static DrawController instance = null;
+    private static VideoPainter instance = null;
     private final MainController mainController;
     private final DrawHandler drawHandler;
 
-    private DrawController(MainController mainController) {
+    private VideoPainter(MainController mainController) {
         this.mainController = mainController;
         this.drawHandler = new DrawHandler(mainController.getGc());
     }
@@ -27,7 +27,7 @@ public class DrawController {
      * Get the instance of DrawController. Before calling it for the first time, init() must be called.
      * @return The instance of DrawController
      */
-    public static DrawController getInstance() {
+    public static VideoPainter getInstance() {
         if (instance == null) {
             throw new AssertionError("You have to call init first!");
         }
@@ -39,11 +39,11 @@ public class DrawController {
      * @param mainController The MainController
      * @return A DrawController
      */
-    public static DrawController init(MainController mainController) {
+    public static VideoPainter init(MainController mainController) {
         if (instance != null) {
             throw new AssertionError("Init has already been called!");
         }
-        instance = new DrawController(mainController);
+        instance = new VideoPainter(mainController);
         return instance;
     }
 

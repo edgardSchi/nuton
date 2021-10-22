@@ -17,7 +17,7 @@
  ******************************************************************************/
 package de.nuton.states;
 
-import de.nuton.draw.DrawController;
+import de.nuton.draw.VideoPainter;
 import de.nuton.application.MainController;
 import de.nuton.application.Point;
 import de.nuton.math.UnitsHandler;
@@ -42,7 +42,7 @@ public abstract class CalibrateState extends State{
 	}
 
 	public void init() {
-		DrawController.getInstance().clearScreen();
+		VideoPainter.getInstance().clearScreen();
 	}
 	
 	public void resetSlider() {
@@ -106,7 +106,7 @@ public abstract class CalibrateState extends State{
 	}
 	
 	protected void resetCalibrate() {
-		DrawController.getInstance().clearScreen();
+		VideoPainter.getInstance().clearScreen();
 		clickCounter = 0;
 	}
 

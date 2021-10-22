@@ -19,16 +19,13 @@ package de.nuton.toolBarEvents;
 
 import java.util.ArrayList;
 
-import de.nuton.draw.DrawController;
-import de.nuton.draw.DrawController;
+import de.nuton.draw.VideoPainter;
 import de.nuton.application.MainController;
 import de.nuton.application.ScalingManager;
 import de.nuton.application.Point;
 import de.nuton.states.State;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Slider;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.paint.Color;
 
 public class AddPointEvents {
 	
@@ -60,9 +57,9 @@ public class AddPointEvents {
 		}		
 		
 		if (e.getEventType() == MouseEvent.MOUSE_DRAGGED && e.isPrimaryButtonDown()) {
-			DrawController.getInstance().clearScreen();
+			VideoPainter.getInstance().clearScreen();
 			for(Point p : points) {
-				DrawController.getInstance().drawPoint(p);
+				VideoPainter.getInstance().drawPoint(p);
 			}
 			
 			if (e.isSecondaryButtonDown()) {			
@@ -75,7 +72,7 @@ public class AddPointEvents {
 				y2 = e.getY();
 			}
 
-			DrawController.getInstance().drawSelectionRectangle(x, y, x2, y2);
+			VideoPainter.getInstance().drawSelectionRectangle(x, y, x2, y2);
 
 			dragX = e.getX();
 			dragY = e.getY();	
@@ -83,9 +80,9 @@ public class AddPointEvents {
 		
 		if (e.getEventType() == MouseEvent.MOUSE_RELEASED && !e.isPrimaryButtonDown() && leftClicked) {
 			addPoint(state, e, (x2 - x) / 2 + x, (y2 - y) / 2 + y);
-			DrawController.getInstance().clearScreen();
+			VideoPainter.getInstance().clearScreen();
 			for(Point p : points) {
-				DrawController.getInstance().drawPoint(p);
+				VideoPainter.getInstance().drawPoint(p);
 			}
 			leftClicked = false;
 		}
@@ -101,9 +98,9 @@ public class AddPointEvents {
 		}
 		
 		if (e.getEventType() == MouseEvent.MOUSE_DRAGGED && e.isPrimaryButtonDown()) {
-			DrawController.getInstance().clearScreen();
+			VideoPainter.getInstance().clearScreen();
 			for(Point p : points) {
-				DrawController.getInstance().drawPoint(p);
+				VideoPainter.getInstance().drawPoint(p);
 			}
 			
 			if (e.isSecondaryButtonDown()) {
@@ -119,7 +116,7 @@ public class AddPointEvents {
 			int w = (int) Math.abs(x2 - x);
 			int h = (int) Math.abs(y2 - y);
 
-			DrawController.getInstance().drawSelectionOval(x, y, x2, y2, w, h);
+			VideoPainter.getInstance().drawSelectionOval(x, y, x2, y2, w, h);
 			
 			dragX = e.getX();
 			dragY = e.getY();	
@@ -127,9 +124,9 @@ public class AddPointEvents {
 		
 		if (e.getEventType() == MouseEvent.MOUSE_RELEASED && !e.isPrimaryButtonDown() && leftClicked) {
 			addPoint(state, e, (x2 - x) / 2 + x, (y2 - y) / 2 + y);
-			DrawController.getInstance().clearScreen();
+			VideoPainter.getInstance().clearScreen();
 			for(Point p : points) {
-				DrawController.getInstance().drawPoint(p);
+				VideoPainter.getInstance().drawPoint(p);
 			}
 			leftClicked = false;
 		}
@@ -145,29 +142,29 @@ public class AddPointEvents {
 				yFix = y;
 				p = new Point((int)x, (int)y, slider.getValue());
 				points.add(p);
-				DrawController.getInstance().drawPoint(p);
+				VideoPainter.getInstance().drawPoint(p);
 			} else if (mainController.getSettings().isyFixed()) {
 				p = new Point((int)x, (int)yFix, slider.getValue());
 				points.add(p);
-				DrawController.getInstance().drawPoint(p);
+				VideoPainter.getInstance().drawPoint(p);
 			} else if (mainController.getSettings().isxFixed() && xFix == 0) {
 				xFix = x;
 				p = new Point((int)x, (int)y, slider.getValue());
 				points.add(p);
-				DrawController.getInstance().drawPoint(p);
+				VideoPainter.getInstance().drawPoint(p);
 			} else if (mainController.getSettings().isxFixed()) {
 				p = new Point((int)xFix, (int)y, slider.getValue());
 				points.add(p);
-				DrawController.getInstance().drawPoint(p);
+				VideoPainter.getInstance().drawPoint(p);
 			} else {
 				p = new Point((int)x, (int)y, slider.getValue());
 				points.add(p);
-				DrawController.getInstance().drawPoint(p);
+				VideoPainter.getInstance().drawPoint(p);
 			}
 			ScalingManager.getInstance().normalizePoint(p);
 			state.getMainController().updateLists();
 			for (Point po : points) {
-				DrawController.getInstance().drawPoint(po);
+				VideoPainter.getInstance().drawPoint(po);
 			}
 			slider.setValue(slider.getValue() + mainController.getSettings().getSchrittweite());
 		}		
@@ -222,24 +219,24 @@ public class AddPointEvents {
 				yFix = e.getY();
 				p = new Point((int)e.getX(), (int)e.getY(), slider.getValue());
 				points.add(p);
-				DrawController.getInstance().drawPoint(p);
+				VideoPainter.getInstance().drawPoint(p);
 			} else if (mainController.getSettings().isyFixed() == true) {
 				p = new Point((int)e.getX(), (int)yFix, slider.getValue());
 				points.add(p);
-				DrawController.getInstance().drawPoint(p);
+				VideoPainter.getInstance().drawPoint(p);
 			} else if (mainController.getSettings().isxFixed() && xFix == 0) {
 				xFix = e.getX();
 				p = new Point((int)e.getX(), (int)e.getY(), slider.getValue());
 				points.add(p);
-				DrawController.getInstance().drawPoint(p);
+				VideoPainter.getInstance().drawPoint(p);
 			} else if (mainController.getSettings().isxFixed() == true) {
 				p = new Point((int)xFix, (int)e.getY(), slider.getValue());
 				points.add(p);
-				DrawController.getInstance().drawPoint(p);
+				VideoPainter.getInstance().drawPoint(p);
 			} else {
 				p = new Point((int)e.getX(), (int)e.getY(), slider.getValue());
 				points.add(p);
-				DrawController.getInstance().drawPoint(p);
+				VideoPainter.getInstance().drawPoint(p);
 			}
 			ScalingManager.getInstance().normalizePoint(p);
 			state.getMainController().updateLists();

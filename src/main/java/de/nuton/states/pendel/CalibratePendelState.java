@@ -20,7 +20,7 @@ package de.nuton.states.pendel;
 import java.util.Optional;
 
 import de.nuton.application.MainController;
-import de.nuton.draw.DrawController;
+import de.nuton.draw.VideoPainter;
 import de.nuton.states.CalibrateState;
 import de.nuton.application.ScalingManager;
 import javafx.scene.control.TextInputDialog;
@@ -49,12 +49,12 @@ public class CalibratePendelState extends CalibrateState{
 	@Override
 	public void onClick(MouseEvent e) {
 		if (e.getEventType() == MouseEvent.MOUSE_CLICKED) {
-			DrawController.getInstance().drawCalibrationPoint(e.getX(), e.getY());
+			VideoPainter.getInstance().drawCalibrationPoint(e.getX(), e.getY());
 			
 			addPointByMouse(e);
 			
 			if(clickCounter == 2) {
-				DrawController.getInstance().drawDistance(calibratePoints[0], calibratePoints[1], Color.RED);
+				VideoPainter.getInstance().drawDistance(calibratePoints[0], calibratePoints[1], Color.RED);
 			}
 			
 			if(clickCounter == 3) {
@@ -67,7 +67,7 @@ public class CalibratePendelState extends CalibrateState{
 					mainController.getSettings().setEichung(Double.parseDouble(result.get()));
 					pManager.setEichung(Double.parseDouble(result.get()));
 					pManager.setOrigin(calibratePoints[2]);
-					DrawController.getInstance().clearScreen();
+					VideoPainter.getInstance().clearScreen();
 					clickCounter = 0;
 					mainController.getStateManager().getCurrentState().setCalibratePoints(calibratePoints);
 				} else {

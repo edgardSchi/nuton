@@ -21,7 +21,7 @@ import java.io.File;
 import java.net.URL;
 import java.util.ResourceBundle;
 import de.nuton.application.settingsPane.SettingsController;
-import de.nuton.draw.DrawController;
+import de.nuton.draw.VideoPainter;
 import de.nuton.math.UnitsHandler.LengthUnit;
 import de.nuton.math.UnitsHandler.TimeUnit;
 import de.nuton.savingFile.LoadHandler;
@@ -129,7 +129,7 @@ public class MainController implements Initializable{
 		scalingManager = ScalingManager.getInstance();
 		settings = new Settings();
 		eventHandler = new MainEventHandler(this);
-		DrawController.init(this);
+		VideoPainter.init(this);
 		
 		settingsController = new SettingsController(this, settings, themeLoader);
 		
@@ -443,7 +443,7 @@ public class MainController implements Initializable{
 		slider.setValue(0);
 		slider.setDisable(false);
 		slider.setSnapToTicks(false);
-		DrawController.getInstance().clearScreen();
+		VideoPainter.getInstance().clearScreen();
 		startBtn.setDisable(false);
 		pManager.reset();
 		stateManager.setState(StateManager.DEFAULT);

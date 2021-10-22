@@ -19,10 +19,9 @@ package de.nuton.states;
 
 import de.nuton.application.MainController;
 import de.nuton.application.Point;
-import de.nuton.draw.DrawController;
+import de.nuton.draw.VideoPainter;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.Slider;
 import javafx.scene.input.MouseEvent;
@@ -64,7 +63,7 @@ public abstract class PointState extends State{
 		slider.setValue(0);
 		slider.setDisable(false);
 		slider.setSnapToTicks(true);
-		DrawController.getInstance().clearScreen();
+		VideoPainter.getInstance().clearScreen();
 		pManager.reset();
 	}
 	
