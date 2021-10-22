@@ -30,7 +30,7 @@ public class BackwardButton extends ToolBarButton {
 	
 	@Override
 	public void onClick() {
-		tbm.getEventHandler().backwardButton();
+		tbm.getMainController().backwardButton();
 	}
 
 

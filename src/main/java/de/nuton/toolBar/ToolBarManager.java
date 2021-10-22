@@ -20,7 +20,6 @@ package de.nuton.toolBar;
 import java.util.ArrayList;
 
 import de.nuton.application.MainController;
-import de.nuton.application.MainEventHandler;
 import de.nuton.application.Point;
 import de.nuton.states.State;
 import javafx.beans.value.ChangeListener;
@@ -41,12 +40,10 @@ public class ToolBarManager {
 	
 	private ToolBar toolBar;
 	private MainController mainController;
-	private MainEventHandler mainEventHandler;
-	
+
 	public ToolBarManager(ToolBar toolBar, MainController mainController) {
 		this.toolBar = toolBar;
 		this.mainController = mainController;
-		mainEventHandler = new MainEventHandler(mainController);
 		pointItems = new ArrayList<ToolBarToggleButton>();
 		loadItems();
 		initGroup();
@@ -65,7 +62,7 @@ public class ToolBarManager {
 	}
 	
 	private void loadFirstSegment() {
-		ToolBarItem openButton = new OpenFileButton(mainEventHandler);
+		ToolBarItem openButton = new OpenFileButton(mainController);
 		addItem(openButton);
 		ToolBarItem saveButton = new SaveButton(mainController);
 		addItem(saveButton);
@@ -74,7 +71,7 @@ public class ToolBarManager {
 	
 	private void loadSecondSegment() {
 		ToolBarItem bButton = new BackwardButton(this);
-		ToolBarItem fButton = new ForwardButton(mainEventHandler);
+		ToolBarItem fButton = new ForwardButton(mainController);
 		ToolBarItem firstPointButton = new FirstPointButton(this);
 		ToolBarItem lastPointButton = new LastPointButton(this);
 		addItem(firstPointButton);
@@ -132,10 +129,6 @@ public class ToolBarManager {
 		Separator s = new Separator();
 		s.setOrientation(Orientation.VERTICAL);
 		toolBar.getItems().add(s);
-	}
-	
-	public MainEventHandler getEventHandler() {
-		return mainEventHandler;
 	}
 	
 	public MainController getMainController() {

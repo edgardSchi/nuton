@@ -18,28 +18,35 @@
 package de.nuton.application;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 import de.nuton.application.settingsPane.SettingsController;
 import de.nuton.draw.VideoPainter;
+import de.nuton.ffmpeg.FfmpegHandler;
 import de.nuton.math.UnitsHandler.LengthUnit;
 import de.nuton.math.UnitsHandler.TimeUnit;
+import de.nuton.properties.PropertiesReader;
+import de.nuton.properties.PropertiesWriter;
 import de.nuton.savingFile.LoadHandler;
 import de.nuton.savingFile.SaveHandler;
 import de.nuton.settings.Settings;
 import de.nuton.states.StateManager;
 import de.nuton.toolBar.ToolBarManager;
 import de.nuton.tracking.TrackingSettingsController;
+import de.nuton.ui.UIUtils;
 import de.nuton.userSettings.ProgramSettingsController;
 import de.nuton.userSettings.ThemeLoader;
 import javafx.application.HostServices;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
+import javafx.application.Platform;
+import javafx.beans.binding.Bindings;
+import javafx.beans.property.DoubleProperty;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.geometry.Bounds;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Alert;
@@ -64,6 +71,8 @@ import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
 import javafx.stage.FileChooser;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import javafx.util.Duration;
 
 public class MainController implements Initializable{
@@ -98,8 +107,7 @@ public class MainController implements Initializable{
 	
 	//@FXML private MenuItem startCameraMenu;
 	//@FXML private MenuItem stopCameraMenu;
-	
-	//private GraphicsContext gc;
+
 	private ToolBarManager tbm;
 	
 	private double mediaLength = 0;
@@ -107,7 +115,6 @@ public class MainController implements Initializable{
 	private ThemeLoader themeLoader;
 	private ProgramSettingsController pSettings;
 	private PixelManager pManager;
-	private MainEventHandler eventHandler;
 	private StateManager stateManager;
 	private Settings settings;
 	private LoadHandler loadHandler;
@@ -128,7 +135,6 @@ public class MainController implements Initializable{
 		themeLoader = new ThemeLoader();
 		scalingManager = ScalingManager.getInstance();
 		settings = new Settings();
-		eventHandler = new MainEventHandler(this);
 		VideoPainter.init(canvas);
 		
 		settingsController = new SettingsController(this, settings, themeLoader);
@@ -167,32 +173,11 @@ public class MainController implements Initializable{
 //			
 //		});
 		
-		openFileMenu.setOnAction(new EventHandler<ActionEvent>() {
-
-			@Override
-			public void handle(ActionEvent event) {
-				eventHandler.openFileDialog();
-			}
-			
-		});
+		openFileMenu.setOnAction(event -> openVideoDialog());
 		
-		ffmpegMenu.setOnAction(new EventHandler<ActionEvent>() {
-
-			@Override
-			public void handle(ActionEvent event) {
-				eventHandler.ffmpegOpenFileDialog();
-			}
-			
-		});
+		ffmpegMenu.setOnAction(event -> openVideoWithFfmpegDialog());
 		
-		closeMenu.setOnAction(new EventHandler<ActionEvent>() {
-
-			@Override
-			public void handle(ActionEvent event) {
-				MainEventHandler.closeProgram();
-			}
-			
-		});
+		closeMenu.setOnAction(event -> closeProgram());
 		
 		
 		tbm = new ToolBarManager(toolBar, this);
@@ -202,220 +187,110 @@ public class MainController implements Initializable{
 		SaveHandler saveHandler = new SaveHandler(this);
 		loadHandler = new LoadHandler(this, settings);
 		
-		einstellungenItem.setOnAction(new EventHandler<ActionEvent>() {
-
-			@Override
-			public void handle(ActionEvent event) {
-				pSettings.showDialog();
-			}
-			
+		einstellungenItem.setOnAction(event -> pSettings.showDialog());
+		
+		loadProjectMenu.setOnAction(event -> {
+			FileChooser chooser = new FileChooser();
+			FileChooser.ExtensionFilter filter = new FileChooser.ExtensionFilter("Nuton Datein (*.ntn)", "*.ntn");
+			chooser.getExtensionFilters().add(filter);
+			File file = chooser.showOpenDialog(MainFX.getStage());
+			//TODO: Wurde beim refactorn vom EventHandler auskommentiert, wegen openMedia()
+			loadHandler.load(file);
 		});
 		
-		loadProjectMenu.setOnAction(new EventHandler<ActionEvent>() {
-
-			@Override
-			public void handle(ActionEvent arg0) {
-				FileChooser chooser = new FileChooser();
-				FileChooser.ExtensionFilter filter = new FileChooser.ExtensionFilter("Nuton Datein (*.ntn)", "*.ntn");
-				chooser.getExtensionFilters().add(filter);
-				File file = chooser.showOpenDialog(MainFX.getStage());
-				loadHandler.load(file);
+		saveFileMenu.setOnAction(event -> {
+			if (player != null && player.getMedia() != null) {
+				saveHandler.save();
+			} else {
+				Alert alert = new Alert(AlertType.ERROR);
+				alert.setTitle("Error!");
+				alert.setContentText("Es ist nichts zum speichern vorhanden.");
+				alert.setHeaderText(null);
+				alert.showAndWait().ifPresent(rs -> {
+					if (rs == ButtonType.OK) {
+						alert.close();
+					}
+				});
 			}
-			
 		});
 		
-		saveFileMenu.setOnAction(new EventHandler<ActionEvent>() {
-
-			@Override
-			public void handle(ActionEvent arg0) {
-				if (player != null && player.getMedia() != null) {
-					saveHandler.save();
-				} else {
-					Alert alert = new Alert(AlertType.ERROR);
-					alert.setTitle("Error!");
-					alert.setContentText("Es ist nichts zum speichern vorhanden.");
-					alert.setHeaderText(null);
-					alert.showAndWait().ifPresent(rs -> {
-						if (rs == ButtonType.OK) {
-							alert.close();
-						}
-					});
-				}		
+		saveFileAsMenu.setOnAction(event -> {
+			if (player != null && player.getMedia() != null) {
+				saveHandler.setSaveAs(true);
+				saveHandler.save();
+			} else {
+				UIUtils.showErrorAlert("Es ist nichts zum speichern vorhanden.");
 			}
-			
-		});
-		
-		saveFileAsMenu.setOnAction(new EventHandler<ActionEvent>() {
-
-			@Override
-			public void handle(ActionEvent event) {
-				if (player.getMedia() != null) {
-					saveHandler.setSaveAs(true);
-					saveHandler.save();
-				} else {
-					Alert alert = new Alert(AlertType.ERROR);
-					alert.setTitle("Error!");
-					alert.setContentText("Es ist nichts zum speichern vorhanden.");
-					alert.setHeaderText(null);
-					alert.showAndWait().ifPresent(rs -> {
-						if (rs == ButtonType.OK) {
-							alert.close();
-						}
-					});
-				}
-			}
-			
 		});
 
 		
 		if (getPlayer() != null) {
-			getPlayer().currentTimeProperty().addListener(new ChangeListener<Duration>() {
-
-				@Override
-				public void changed(ObservableValue<? extends Duration> arg0, Duration arg1, Duration arg2) {
-					slider.setValue(getPlayer().getCurrentTime().toSeconds());				
-				}
-				
-			});
+			getPlayer().currentTimeProperty().addListener((arg0, arg1, arg2) -> slider.setValue(getPlayer().getCurrentTime().toSeconds()));
 		}
 
 
-		slider.valueProperty().addListener(new ChangeListener<Number>() {
-
-			@Override
-			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-				if (getPlayer() != null) {
-					getPlayer().seek(Duration.millis((double)newValue));
-				}			
-				
+		slider.valueProperty().addListener((observable, oldValue, newValue) -> {
+			if (getPlayer() != null) {
+				getPlayer().seek(Duration.millis((double)newValue));
 			}
-			
+
 		});
 		
 		//Verbessern
-		startBtn.setOnAction(new EventHandler<ActionEvent>() {
-
-			@Override
-			public void handle(ActionEvent arg0) {
-				if (mv.getMediaPlayer() == null || mv.getMediaPlayer().getMedia() == null) {
-					Alert alert = new Alert(AlertType.ERROR);
-					alert.setTitle("Videodatei auswählen!");
-					alert.setContentText("Wählen Sie zuerst eine geeignete Videodatei aus.");
-					alert.setHeaderText(null);
-					alert.showAndWait().ifPresent(rs -> {
-						if (rs == ButtonType.OK) {
-							alert.close();
-						}
-					});
-//				} else if (camera.isRunning()) {
-//					getStartBtn().setDisable(true);
-//					getSettingsController().showDialog();
-				} else {
-					getStartBtn().setDisable(true);
-					getSettingsController().showDialog();
-				}		
-			}
-			
-		});
-		
-		
-		
-		canvas.addEventFilter(MouseEvent.ANY, new EventHandler<MouseEvent>() {	
-			
-			
-			@Override
-			public void handle(MouseEvent e) {
-				
-				stateManager.onClick(e);
-				
+		startBtn.setOnAction(event -> {
+			if (mv.getMediaPlayer() == null || mv.getMediaPlayer().getMedia() == null) {
+				UIUtils.showErrorAlert("Wählen Sie zuerst eine geeignete Videodatei aus.");
+			} else {
+				getStartBtn().setDisable(true);
+				getSettingsController().showDialog();
 			}
 		});
 		
-		restartBtn.setOnAction(new EventHandler<ActionEvent>() {
-
-			@Override
-			public void handle(ActionEvent event) {
-				eventHandler.reset();
-			}
-			
-		});
 		
 		
-		fertigBtn.setOnAction(new EventHandler<ActionEvent>() {
-
-			@Override
-			public void handle(ActionEvent event) {
-				stateManager.fertigBtnClick();
-			}
-
-		});
+		canvas.addEventFilter(MouseEvent.ANY, e -> stateManager.onClick(e));
 		
-		canvas.boundsInLocalProperty().addListener(new ChangeListener<Bounds>() {
-
-			@Override
-			public void changed(ObservableValue<? extends Bounds> observable, Bounds oldValue, Bounds newValue) {
-				scalingManager.setCanvasDimension(getCanvas().getWidth(), getCanvas().getHeight());
-				if (stateManager.getCurrentState().getPoints() != null) {
-					for (Point p : stateManager.getCurrentState().getPoints()) {
-						System.out.println("X: " + p.getDrawX() + "Y: " + p.getDrawY());
+		restartBtn.setOnAction(event -> restart());
+		
+		
+		fertigBtn.setOnAction(event -> stateManager.fertigBtnClick());
+		
+		canvas.boundsInLocalProperty().addListener((observable, oldValue, newValue) -> {
+			scalingManager.setCanvasDimension(getCanvas().getWidth(), getCanvas().getHeight());
+			if (stateManager.getCurrentState().getPoints() != null) {
+				for (Point p : stateManager.getCurrentState().getPoints()) {
+					System.out.println("X: " + p.getDrawX() + "Y: " + p.getDrawY());
+					scalingManager.updatePointPos(p);
+				}
+				for(Point p : stateManager.getCurrentState().getCalibratePoints()) {
+					if(p != null) {
 						scalingManager.updatePointPos(p);
 					}
-					for(Point p : stateManager.getCurrentState().getCalibratePoints()) {
-						if(p != null) {
-							scalingManager.updatePointPos(p);
-						}					
-					}
-					if(pManager.getOrigin() != null) {
-						scalingManager.updatePointPos(pManager.getOrigin());
-					}
-					redraw();
 				}
+				if(pManager.getOrigin() != null) {
+					scalingManager.updatePointPos(pManager.getOrigin());
+				}
+				redraw();
 			}
 		});
 		
 		initTableView();
 		
 		
-		startTrackingMenu.setOnAction(new EventHandler<ActionEvent>() {
-
-			@Override
-			public void handle(ActionEvent event) {
-				trackingController.showDialog();
+		startTrackingMenu.setOnAction(event -> trackingController.showDialog());
+		
+		menuOpenWiki.setOnAction(event -> getHostServices().showDocument("https://github.com/edgardSchi/nuton/wiki"));
+		
+		menuUpdates.setOnAction(event -> {
+			UpdateChecker checker = new UpdateChecker("https://edgardschi.github.io/nuton-website/version.html", MainFX.VERSION);
+			if(checker.readData()) {
+				checker.checkVersion();
+			} else {
+				checker.errorDialog();
 			}
-			
 		});
 		
-		menuOpenWiki.setOnAction(new EventHandler<ActionEvent>() {
-
-			@Override
-			public void handle(ActionEvent event) {
-				getHostServices().showDocument("https://github.com/edgardSchi/nuton/wiki");
-			}
-			
-		});
-		
-		menuUpdates.setOnAction(new EventHandler<ActionEvent>() {
-
-			@Override
-			public void handle(ActionEvent event) {
-				UpdateChecker checker = new UpdateChecker("https://edgardschi.github.io/nuton-website/version.html", MainFX.VERSION);
-				if(checker.readData()) {
-					checker.checkVersion();
-				} else {
-					checker.errorDialog();
-				}
-			}
-			
-		});
-		
-		menuAbout.setOnAction(new EventHandler<ActionEvent>() {
-
-			@Override
-			public void handle(ActionEvent arg0) {
-				eventHandler.openAboutDialog();
-			}
-			
-		});
+		menuAbout.setOnAction(event -> openAboutDialog());
 		
 		
 
@@ -477,33 +352,28 @@ public class MainController implements Initializable{
 		tableView.setPlaceholder(new Label("Keine Punkte ausgewählt"));
 		tableView.getColumns().clear();
 		TableColumn<Point, Integer> timeCol = new TableColumn<>("Zeit[ms]");
-		timeCol.setCellValueFactory(new PropertyValueFactory<Point, Integer>("time"));
+		timeCol.setCellValueFactory(new PropertyValueFactory<>("time"));
 		timeCol.setResizable(false);
 		timeCol.setPrefWidth(53);
 		timeCol.setSortable(false);
 		TableColumn<Point, Integer> xCol = new TableColumn<>("X[px]");
-		xCol.setCellValueFactory(new PropertyValueFactory<Point, Integer>("x"));
+		xCol.setCellValueFactory(new PropertyValueFactory<>("x"));
 		xCol.setResizable(false);
 		xCol.setPrefWidth(54);
 		xCol.setSortable(false);
 		TableColumn<Point, Integer> yCol = new TableColumn<>("Y[px]");
-		yCol.setCellValueFactory(new PropertyValueFactory<Point, Integer>("y"));
+		yCol.setCellValueFactory(new PropertyValueFactory<>("y"));
 		yCol.setResizable(false);
 		yCol.setPrefWidth(54);
 		yCol.setSortable(false);
 		
 		tableView.getColumns().addAll(timeCol, xCol, yCol);
 		
-		tableView.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
-
-			@Override
-			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-				if (newValue.intValue() != -1) {
-					double t = stateManager.getPoints().get(newValue.intValue()).getTime();
-					slider.setValue(t);
-				}
+		tableView.getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) -> {
+			if (newValue.intValue() != -1) {
+				double t = stateManager.getPoints().get(newValue.intValue()).getTime();
+				slider.setValue(t);
 			}
-			
 		});
 	}
 	/**
@@ -515,6 +385,191 @@ public class MainController implements Initializable{
 			tableView.getItems().add(p);
 		}
 	}
+
+	public void openMedia(File media) {
+		reset();
+		if (media != null) {
+			player = new MediaPlayer(new Media(media.toURI().toString()));
+			player.setOnReady(() -> {
+				// slider.setMin(0);
+				mv.setPreserveRatio(true);
+				DoubleProperty mvw = mv.fitWidthProperty();
+				DoubleProperty mvh = mv.fitHeightProperty();
+				DoubleProperty canvasX = canvas.layoutXProperty();
+				DoubleProperty canvasW = canvas.widthProperty();
+				DoubleProperty canvasH = canvas.heightProperty();
+
+				mvw.bind(Bindings.selectDouble(mv.parentProperty(), "width"));
+				mvh.bind(Bindings.selectDouble(mv.parentProperty(), "height"));
+				canvasW.bind(Bindings.selectDouble(mv.boundsInParentProperty(), "width"));
+				canvasH.bind(Bindings.selectDouble(mv.boundsInParentProperty(), "height"));
+
+				slider.setMinorTickCount(0);
+				slider.setMajorTickUnit(1000);
+				slider.setMax(player.getTotalDuration().toMillis());
+				mediaLength = player.getTotalDuration().toMillis();
+
+				//Fix for changing the dimensions in the scaling manager when a video is opened
+				scalingManager.setMediaDimension(player.getMedia().getWidth(), player.getMedia().getHeight());
+				scalingManager.setCanvasDimension(canvas.getWidth(), canvas.getHeight());
+			});
+			mv.setMediaPlayer(player);
+			player.setMute(true);
+
+			settingsController.reset();
+			//TODO: Wieso steht hier nochmal reset?
+			reset();
+			startBtn.setDisable(false);
+		} else {
+			UIUtils.showErrorAlert("Fehler beim Öffnen der Datei!");
+		}
+
+	}
+
+	public void openVideoDialog() {
+		PropertiesReader propReader = PropertiesReader.getInstance();
+		PropertiesWriter propWriter = new PropertiesWriter();
+		FileChooser fileChooser = new FileChooser();
+
+		if (!propReader.getLastPath().isEmpty()) {
+			if (new File(propReader.getLastPath()).isDirectory()) {
+				fileChooser.setInitialDirectory(new File(propReader.getLastPath()));
+			} else {
+				propWriter.setLastPath("");
+			}
+		}
+
+		FileChooser.ExtensionFilter filter = new FileChooser.ExtensionFilter(
+				"Video Dateien (*.fxm), (*.flv), (*.mp4), (*.m4v)", "*.fxm", "*.flv", "*.mp4", "*.m4v");
+		fileChooser.getExtensionFilters().add(filter);
+		File mediaFile = fileChooser.showOpenDialog(MainFX.getStage());
+
+		if (mediaFile != null) {
+			//-----------------------------------------------------------------------------
+			openMedia(mediaFile);
+			//-----------------------------------------------------------------------------
+			System.out.println(mediaFile.getAbsolutePath());
+			propWriter.setLastPath(mediaFile.getParent());
+			propWriter.confirm();
+			de.nuton.savingFile.TempSaving.setURL(mediaFile.getAbsolutePath());
+			de.nuton.savingFile.TempSaving.withFfmpeg(false);
+		}
+	}
+
+	public boolean loadVideoWithFfmpeg(File video) {
+		PropertiesReader propReader = PropertiesReader.getInstance();
+		PropertiesWriter propWriter = new PropertiesWriter();
+		Alert waitAlert = new Alert(Alert.AlertType.NONE);
+		waitAlert.setHeaderText("Ffmpeg verabeitet das Video.");
+		waitAlert.setContentText("Das Video wird importiert.");
+		waitAlert.initStyle(StageStyle.TRANSPARENT);
+		String videoPath = "";
+		if (video != null) {
+			videoPath = video.getAbsolutePath();
+			String outputPath = null;
+			if (propReader.isFfmpegOutputSame()) {
+				outputPath = propReader.getFfmpegSameOutputPath();
+			}
+			String name = "output";
+
+			FfmpegHandler handler = new FfmpegHandler(videoPath, outputPath, name);
+
+			if (!handler.getffmpegStarted()) {
+				System.out.println("ffmpeg nicht gefunden");
+				return false;
+			}
+
+			if (!handler.getVideo().exists()) {
+				Alert alert = new Alert(AlertType.ERROR);
+				alert.setTitle("Video nicht gefunden");
+				alert.setHeaderText("Ein Fehler ist aufgetreten!");
+				alert.setContentText(
+						"Das Video konnte nicht gefunden werden. Überprüfen Sie die Log-Datei für weitere Informationen.");
+
+				alert.showAndWait();
+				return false;
+			} else {
+				propWriter.setLastPath(video.getParent());
+				propWriter.confirm();
+				openMedia(handler.getVideo());
+				de.nuton.savingFile.TempSaving.setURL(video.getAbsolutePath());
+				de.nuton.savingFile.TempSaving.withFfmpeg(true);
+
+			}
+		}
+		waitAlert.close();
+		waitAlert.hide();
+		return true;
+	}
+
+	public void openVideoWithFfmpegDialog() {
+		PropertiesReader propReader = PropertiesReader.getInstance();
+		PropertiesWriter propWriter = new PropertiesWriter();
+		FileChooser chooser = new FileChooser();
+
+		if (!propReader.getLastPath().isEmpty()) {
+			if (new File(propReader.getLastPath()).exists()) {
+				chooser.setInitialDirectory(new File(propReader.getLastPath()));
+			} else {
+				propWriter.setLastPath("");
+			}
+		}
+
+		File video;
+		video = chooser.showOpenDialog(MainFX.getStage());
+
+		loadVideoWithFfmpeg(video);
+	}
+
+	public void openAboutDialog() {
+		try {
+			Parent loader = FXMLLoader.load(getClass().getResource("/fxml/About.fxml"));
+			Scene scene = new Scene(loader);
+			Stage stage = new Stage();
+			stage.setTitle("Über Nuton");
+			stage.setScene(scene);
+			stage.getIcons().add(new Image(MainController.class.getResourceAsStream("/nutonLogo.png")));
+			stage.setResizable(false);
+			stage.show();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	static public void closeProgram() {
+		Platform.exit();
+		System.exit(0);
+	}
+
+	//TODO: besserer Name
+	public void restart() {
+		startBtn.setDisable(false);
+		stateManager.getCurrentState().reset();
+		stateManager.setState(StateManager.DEFAULT);
+		de.nuton.toolBarEvents.AddPointEvents.reset();
+		updateLists();
+	}
+
+	public void backwardButton() {
+		ArrayList<Point> points = stateManager.getPoints();
+		double schrittweite = settings.getSchrittweite();
+		if (points != null) {
+			double time = 0;
+			if (points.size() - 1 > 0) {
+				time = points.get(points.size() - 1).getTime();
+			}
+
+			if (time == slider.getValue() - schrittweite
+					&& slider.getValue() - schrittweite >= 0) {
+				slider.setValue(slider.getValue() - schrittweite);
+			} else if (slider.getValue() - schrittweite >= 0) {
+				slider.setValue(slider.getValue() - schrittweite);
+			}
+		} else if (slider.getValue() - schrittweite >= 0) {
+			slider.setValue(slider.getValue() - schrittweite);
+		}
+	}
+
 	
 /*	public void clearCanvas() {
 		gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
@@ -650,10 +705,6 @@ public class MainController implements Initializable{
 	
 	public MenuItem getSaveFileMenu() {
 		return saveFileMenu;
-	}
-	
-	public MainEventHandler getMainEventHandler() {
-		return eventHandler;
 	}
 	
 	public StackPane getStackPane() {

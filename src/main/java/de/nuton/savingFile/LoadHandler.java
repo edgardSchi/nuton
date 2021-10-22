@@ -51,7 +51,7 @@ public class LoadHandler {
 		this.settings = settings;
 		points = new ArrayList<Point>();
 	}
-	
+
 	public void load(File file) {
 		try {
 			FileInputStream fi = new FileInputStream(file);
@@ -102,7 +102,7 @@ public class LoadHandler {
 //		alert2.close();
 //		return false;
 	}
-	
+
 	private void applySettings(SaveFile saveFile) {
 		TempSaving.withFfmpeg(saveFile.isWithFfmpeg());
 		File video = new File(saveFile.getVideoURL());
@@ -117,7 +117,7 @@ public class LoadHandler {
 			loadVideo(saveFile.getVideoURL());
 		}
 			
-		mainController.getSettings().overloadSettings(saveFile.getSettings());			
+		mainController.getSettings().overloadSettings(saveFile.getSettings());
 		if(saveFile.getOrigin() != null) {
 			mainController.getPManager().setOrigin(convertOrigin(saveFile.getOrigin()));
 		}	
@@ -141,22 +141,24 @@ public class LoadHandler {
 		System.out.println("LOADED");
 		System.out.println(mainController.getSettings());
 	}
-	
+
 	private void loadVideo(String path) {
 		File video;
 		if(TempSaving.isFfmpeg()) {
 			if(path.equals("")) {
-				mainController.getMainEventHandler().ffmpegOpenFileDialog();
+				mainController.openVideoWithFfmpegDialog();
 			} else {
 				video = new File(path);
-				mainController.getMainEventHandler().loadMediaWithFfmpeg(video);
+				mainController.loadVideoWithFfmpeg(video);
 			}
 		} else {
 			if(path.equals("")) {
-				mainController.getMainEventHandler().openMediaDialogWithoutReset();
+				//TODO: Wieso ist das ohne reset?
+				//mainController.getMainEventHandler().openMediaDialogWithoutReset();
+				throw new Error("Das sollte nicht passieren, hier wurde was vergessen!");
 			} else {
 				video = new File(path);
-				mainController.getMainEventHandler().openMedia(video);
+				mainController.openMedia(video);
 			}
 			
 		}
