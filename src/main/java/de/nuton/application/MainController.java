@@ -129,7 +129,7 @@ public class MainController implements Initializable{
 		scalingManager = ScalingManager.getInstance();
 		settings = new Settings();
 		eventHandler = new MainEventHandler(this);
-		VideoPainter.init(this);
+		VideoPainter.init(canvas);
 		
 		settingsController = new SettingsController(this, settings, themeLoader);
 		

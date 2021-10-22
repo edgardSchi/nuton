@@ -1,12 +1,12 @@
 package de.nuton.draw;
 
-import de.nuton.application.MainController;
 import de.nuton.application.Point;
 import de.nuton.properties.PropertiesReader;
+import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 
 /**
- * This class is responsible for the communication between the main controller and the draw handler. Everything that should be drawn on the canvas must be called here.
+ * This class is responsible for the communication between the canvas and the draw handler. Everything that should be drawn on the canvas must be called here.
  */
 public class VideoPainter {
 
@@ -15,12 +15,12 @@ public class VideoPainter {
     private static final Color CALIBRATION_POINT_COLOR = Color.rgb(255, 119, 0, 0.80);
 
     private static VideoPainter instance = null;
-    private final MainController mainController;
+    private final Canvas canvas;
     private final DrawHandler drawHandler;
 
-    private VideoPainter(MainController mainController) {
-        this.mainController = mainController;
-        this.drawHandler = new DrawHandler(mainController.getGc());
+    private VideoPainter(Canvas canvas) {
+        this.canvas = canvas;
+        this.drawHandler = new DrawHandler(canvas.getGraphicsContext2D());
     }
 
     /**
@@ -36,14 +36,14 @@ public class VideoPainter {
 
     /**
      * Initializes the draw controller. Needs to be called once before getInstance.
-     * @param mainController The MainController
-     * @return A DrawController
+     * @param canvas The canvas
+     * @return A VideoPainter
      */
-    public static VideoPainter init(MainController mainController) {
+    public static VideoPainter init(Canvas canvas) {
         if (instance != null) {
             throw new AssertionError("Init has already been called!");
         }
-        instance = new VideoPainter(mainController);
+        instance = new VideoPainter(canvas);
         return instance;
     }
 
@@ -51,7 +51,7 @@ public class VideoPainter {
      * Clears a rectangular section of the canvas
      */
     public void clearScreen() {
-        drawHandler.clearRect(0, 0, mainController.getCanvas().getWidth(), mainController.getCanvas().getHeight());
+        drawHandler.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
     }
 
     /**
@@ -135,7 +135,6 @@ public class VideoPainter {
      * @param y1 Y Corrdinate of the first point
      * @param x2 X Coordinate of the second point
      * @param y2 Y Coordinate of the second point
-     * @param color Color of the line
      */
     public void drawDistance(double x1, double y1, double x2, double y2) {
         drawHandler.drawDistance(x1, y1, x2, y2, POINT_COLOR);
