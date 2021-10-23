@@ -61,8 +61,6 @@ public class CalibratePendelState extends CalibrateState{
 				TextInputDialog dialog = createDialog("Mittelpunkt und Distanz mit folgendem Wert speichern? (cm):", 1, 0);
 				Optional<String> result = dialog.showAndWait();
 				if (result.isPresent()) {
-					ScalingManager.getInstance().normalizePoint(calibratePoints[2]);
-					ScalingManager.getInstance().normalizePoint(calibratePoints[1]);
 					pManager.setCalibratePoints(calibratePoints);
 					mainController.getSettings().setEichung(Double.parseDouble(result.get()));
 					pManager.setEichung(Double.parseDouble(result.get()));
@@ -79,43 +77,43 @@ public class CalibratePendelState extends CalibrateState{
 
 	@Override
 	public void keyPressed(int k) {
-		// TODO Auto-generated method stub
+
 		
 	}
 
 	@Override
 	public void keyReleased(int k) {
-		// TODO Auto-generated method stub
+
 		
 	}
 
 	@Override
 	public void fertigBtnClick() {
-		// TODO Auto-generated method stub
+
 		
 	}
 
 	@Override
 	public void reset() {
-		// TODO Auto-generated method stub
+
 		
 	}
 
 	@Override
 	public void redraw() {
-		// TODO Auto-generated method stub
+
 		
 	}
 
 	@Override
 	public void onKill() {
-		// TODO Auto-generated method stub
+
 		
 	}
 
 	@Override
 	public void onUnpause() {
-		// TODO Auto-generated method stub
+
 		
 	}
 

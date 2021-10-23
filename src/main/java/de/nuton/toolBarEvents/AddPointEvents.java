@@ -23,6 +23,8 @@ import de.nuton.draw.VideoPainter;
 import de.nuton.application.MainController;
 import de.nuton.application.ScalingManager;
 import de.nuton.application.Point;
+import de.nuton.math.MathUtils;
+import de.nuton.math.Vector2;
 import de.nuton.states.State;
 import javafx.scene.control.Slider;
 import javafx.scene.input.MouseEvent;
@@ -34,7 +36,7 @@ public class AddPointEvents {
 	
 	public static void point(State state, MouseEvent e) {
 		if (e.getEventType() == MouseEvent.MOUSE_CLICKED) {
-			addPoint(state, e);
+			addPoint(state, e.getX(), e.getY());
 		}
 		
 	}
@@ -79,7 +81,7 @@ public class AddPointEvents {
 		}
 		
 		if (e.getEventType() == MouseEvent.MOUSE_RELEASED && !e.isPrimaryButtonDown() && leftClicked) {
-			addPoint(state, e, (x2 - x) / 2 + x, (y2 - y) / 2 + y);
+			addPoint(state, (x2 - x) / 2 + x, (y2 - y) / 2 + y);
 			VideoPainter.getInstance().clearScreen();
 			for(Point p : points) {
 				VideoPainter.getInstance().drawPoint(p);
@@ -123,7 +125,7 @@ public class AddPointEvents {
 		}
 		
 		if (e.getEventType() == MouseEvent.MOUSE_RELEASED && !e.isPrimaryButtonDown() && leftClicked) {
-			addPoint(state, e, (x2 - x) / 2 + x, (y2 - y) / 2 + y);
+			addPoint(state, (x2 - x) / 2 + x, (y2 - y) / 2 + y);
 			VideoPainter.getInstance().clearScreen();
 			for(Point p : points) {
 				VideoPainter.getInstance().drawPoint(p);
@@ -132,37 +134,33 @@ public class AddPointEvents {
 		}
 	}
 	
-	public static void addPoint(State state, MouseEvent e, double x, double y) {
+	public static void addPoint(State state, double x, double y) {
 		Slider slider = state.getMainController().getSlider();
 		MainController mainController = state.getMainController();
 		ArrayList<Point> points = state.getPoints();
+		double newX = x;
+		double newY = y;
 		if (slider.getValue() < slider.getMax()) {
-			Point p;
 			if (mainController.getSettings().isyFixed() && yFix == 0) {
 				yFix = y;
-				p = new Point((int)x, (int)y, slider.getValue());
-				points.add(p);
-				VideoPainter.getInstance().drawPoint(p);
 			} else if (mainController.getSettings().isyFixed()) {
-				p = new Point((int)x, (int)yFix, slider.getValue());
-				points.add(p);
-				VideoPainter.getInstance().drawPoint(p);
+				newY = yFix;
 			} else if (mainController.getSettings().isxFixed() && xFix == 0) {
 				xFix = x;
-				p = new Point((int)x, (int)y, slider.getValue());
-				points.add(p);
-				VideoPainter.getInstance().drawPoint(p);
+				newX = x;
+				newY = y;
 			} else if (mainController.getSettings().isxFixed()) {
-				p = new Point((int)xFix, (int)y, slider.getValue());
-				points.add(p);
-				VideoPainter.getInstance().drawPoint(p);
+				newX = xFix;
+				newY = y;
 			} else {
-				p = new Point((int)x, (int)y, slider.getValue());
-				points.add(p);
-				VideoPainter.getInstance().drawPoint(p);
+				newX = x;
+				newY = y;
 			}
-			ScalingManager.getInstance().normalizePoint(p);
+			Vector2 normCord = MathUtils.toNormalizedCoordinates(newX, newY, mainController.getCanvas().getWidth(), mainController.getCanvas().getHeight());
+			Point p = new Point(normCord.getX(), normCord.getY(), slider.getValue());
+			points.add(p);
 			state.getMainController().updateLists();
+			//TODO: Vielleicht den state manager notifien fürs redraw
 			for (Point po : points) {
 				VideoPainter.getInstance().drawPoint(po);
 			}
@@ -208,41 +206,7 @@ public class AddPointEvents {
 			slider.setValue(slider.getValue() + mainController.getSettings().getSchrittweite());
 		}		
 	}*/
-	
-	private static void addPoint(State state, MouseEvent e) {
-		Slider slider = state.getMainController().getSlider();
-		MainController mainController = state.getMainController();
-		ArrayList<Point> points = state.getPoints();
-		if (slider.getValue() < slider.getMax()) {
-			Point p;
-			if (mainController.getSettings().isyFixed() && yFix == 0) {
-				yFix = e.getY();
-				p = new Point((int)e.getX(), (int)e.getY(), slider.getValue());
-				points.add(p);
-				VideoPainter.getInstance().drawPoint(p);
-			} else if (mainController.getSettings().isyFixed() == true) {
-				p = new Point((int)e.getX(), (int)yFix, slider.getValue());
-				points.add(p);
-				VideoPainter.getInstance().drawPoint(p);
-			} else if (mainController.getSettings().isxFixed() && xFix == 0) {
-				xFix = e.getX();
-				p = new Point((int)e.getX(), (int)e.getY(), slider.getValue());
-				points.add(p);
-				VideoPainter.getInstance().drawPoint(p);
-			} else if (mainController.getSettings().isxFixed() == true) {
-				p = new Point((int)xFix, (int)e.getY(), slider.getValue());
-				points.add(p);
-				VideoPainter.getInstance().drawPoint(p);
-			} else {
-				p = new Point((int)e.getX(), (int)e.getY(), slider.getValue());
-				points.add(p);
-				VideoPainter.getInstance().drawPoint(p);
-			}
-			ScalingManager.getInstance().normalizePoint(p);
-			state.getMainController().updateLists();
-			slider.setValue(slider.getValue() + mainController.getSettings().getSchrittweite());
-		}
-	}
+
 	
 	public static void reset() {
 		x = 0;

@@ -165,25 +165,25 @@ public class StreamState extends PointState {
 
 	@Override
 	public void keyPressed(int k) {
-		// TODO Auto-generated method stub
+
 		
 	}
 
 	@Override
 	public void keyReleased(int k) {
-		// TODO Auto-generated method stub
+
 		
 	}
 
 	@Override
 	public void fertigBtnClick() {
-		// TODO Auto-generated method stub
+
 		
 	}
 
 	@Override
 	public void reset() {
-		// TODO Auto-generated method stub
+
 		
 	}
 
@@ -264,7 +264,7 @@ public class StreamState extends PointState {
 
 	@Override
 	public void onUnpause() {
-		// TODO Auto-generated method stub
+
 		
 	}
 	

@@ -18,7 +18,15 @@
 package de.nuton.application;
 
 public class Point {
-	
+
+	//Normalized coordinates
+	private double x;
+	private double y;
+
+	private double time;
+	private boolean highlight;
+
+	/*
 	private int x;
 	private int y;
 	private double time;
@@ -32,21 +40,20 @@ public class Point {
 	private int drawY;
 	private double deltaTime;
 	private boolean highlight;
+	 */
 	
-	public Point(int x, int y, double time) {
+	public Point(double x, double y, double time) {
 		this.x = x;
 		this.y = y;
-		this.drawX = x;
-		this.drawY = y;
 		this.time = time;
 		this.highlight = false;
 	}
 
-	public int getX() {
+	public double getX() {
 		return x;
 	}
 
-	public int getY() {
+	public double getY() {
 		return y;
 	}
 
@@ -62,105 +69,31 @@ public class Point {
 	public double getTime() {
 		return time;
 	}
-	
-	public void setEntfernungMeterX(double entfernung) {
-		entfernungMeterX = entfernung;
-	}
-	
-	public double getEntfernungMeterX() {
-		return entfernungMeterX;
-	}
-	
-	public void setEntfernungMeterY(double entfernung) {
-		entfernungMeterY = entfernung;
-	}
-	
-	public double getEntfernungMeterY() {
-		return entfernungMeterY;
-	}
 
 	@Override
 	public String toString() {
-		return "Point [x=" + x + ", y=" + y + ", time=" + time
-				+ ", entfernungMeterX=" + entfernungMeterX + ", entfernungMeterY=" + entfernungMeterY + ", highlightColor=" + ", normX=" + normX + ", normY=" + normY + ", mediaX=" + mediaX + ", mediaY=" + mediaY
-				+ ", drawX=" + drawX + ", drawY=" + drawY + ", deltaTime=" + deltaTime + "]";
+		return "Point{" +
+				"x=" + x +
+				", y=" + y +
+				", time=" + time +
+				", highlight=" + highlight +
+				'}';
 	}
 
 	public String saveString() {
 		return x + "," + y + "," + time;
 	}
 
-	public void setX(int x) {
+	public void setX(double x) {
 		this.x = x;
 	}
 
-	public void setY(int y) {
+	public void setY(double y) {
 		this.y = y;
 	}
 	
 	public void setTime(double time) {
 		this.time = time;
-	}
-	
-	public void setNormCord(double x, double y) {
-		this.normX = x;
-		this.normY = y;
-	}
-
-	public void setNormX(double normX) {
-		this.normX = normX;
-	}
-
-	public void setNormY(double normY) {
-		this.normY = normY;
-	}
-
-	public double getNormX() {
-		return normX;
-	}
-
-	public double getNormY() {
-		return normY;
-	}
-
-	public int getMediaX() {
-		return mediaX;
-	}
-
-	public void setMediaX(int mediaX) {
-		this.mediaX = mediaX;
-	}
-
-	public int getMediaY() {
-		return mediaY;
-	}
-
-	public void setMediaY(int mediaY) {
-		this.mediaY = mediaY;
-	}
-
-	public int getDrawX() {
-		return drawX;
-	}
-
-	public void setDrawX(int drawX) {
-		this.drawX = drawX;
-	}
-
-	public int getDrawY() {
-		return drawY;
-	}
-
-	public void setDrawY(int drawY) {
-		this.drawY = drawY;
-	}
-
-	public double getDeltaTime() {
-		return deltaTime;
-	}
-
-	public void setDeltaTime(double deltaTime) {
-		this.deltaTime = deltaTime;
 	}
 
 }

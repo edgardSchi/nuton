@@ -220,19 +220,19 @@ public class DiagramsController {
 			
 		});
 	}
-	
+
 	public void timePathX() {
 		XYChart.Series<Double, Double> series = new XYChart.Series<>();
 		for(Point p : points) {
-			series.getData().add(new XYChart.Data<Double, Double>(p.getDeltaTime() / 1000, p.getEntfernungMeterX()));
+			series.getData().add(new XYChart.Data<Double, Double>(p.getTime() / 1000, p.getX()));
 		}
 		seriesArray[0] = series;
 	}
-	
+
 	public void timePathY() {
 		XYChart.Series<Double, Double> series = new XYChart.Series<>();
 		for(Point p : points) {
-			series.getData().add(new XYChart.Data<Double, Double>(p.getDeltaTime() / 1000, p.getEntfernungMeterY()));
+			series.getData().add(new XYChart.Data<Double, Double>(p.getTime() / 1000, p.getY()));
 		}
 		seriesArray[1] = series;
 	}
@@ -276,27 +276,29 @@ public class DiagramsController {
 	}
 	
 	public void timeVeloY() {
-		ArrayList<Double> velo = pManager.calcYVelo(points);
+		//TODO: Hängt mit Pixelmanager refactor zusammen
+/*		ArrayList<Double> velo = pManager.calcYVelo(points);
 		XYChart.Series<Double, Double> series = new XYChart.Series<>();
 		for(int i = 0; i < velo.size(); i++) {
 			series.getData().add(new XYChart.Data<>(points.get(i).getDeltaTime() / 1000, velo.get(i)));
 		}
-		seriesArray[3] = series;
+		seriesArray[3] = series;*/
 	}
 	
 	public void timeVeloX() {
-		ArrayList<Double> velo = pManager.calcXVelo(points);
+		//TODO: Hängt mit Pixelmanager refactor zusammen
+/*		ArrayList<Double> velo = pManager.calcXVelo(points);
 		XYChart.Series<Double, Double> series = new XYChart.Series<>();
 		for (int i = 0; i < velo.size(); i++) {
 			series.getData().add(new XYChart.Data<>(points.get(i).getDeltaTime() / 1000, velo.get(i)));
 		}
-		seriesArray[2] = series;
+		seriesArray[2] = series;*/
 	}
 	
 	private void xyDiagram() {
 		XYChart.Series<Double, Double> series = new XYChart.Series<>();
 		for (Point p : points) {
-			series.getData().add(new XYChart.Data<>((double)p.getX(), (double)p.getY()));
+			series.getData().add(new XYChart.Data<>(p.getX(), p.getY()));
 		}
 		seriesArray[6] = series;
 	}
@@ -304,7 +306,7 @@ public class DiagramsController {
 	private void txDiagram() {
 		XYChart.Series<Double, Double> series = new XYChart.Series<>();
 		for (Point p : points) {
-			series.getData().add(new XYChart.Data<>((double)p.getDeltaTime(), (double)p.getX()));
+			series.getData().add(new XYChart.Data<>(p.getTime(), p.getX()));
 		}
 		seriesArray[4] = series;
 	}
@@ -312,7 +314,7 @@ public class DiagramsController {
 	private void tyDiagram() {
 		XYChart.Series<Double, Double> series = new XYChart.Series<>();
 		for (Point p : points) {
-			series.getData().add(new XYChart.Data<>((double)p.getDeltaTime(), (double)p.getY()));
+			series.getData().add(new XYChart.Data<>(p.getTime(), p.getY()));
 		}
 		seriesArray[5] = series;
 	}

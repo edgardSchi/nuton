@@ -27,8 +27,8 @@ public class SerializablePoint implements Serializable{
 	 * 
 	 */
 	private static final long serialVersionUID = 4293937888368438882L;
-	private int x;
-	private int y;
+	private double x;
+	private double y;
 	private double time;
 	private double entfernungMeterX;
 	private double entfernungMeterY;
@@ -43,17 +43,17 @@ public class SerializablePoint implements Serializable{
 		this.x = p.getX();
 		this.y = p.getY();
 		this.time = p.getTime();
-		this.entfernungMeterX = p.getEntfernungMeterX();
-		this.entfernungMeterY = p.getEntfernungMeterY();
-		this.normX = p.getNormX();
-		this.normY = p.getNormY();
-		this.mediaX = p.getMediaX();
-		this.mediaY = p.getMediaY();
-		this.drawX = p.getDrawX();
-		this.drawY = p.getDrawY();
+		this.entfernungMeterY = 0;
+		this.entfernungMeterX = 0;
+		this.normX = 0;
+		this.normY = 0;
+		this.mediaX = 0;
+		this.mediaY = 0;
+		this.drawX = 0;
+		this.drawY = 0;
 	}
 
-	public int getX() {
+	public double getX() {
 		return x;
 	}
 
@@ -61,7 +61,7 @@ public class SerializablePoint implements Serializable{
 		this.x = x;
 	}
 
-	public int getY() {
+	public double getY() {
 		return y;
 	}
 

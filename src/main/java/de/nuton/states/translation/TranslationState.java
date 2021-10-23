@@ -50,13 +50,13 @@ public class TranslationState extends PointState {
 
 	@Override
 	public void keyPressed(int k) {
-		// TODO Auto-generated method stub
+
 		
 	}
 
 	@Override
 	public void keyReleased(int k) {
-		// TODO Auto-generated method stub
+
 		
 	}
 	
@@ -78,7 +78,8 @@ public class TranslationState extends PointState {
 			pManager.setPoints(points);
 			pManager.getSettings().setMotion(Settings.TRANSLATION);
 			pManager.calcPixelLength();
-			pManager.calcMeter(points);
+			//TODO: Pixelmanager refactor
+			//pManager.calcMeter(points);
 			FertigDialogController fController = new FertigDialogController(mainController, pManager, points, Motion.TRANSLATION);
 			fController.showDialog();
 		}
@@ -99,7 +100,7 @@ public class TranslationState extends PointState {
 
 	@Override
 	public void onKill() {
-		// TODO Auto-generated method stub
+
 		
 	}
 

@@ -23,6 +23,7 @@ import de.nuton.draw.VideoPainter;
 import de.nuton.application.MainController;
 import de.nuton.application.Point;
 import de.nuton.application.ScalingManager;
+import de.nuton.math.MathUtils;
 import de.nuton.states.CalibrateState;
 import de.nuton.states.StateManager;
 import javafx.scene.control.TextInputDialog;
@@ -57,7 +58,7 @@ public class CalibrateCircState extends CalibrateState{
 			addPointByMouse(e);
 			
 			if (clickCounter == 2) {
-				VideoPainter.getInstance().drawDistance(calibratePoints[0], calibratePoints[1], Color.RED);
+				VideoPainter.getInstance().drawDistance(calibratePoints[0].getX(), calibratePoints[0].getY(), calibratePoints[1].getX(), calibratePoints[1].getY(), Color.RED);
 				mainController.setHelpLabel("Mittelpunkt auswählen");
 			}
 			
@@ -67,8 +68,9 @@ public class CalibrateCircState extends CalibrateState{
 				Optional<String> result = dialog.showAndWait();
 				if (result.isPresent()) {
 					origin = calibratePoints[2];
-					ScalingManager.getInstance().normalizePoint(origin);
-					ScalingManager.getInstance().normalizePoint(calibratePoints[1]);
+					//TODO: Nach Point refactor ist defect
+/*					ScalingManager.getInstance().normalizePoint(origin);
+					ScalingManager.getInstance().normalizePoint(calibratePoints[1]);*/
 					pManager.setCalibratePoints(calibratePoints);
 					mainController.getSettings().setEichung(Double.parseDouble(result.get()));
 					pManager.setEichung(Double.parseDouble(result.get()));
@@ -93,43 +95,43 @@ public class CalibrateCircState extends CalibrateState{
 
 	@Override
 	public void keyPressed(int k) {
-		// TODO Auto-generated method stub
+
 		
 	}
 
 	@Override
 	public void keyReleased(int k) {
-		// TODO Auto-generated method stub
+
 		
 	}
 
 	@Override
 	public void fertigBtnClick() {
-		// TODO Auto-generated method stub
+
 		
 	}	
 
 	@Override
 	public void reset() {
-		// TODO Auto-generated method stub
+
 		
 	}
 
 	@Override
 	public void redraw() {
-		// TODO Auto-generated method stub
+
 		
 	}
 
 	@Override
 	public void onKill() {
-		// TODO Auto-generated method stub
+
 		
 	}
 
 	@Override
 	public void onUnpause() {
-		// TODO Auto-generated method stub
+
 		
 	}
 

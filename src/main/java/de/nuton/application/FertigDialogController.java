@@ -62,7 +62,7 @@ public class FertigDialogController {
 			dialog = new Dialog<ButtonType>();
 			dialog.setTitle("Optionen für Daten");
 			FXMLLoader loader;
-			loader = new FXMLLoader(getClass().getResource("FertigDialog.fxml"));
+			loader = new FXMLLoader(getClass().getResource("/fxml/FertigDialog.fxml"));
 			loader.setController(this);
 			Parent root = (Parent) loader.load();
 			Scene scene = new Scene(root);

@@ -194,23 +194,15 @@ public class MainController implements Initializable{
 			FileChooser.ExtensionFilter filter = new FileChooser.ExtensionFilter("Nuton Datein (*.ntn)", "*.ntn");
 			chooser.getExtensionFilters().add(filter);
 			File file = chooser.showOpenDialog(MainFX.getStage());
-			//TODO: Wurde beim refactorn vom EventHandler auskommentiert, wegen openMedia()
-			loadHandler.load(file);
+			//TODO: Nach Point refactor ist defect
+			//loadHandler.load(file);
 		});
 		
 		saveFileMenu.setOnAction(event -> {
 			if (player != null && player.getMedia() != null) {
 				saveHandler.save();
 			} else {
-				Alert alert = new Alert(AlertType.ERROR);
-				alert.setTitle("Error!");
-				alert.setContentText("Es ist nichts zum speichern vorhanden.");
-				alert.setHeaderText(null);
-				alert.showAndWait().ifPresent(rs -> {
-					if (rs == ButtonType.OK) {
-						alert.close();
-					}
-				});
+				UIUtils.showErrorAlert("Es ist nichts zum speichern vorhanden.");
 			}
 		});
 		
@@ -258,7 +250,7 @@ public class MainController implements Initializable{
 		canvas.boundsInLocalProperty().addListener((observable, oldValue, newValue) -> {
 			scalingManager.setCanvasDimension(getCanvas().getWidth(), getCanvas().getHeight());
 			if (stateManager.getCurrentState().getPoints() != null) {
-				for (Point p : stateManager.getCurrentState().getPoints()) {
+/*				for (Point p : stateManager.getCurrentState().getPoints()) {
 					System.out.println("X: " + p.getDrawX() + "Y: " + p.getDrawY());
 					scalingManager.updatePointPos(p);
 				}
@@ -269,7 +261,7 @@ public class MainController implements Initializable{
 				}
 				if(pManager.getOrigin() != null) {
 					scalingManager.updatePointPos(pManager.getOrigin());
-				}
+				}*/
 				redraw();
 			}
 		});

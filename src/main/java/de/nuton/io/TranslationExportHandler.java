@@ -65,13 +65,14 @@ public class TranslationExportHandler extends MotionExportHandler{
 				schreibPuffer.write(zeile0);
 				for (int i = 0; i < points.size(); i++) {
 					schreibPuffer.newLine();
-					String zeile;
+					//TODO: Im Export die Medienkoordinaten berechnen
+/*					String zeile;
 					if (i == 0) {
 						zeile = String.format("%f; %d; %d; %s; %f; %f; %s; %f; %f", points.get(i).getTime()/1000, points.get(i).getX(), points.get(i).getY(), leer, points.get(i).getEntfernungMeterX(), points.get(i).getEntfernungMeterY(), leer, eichung, pixelLänge);
 					} else {
 						zeile = String.format("%f; %d; %d; %s; %f; %f", points.get(i).getTime()/1000, points.get(i).getX(), points.get(i).getY(), leer, points.get(i).getEntfernungMeterX(), points.get(i).getEntfernungMeterY());
-					}		
-					schreibPuffer.write(zeile);
+					}
+					schreibPuffer.write(zeile);*/
 				}
 				
 			} catch (IOException e) {

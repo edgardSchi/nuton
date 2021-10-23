@@ -105,7 +105,8 @@ public class TrackingManager extends Dialog<String> implements Runnable {
 
 			@Override
 			public void handle(ActionEvent event) {
-				selectTrackingPoint(calibratePoint.getDrawX(), calibratePoint.getDrawY());			
+				//TODO: Nach Point refactor ist defect
+				//selectTrackingPoint(calibratePoint.getDrawX(), calibratePoint.getDrawY());
 			}
 			
 		});
@@ -128,15 +129,15 @@ public class TrackingManager extends Dialog<String> implements Runnable {
 			}
 			
 		});
-		
-		seekBtn.setOnAction(new EventHandler<ActionEvent>() {
+		//TODO: Nach Point refactor ist defect
+/*		seekBtn.setOnAction(new EventHandler<ActionEvent>() {
 
 			@Override
 			public void handle(ActionEvent event) {				
 				track();
 			}
 			
-		});
+		});*/
 		
 		generateDarkImage();
 		loadBox();
@@ -208,7 +209,8 @@ public class TrackingManager extends Dialog<String> implements Runnable {
 		imageView.setImage(kernelImage);
 	}
 
-	public void track() {
+	//TODO: Nach Point refactor ist defect
+/*	public void track() {
 		for(Point p : mainController.getStateManager().getPoints()) {
 			if(p.getTime() == mainController.getSlider().getValue()) {
 				return;
@@ -228,7 +230,7 @@ public class TrackingManager extends Dialog<String> implements Runnable {
 		mainController.getGc().fillRect(cords[0]-5, cords[1]-5, 10, 10);
 		AddPointEvents.addPoint(mainController.getStateManager().getCurrentState(), null, cords[0], cords[1]);
 		
-	}
+	}*/
 	
 	public void track(Image frame) {
 //		for(Point p : mainController.getStateManager().getPoints()) {
@@ -306,7 +308,7 @@ public class TrackingManager extends Dialog<String> implements Runnable {
 	
 	@Override
 	public void run() {
-		// TODO Auto-generated method stub
+
 		
 	}
 	

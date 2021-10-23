@@ -59,7 +59,7 @@ public class ShowPointsButton extends ToolBarItem {
 
 	@Override
 	public void onClick() {
-		// TODO Auto-generated method stub
+
 		
 	}
 

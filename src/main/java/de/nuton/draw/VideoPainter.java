@@ -1,12 +1,15 @@
 package de.nuton.draw;
 
 import de.nuton.application.Point;
+import de.nuton.math.MathUtils;
+import de.nuton.math.Vector2;
 import de.nuton.properties.PropertiesReader;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 
 /**
  * This class is responsible for the communication between the canvas and the draw handler. Everything that should be drawn on the canvas must be called here.
+ * Points are always converted from normalized to absolute form.
  */
 public class VideoPainter {
 
@@ -60,7 +63,7 @@ public class VideoPainter {
      * @param b Point b
      */
     public void drawCalibrationDistance(Point a, Point b) {
-        drawHandler.drawCalibrationDistance(a.getDrawX(), a.getDrawY(), b.getDrawX(), b.getDrawY(), CALIBRATION_DISTANCE_COLOR, "");
+        this.drawCalibrationDistance(a, b, CALIBRATION_DISTANCE_COLOR, "");
     }
 
     /**
@@ -70,11 +73,7 @@ public class VideoPainter {
      * @param label Text above the line
      */
     public void drawCalibrationDistance(Point a, Point b, String label) {
-        drawHandler.drawCalibrationDistance(a.getDrawX(), a.getDrawY(), b.getDrawX(), b.getDrawY(), CALIBRATION_DISTANCE_COLOR, label);
-    }
-
-    public void drawCalibrationDistance(double x1, double y1, double x2, double y2, Color color, String label) {
-
+       this.drawCalibrationDistance(a, b, CALIBRATION_DISTANCE_COLOR, label);
     }
 
     /**
@@ -84,7 +83,7 @@ public class VideoPainter {
      * @param color Color of the line
      */
     public void drawCalibrationDistance(Point a, Point b, Color color) {
-        drawHandler.drawCalibrationDistance(a.getDrawX(), a.getDrawY(), b.getDrawX(), b.getDrawY(), color, "");
+        this.drawCalibrationDistance(a, b, color, "");
     }
 
     /**
@@ -95,7 +94,9 @@ public class VideoPainter {
      * @param label Label of the line
      */
     public void drawCalibrationDistance(Point a, Point b, Color color, String label) {
-        drawHandler.drawCalibrationDistance(a.getDrawX(), a.getDrawY(), b.getDrawX(), b.getDrawY(), color, label);
+        Vector2 normA = MathUtils.toAbsoluteCoordinates(a, canvas.getWidth(), canvas.getHeight());
+        Vector2 normB = MathUtils.toAbsoluteCoordinates(b, canvas.getWidth(), canvas.getHeight());
+        drawHandler.drawCalibrationDistance(normA.getX(), normA.getY(), normB.getX(), normB.getY(), color, label);
     }
 
     /**
@@ -104,7 +105,7 @@ public class VideoPainter {
      * @param b Point b
      */
     public void drawDistance(Point a, Point b) {
-        drawHandler.drawDistance(a.getDrawX(), a.getDrawY(), b.getDrawX(), b.getDrawY(), POINT_COLOR);
+        this.drawDistance(a, b, POINT_COLOR);
     }
 
     /**
@@ -114,7 +115,9 @@ public class VideoPainter {
      * @param color Color of the line
      */
     public void drawDistance(Point a, Point b, Color color) {
-        drawHandler.drawDistance(a.getDrawX(), a.getDrawY(), b.getDrawX(), b.getDrawY(), color);
+        Vector2 normA = MathUtils.toAbsoluteCoordinates(a, canvas.getWidth(), canvas.getHeight());
+        Vector2 normB = MathUtils.toAbsoluteCoordinates(b, canvas.getWidth(), canvas.getHeight());
+        drawHandler.drawDistance(normA.getX(), normA.getY(), normB.getX(), normB.getY(), color);
     }
 
     /**
@@ -146,7 +149,8 @@ public class VideoPainter {
      * @param highlight Whether or not the point should be highlighted (inverse color)
      */
     public void drawPoint(Point p, boolean highlight) {
-        drawHandler.drawPoint(p.getDrawX(), p.getDrawY(), POINT_COLOR, highlight);
+        Vector2 absP = MathUtils.toAbsoluteCoordinates(p, canvas.getWidth(), canvas.getHeight());
+        drawHandler.drawPoint(absP.getX(), absP.getY(), POINT_COLOR, highlight);
     }
 
     /**
@@ -154,7 +158,7 @@ public class VideoPainter {
      * @param p Point that needs to be drawn
      */
     public void drawPoint(Point p) {
-        drawHandler.drawPoint(p.getDrawX(), p.getDrawY(), POINT_COLOR, p.isHighlight());
+       this.drawPoint(p, p.isHighlight());
     }
 
     /**

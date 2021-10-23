@@ -37,7 +37,7 @@ public abstract class ToolBarToggleButton extends ToolBarItem {
 	
 	@Override
 	public void onClick() {
-		// TODO Auto-generated method stub
+
 		
 	}
 	

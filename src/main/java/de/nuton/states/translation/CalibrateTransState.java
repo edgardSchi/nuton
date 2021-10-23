@@ -49,7 +49,7 @@ public class CalibrateTransState extends CalibrateState {
 			addPointByMouse(e);
 			
 			if (clickCounter == 2) {
-				VideoPainter.getInstance().drawDistance(calibratePoints[0], calibratePoints[1], Color.RED);
+				VideoPainter.getInstance().drawDistance(calibratePoints[0].getX(), calibratePoints[0].getY(), calibratePoints[1].getX(), calibratePoints[1].getY(), Color.RED);
 
 				TextInputDialog dialog = createDialog("Distanz für folgenen Wert speichern? ("+ settings.getLengthUnit().toString().toLowerCase() + "):", 1, 0);
 				
@@ -67,8 +67,6 @@ public class CalibrateTransState extends CalibrateState {
 						mainController.getStateManager().setState(StateManager.TRANSLATION);
 					}
 
-					ScalingManager.getInstance().normalizePoint(calibratePoints[0]);
-					ScalingManager.getInstance().normalizePoint(calibratePoints[1]);
 					mainController.getStateManager().getCurrentState().setCalibratePoints(calibratePoints);
 				} else {
 					resetCalibrate();
@@ -80,43 +78,43 @@ public class CalibrateTransState extends CalibrateState {
 
 	@Override
 	public void keyPressed(int k) {
-		// TODO Auto-generated method stub
+
 		
 	}
 
 	@Override
 	public void keyReleased(int k) {
-		// TODO Auto-generated method stub
+
 		
 	}
 
 	@Override
 	public void fertigBtnClick() {
-		// TODO Auto-generated method stub
+
 		
 	}
 
 	@Override
 	public void reset() {
-		// TODO Auto-generated method stub
+
 		
 	}
 
 	@Override
 	public void redraw() {
-		// TODO Auto-generated method stub
+
 		
 	}
 
 	@Override
 	public void onKill() {
-		// TODO Auto-generated method stub
+
 		
 	}
 
 	@Override
 	public void onUnpause() {
-		// TODO Auto-generated method stub
+
 		
 	}
 

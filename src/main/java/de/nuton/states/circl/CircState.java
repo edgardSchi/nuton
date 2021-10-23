@@ -52,13 +52,13 @@ public class CircState extends PointState{
 
 	@Override
 	public void keyPressed(int k) {
-		// TODO Auto-generated method stub
+
 		
 	}
 
 	@Override
 	public void keyReleased(int k) {
-		// TODO Auto-generated method stub
+
 		
 	}
 
@@ -76,7 +76,8 @@ public class CircState extends PointState{
 			pManager.calcPixelLength();
 			pManager.setPoints(points);
 			pManager.getSettings().setMotion(Settings.CIRCULAR);
-			pManager.calcMeter(points);
+			//TODO: Pixelmanager refactor
+			//pManager.calcMeter(points);
 			pManager.createVectors(points);
 			pManager.checkVectorDirection();
 			pManager.calcDeltaPhi();
@@ -118,7 +119,7 @@ public class CircState extends PointState{
 
 	@Override
 	public void onKill() {
-		// TODO Auto-generated method stub
+
 		
 	}
 

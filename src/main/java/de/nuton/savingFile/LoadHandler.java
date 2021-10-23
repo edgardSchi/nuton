@@ -51,8 +51,8 @@ public class LoadHandler {
 		this.settings = settings;
 		points = new ArrayList<Point>();
 	}
-
-	public void load(File file) {
+	//TODO: Nach Point refactor ist defect
+	/*public void load(File file) {
 		try {
 			FileInputStream fi = new FileInputStream(file);
 			ObjectInputStream oi = new ObjectInputStream(fi);
@@ -76,7 +76,7 @@ public class LoadHandler {
 		} catch (ClassNotFoundException e) {
 			
 		}
-	}
+	}*/
 	
 	private boolean errorDialog(String path) {
 		Alert alert = new Alert(AlertType.ERROR);
@@ -103,7 +103,8 @@ public class LoadHandler {
 //		return false;
 	}
 
-	private void applySettings(SaveFile saveFile) {
+	//TODO: Nach Point refactor ist defect
+	/*private void applySettings(SaveFile saveFile) {
 		TempSaving.withFfmpeg(saveFile.isWithFfmpeg());
 		File video = new File(saveFile.getVideoURL());
 		if(!video.exists()) {
@@ -140,7 +141,7 @@ public class LoadHandler {
 		TempSaving.setURL(saveFile.getVideoURL());
 		System.out.println("LOADED");
 		System.out.println(mainController.getSettings());
-	}
+	}*/
 
 	private void loadVideo(String path) {
 		File video;
@@ -163,8 +164,8 @@ public class LoadHandler {
 			
 		}
 	}
-	
-	private Point[] convertCalibratePoints(SerializablePoint[] sPoints) {
+	//TODO: Nach Point refactor ist defect
+/*	private Point[] convertCalibratePoints(SerializablePoint[] sPoints) {
 		Point[] points = new Point[2];
 		for(int i = 0; i < sPoints.length; i++) {
 			points[i] = new Point(sPoints[i].getX(), sPoints[i].getY(), 0);
@@ -173,9 +174,10 @@ public class LoadHandler {
 			//System.out.println(points[i]);
 		}
 		return points;
-	}
-	
-	private ArrayList<Point> convertPoints(ArrayList<SerializablePoint> sPoints) {
+	}*/
+
+	//TODO: Nach Point refactor ist defect
+/*	private ArrayList<Point> convertPoints(ArrayList<SerializablePoint> sPoints) {
 		ArrayList<Point> points = new ArrayList<Point>();
 		ScalingManager.getInstance().setMediaDimension(mainController.getPlayer().getMedia().getWidth(), mainController.getPlayer().getMedia().getHeight());
 		for(SerializablePoint sPoint : sPoints) {
@@ -192,9 +194,10 @@ public class LoadHandler {
 			System.out.println(p.toString());
 		}
 		return points;
-	}
-	
-	private Point convertOrigin(SerializablePoint sPoint) {
+	}*/
+
+	//TODO: Nach Point refactor ist defect
+/*	private Point convertOrigin(SerializablePoint sPoint) {
 		Point o = new Point(sPoint.getX(), sPoint.getY(), sPoint.getTime());
 		o.setNormX(sPoint.getNormX());
 		o.setNormY(sPoint.getNormY());
@@ -202,9 +205,10 @@ public class LoadHandler {
 		o.setMediaY(sPoint.getMediaY());
 		ScalingManager.getInstance().updatePointPos(o);
 		return o;
-	}
-	
-	private void updatePoints() {
+	}*/
+
+	//TODO: Nach Point refactor ist defect
+/*	private void updatePoints() {
 		for(Point p : mainController.getStateManager().getPoints()) {
 			ScalingManager.getInstance().updatePointPos(p);
 		}
@@ -214,5 +218,5 @@ public class LoadHandler {
 		if(mainController.getPManager().getOrigin() != null) {
 			ScalingManager.getInstance().updatePointPos(mainController.getPManager().getOrigin());
 		}
-	}
+	}*/
 }

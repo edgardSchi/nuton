@@ -72,8 +72,9 @@ public class PixelManager {
 	public void calcPixelLength() {
 		LAENGEPIXEL = getDistance(calibratePoints[0].getX(), calibratePoints[0].getY(), calibratePoints[1].getX(), calibratePoints[1].getY());
 	}
-	
-	public void calcMeter(ArrayList<Point> pointArray) {
+
+	//TODO: Nach Point refactor ist defect
+/*	public void calcMeter(ArrayList<Point> pointArray) {
 		double eichungMeter = mainController.getSettings().getEichung();
 		double tmp = eichungMeter/LAENGEPIXEL;
 		double xNull = points.get(0).getX();
@@ -93,13 +94,14 @@ public class PixelManager {
 				}
 			p.setDeltaTime(p.getTime() - tNull);
 		}
-	}
-	
-	/**
+	}*/
+
+	//TODO: Nach Point refactor ist defect
+/*	*//**
 	 * Berechnet die Geschwindigkeit zwischen den Punkten in der y-Richtung. Dabei wird die Entfernung in Metern der Punkte-Objekte verwendet.
 	 * @param pointArray Punkte
 	 * @return Die Geschwindigkeit zwischen den Punkten auf der y-Achse
-	 */
+	 *//*
 	public ArrayList<Double> calcYVelo(ArrayList<Point> pointArray) {
 		ArrayList<Double> velo = new ArrayList<Double>();
 		
@@ -113,13 +115,14 @@ public class PixelManager {
 			
 		}
 		return velo;
-	}
-	
-	/**
+	}*/
+
+	//TODO: Nach Point refactor ist defect
+/*	*//**
 	 * Berechnet die Geschwindigkeit zwischen den Punkten in der x-Richtung. Dabei wird die Entfernung in Metern der Punkte-Objekte verwendet.
 	 * @param pointArray Punkte
 	 * @return Die Geschwindigkeit zwischen den Punkten auf der x-Achse
-	 */
+	 *//*
 	public ArrayList<Double> calcXVelo(ArrayList<Point> pointArray) {
 		ArrayList<Double> velo = new ArrayList<Double>();
 		
@@ -132,7 +135,7 @@ public class PixelManager {
 			}			
 		}
 		return velo;
-	}
+	}*/
 	
 	public void createVectors(ArrayList<Point> pointArray) {
 		vectors.clear();

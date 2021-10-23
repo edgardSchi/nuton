@@ -35,10 +35,11 @@ public class MovePointEvents {
 			dragY = e.getY();	
 		}		
 		
-		if (e.getEventType() == MouseEvent.MOUSE_DRAGGED && e.isPrimaryButtonDown()) {		
-			
-			x = p.getDrawX() - dragX + e.getX();
-			y = p.getDrawY() - dragY + e.getY();
+		if (e.getEventType() == MouseEvent.MOUSE_DRAGGED && e.isPrimaryButtonDown()) {
+
+			//TODO: Nach Point refactor ist defect
+/*			x = p.getDrawX() - dragX + e.getX();
+			y = p.getDrawY() - dragY + e.getY();*/
 
 			if(x >= 0 && x <= mainController.getCanvas().getWidth() && y >= 0 && y <= mainController.getCanvas().getHeight()) {
 				p.setX((int)x);
@@ -46,10 +47,11 @@ public class MovePointEvents {
 				
 				
 				dragX = e.getX();
-				dragY = e.getY();	
-				
-				ScalingManager.getInstance().normalizePoint(p);
-				ScalingManager.getInstance().updatePointPos(p);
+				dragY = e.getY();
+
+				//TODO: Nach Point refactor ist defect
+/*				ScalingManager.getInstance().normalizePoint(p);
+				ScalingManager.getInstance().updatePointPos(p);*/
 				mainController.redraw();
 				mainController.updateLists();
 				//System.out.println(p.toString());
