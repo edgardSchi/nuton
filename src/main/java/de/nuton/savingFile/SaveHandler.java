@@ -30,6 +30,7 @@ import de.nuton.application.Point;
 import de.nuton.settings.Settings;
 import javafx.stage.FileChooser;
 
+//TODO: New Save Handler
 public class SaveHandler {
 
 	private File file;
@@ -42,8 +43,8 @@ public class SaveHandler {
 	
 	public SaveHandler(MainController mainController) {
 		this.mainController = mainController;
-		settings = mainController.getSettings();
-		this.points = mainController.getStateManager().getCurrentState().getPoints();
+		//settings = mainController.getSettings();
+		//this.points = mainController.getStateManager().getCurrentState().getPoints();
 	}
 	
 	private String booleanConverter(boolean b) {
@@ -56,7 +57,7 @@ public class SaveHandler {
 	
 	public void save() {
 		try {
-			SaveFile saveFile = new SaveFile(mainController, preparePoints(), prepareCalibratePoints(), prepareOrigin());
+			//SaveFile saveFile = new SaveFile(mainController, preparePoints(), prepareCalibratePoints(), prepareOrigin());
 			if (TempSaving.isAlreadySaved() && !saveAs) {
 				file = new File(TempSaving.getSavingPath());
 			} else {
@@ -65,8 +66,8 @@ public class SaveHandler {
 			if (file != null) {
 				FileOutputStream f = new FileOutputStream(file);
 				ObjectOutputStream o = new ObjectOutputStream(f);
-				
-				o.writeObject(saveFile);
+
+				//o.writeObject(saveFile);
 				
 				o.close();
 				f.close();
@@ -77,30 +78,34 @@ public class SaveHandler {
 			e.printStackTrace();
 		}
 	}
-	
+
+/*
 	private SerializablePoint[] prepareCalibratePoints() {
 		SerializablePoint[] caliPoints = new SerializablePoint[2];
 		caliPoints[0] = new SerializablePoint(mainController.getStateManager().getCurrentState().getCalibratePoints()[0]);
 		caliPoints[1] = new SerializablePoint(mainController.getStateManager().getCurrentState().getCalibratePoints()[1]);
 		return caliPoints;
 	}
-	
-	private ArrayList<SerializablePoint> preparePoints() {
+*/
+
+
+/*	private ArrayList<SerializablePoint> preparePoints() {
 		ArrayList<SerializablePoint> sPoints = new ArrayList<SerializablePoint>();
 		for (Point p : mainController.getStateManager().getPoints()) {
 			sPoints.add(new SerializablePoint(p));
 		}
 		return sPoints;
-	}
-	
-	private SerializablePoint prepareOrigin() {
+	}*/
+
+
+/*	private SerializablePoint prepareOrigin() {
 		if(mainController.getPManager().getOrigin() != null) {
 			SerializablePoint p = new SerializablePoint(mainController.getPManager().getOrigin());
 			return p;
 		} else {
 			return null;
 		}				
-	}
+	}*/
 	
 	private void initFileChooser() {
 		fileChooser = new FileChooser();

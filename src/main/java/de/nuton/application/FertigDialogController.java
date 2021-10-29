@@ -49,15 +49,16 @@ public class FertigDialogController {
 	private DiagramsController diaController;
 	private ArrayList<Point> points;
 	private Exporter exporter;
-	private PixelManager pManager;
+	//private PixelManager pManager;
 	private MainController mainController;
 	private Motion motion;
 
+	//TODO: New Controller with a better name
 	public FertigDialogController(MainController mainController, PixelManager pixelManager, ArrayList<Point> points, Motion motion) {
 		try {
 			this.mainController = mainController;
 			this.points = points;
-			this.pManager = pixelManager;
+			//this.pManager = pixelManager;
 			this.motion = motion;
 			dialog = new Dialog<ButtonType>();
 			dialog.setTitle("Optionen für Daten");
@@ -89,7 +90,7 @@ public class FertigDialogController {
 		showDiagramButton.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
-				diaController = new DiagramsController(mainController, pManager, motion);
+				//diaController = new DiagramsController(mainController, pManager, motion);
 				diaController.setPoints(points);
 				diaController.calculateDiagrams();
 				diaController.show();
@@ -99,7 +100,7 @@ public class FertigDialogController {
 		exportButton.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
-				exporter = new Exporter(points, pManager);
+				//exporter = new Exporter(points, pManager);
 				exporter.exportData();
 			}
 			

@@ -26,19 +26,25 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Slider;
 import javafx.scene.input.MouseEvent;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public abstract class PointState extends State{
 
-	protected Slider slider;
+	//TODO: Button und Slider haben hier eigentlich nix verloren
 	protected Button fertigBtn;
 	protected boolean pointSelected = false;
 	protected Point selectedPoint = null;
+	private final ArrayList<Point> points;
 	protected ChangeListener<Number> sliderListener;
 	
 	public PointState(MainController mainController) {
 		super(mainController);
-		this.slider = mainController.getSlider();
+		points = new ArrayList<>();
 		this.fertigBtn = mainController.getFertigBtn();
-		fertigBtn.setDisable(false);	
+		fertigBtn.setDisable(false);
+
+		setStateData("points", () -> points);
 	}
 	
 	public void defaultInit() {
@@ -47,26 +53,25 @@ public abstract class PointState extends State{
 		fertigBtn.setDisable(false);
 		checkSlider(mainController.getSlider());
 	}
-	
+
+	//TODO: Dont always redraw on every click
 	public void defaultOnClick(MouseEvent e) {
-		updateSlider(mainController.getSlider());
 		if (pointSelected) {
 			de.nuton.toolBarEvents.MovePointEvents.dragPoint(mainController, e, selectedPoint);
 		} else {
-			mainController.getToolBarManager().pointButtonEvent(this, e);	
+			mainController.getToolBarManager().pointButtonEvent(this, e);
 		}
+		mainController.redraw();
+		mainController.updateLists(getPoints());
 	}
 	
 	public void defaultReset() {
 		pointSelected = false;
 		points.clear();
-		slider.setValue(0);
-		slider.setDisable(false);
-		slider.setSnapToTicks(true);
+		mainController.resetSlider();
 		VideoPainter.getInstance().clearScreen();
-		pManager.reset();
 	}
-	
+
 	
 	private void checkSlider(Slider slider) {
 		
@@ -97,6 +102,16 @@ public abstract class PointState extends State{
 		sliderListener.changed(slider.valueProperty(), slider.getValue(), slider.getValue());
 	}
 
-	
+	public void addPoint(Point p) {
+		points.add(p);
+	}
+
+	public void removePoint(Point p) {
+		points.remove(p);
+	}
+
+	public List<Point> getPoints() {
+		return points;
+	}
 
 }

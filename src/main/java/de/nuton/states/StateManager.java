@@ -18,14 +18,13 @@
 package de.nuton.states;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 import de.nuton.application.MainController;
 import de.nuton.application.Point;
-import de.nuton.states.circl.CalibrateCircState;
-import de.nuton.states.circl.CircState;
-import de.nuton.states.tracking.TrackingState;
-import de.nuton.states.translation.CalibrateTransState;
-import de.nuton.states.translation.TranslationState;
+import de.nuton.states.circl.CircularStateChain;
+import de.nuton.states.translation.TranslationStateChain;
 import javafx.scene.input.MouseEvent;
 
 public class StateManager {
@@ -36,9 +35,9 @@ public class StateManager {
 	
 	public static final int DEFAULT = 0;
 	public static final int TRANSLATION_CALIBRATION = 1;
-	public static final int TRANSLATION = 2;
-	public static final int CIRCULAR_CALIBRATION = 3;
-	public static final int CIRCULAR = 4;
+	//public static final int TRANSLATION = 2;
+	public static final int CIRCULAR_CALIBRATION = 2;
+	//public static final int CIRCULAR = 4;
 	public static final int TRACKING = 5;
 	public static final int STREAMING = 6;
 	
@@ -58,11 +57,12 @@ public class StateManager {
 	
 	private void initStates() {
 		states.add(new DefaultState(mainController));
-		states.add(new CalibrateTransState(mainController));
-		states.add(new TranslationState(mainController));
-		states.add(new CalibrateCircState(mainController));
-		states.add(new CircState(mainController));
-		states.add(new TrackingState(mainController));
+		//states.add(new CalibrateTransState(mainController));
+		states.add(new TranslationStateChain(mainController));
+		//states.add(new TranslationState(mainController));
+		states.add(new CircularStateChain(mainController));
+		//states.add(new CircState(mainController));
+		//states.add(new TrackingState(mainController));
 	}
 	
 	public void init() {
@@ -108,6 +108,10 @@ public class StateManager {
 			pausedStateID = -1;
 		}
 	}
+
+	public void loadState(State state) {
+		currentState = state;
+	}
 	
 	public boolean statePaused() {
 		return pausedState != null;
@@ -124,8 +128,13 @@ public class StateManager {
 	public void fertigBtnClick() {
 		currentState.fertigBtnClick();
 	}
-	
-	public ArrayList<Point> getPoints() {
-		return currentState.getPoints();
+
+	//Hacky way
+	public Optional<List<Point>> getPoints() {
+		try {
+			return  Optional.of((List<Point>) getCurrentState().getStateData("points"));
+		} catch (Exception e) {
+			return Optional.empty();
+		}
 	}
 }

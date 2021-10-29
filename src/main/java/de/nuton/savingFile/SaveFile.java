@@ -21,6 +21,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 import de.nuton.application.MainController;
+import de.nuton.application.Point;
 import de.nuton.math.UnitsHandler.LengthUnit;
 import de.nuton.math.UnitsHandler.TimeUnit;
 import de.nuton.settings.Settings;
@@ -31,20 +32,21 @@ public class SaveFile implements Serializable {
 	/**
 	 * 
 	 */
+	//TODO: Fix logic after removing serialized points
 	private static final long serialVersionUID = 2451581485648747317L;
 	private int stateID;
 	private Settings settings;
-	private ArrayList<SerializablePoint> sPoints;
-	private SerializablePoint[] calibratePoints;
-	private SerializablePoint origin;
+	private ArrayList<Point> sPoints;
+	private Point[] calibratePoints;
+	private Point origin;
 	private double sliderPos;
 	private String videoURL;
 	private boolean withFfmpeg;
 	
-	public SaveFile(MainController mainController, ArrayList<SerializablePoint> points, SerializablePoint[] calibratePoints, SerializablePoint origin) {
+	public SaveFile(MainController mainController, ArrayList<Point> points, Point[] calibratePoints, Point origin) {
 		this.calibratePoints = calibratePoints;
 		sPoints = points;
-		settings = mainController.getSettings();
+		//settings = mainController.getSettings();
 		stateID = mainController.getStateManager().getCurrentStateID();
 		sliderPos = mainController.getSlider().getValue();
 		videoURL = TempSaving.getVideoURL();
@@ -54,11 +56,11 @@ public class SaveFile implements Serializable {
 
 	
 	
-	public SerializablePoint getOrigin() {
+	public Point getOrigin() {
 		return origin;
 	}
 
-	public SerializablePoint[] getCalibratePoints() {
+	public Point[] getCalibratePoints() {
 		return calibratePoints;
 	}
 	
@@ -72,7 +74,7 @@ public class SaveFile implements Serializable {
 	}
 
 
-	public ArrayList<SerializablePoint> getsPoints() {
+	public ArrayList<Point> getsPoints() {
 		return sPoints;
 	}
 

@@ -33,7 +33,8 @@ public class ChangeStepSizeButton extends ToolBarButton {
 	
 	@Override
 	public void onClick() {
-		TextInputDialog dialog = new TextInputDialog("" + (int)tbm.getMainController().getSettings().getSchrittweite());
+		//TODO: After fixing settings
+		TextInputDialog dialog = new TextInputDialog("" /*+ (int)tbm.getMainController().getSettings().getSchrittweite()*/);
 		dialog.setTitle("Schrittweite ändern");
 		dialog.setHeaderText(null);
 		dialog.setContentText("Neue Schrittweite (ms): ");
@@ -70,7 +71,8 @@ public class ChangeStepSizeButton extends ToolBarButton {
 		Optional<String> result = dialog.showAndWait();
 		if (result.isPresent()){
 			int schrittweite = Integer.parseInt(dialog.getEditor().getText());
-			tbm.getMainController().getSettings().setSchrittweite(schrittweite);
+			//TODO: After fixing settings
+			//tbm.getMainController().getSettings().setSchrittweite(schrittweite);
 		} else {
 
 		}

@@ -32,7 +32,8 @@ public class Exporter {
 	public Exporter(ArrayList<Point> points, PixelManager pManager) {
 		translationHandler = new TranslationExportHandler(points, pManager);
 		circHandler = new CircExportHandler(points, pManager);
-		handlerID = pManager.getSettings().getMotion();
+		//TODO: After fixing settings
+		//handlerID = pManager.getSettings().getMotion();
 	}
 	
 	public void exportData() {

@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import java.util.Optional;
 
 import de.nuton.application.MainController;
-import de.nuton.settings.Settings;
+import de.nuton.settings.MotionSettings;
 import de.nuton.userSettings.ThemeLoader;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -42,23 +42,18 @@ public class SettingsController{
 	@FXML Pane rootPane;
 	@FXML Pane contentPane;
 	@FXML ComboBox<String> motionBox;
-	
-	private static double SCHRITTWEITE = 1000; //Schrittweite in ms
-	private static double LAENGENEINHEIT = 100; //Länge in cm
-	private boolean settingsComplete = false;
+
 	private MainController mainController;
-	private Settings settingsObj;
 	private Dialog<ButtonType> dialog;
 	
 	private ArrayList<SettingsPaneController> motionController;
 	
 	private int currentMotion;
 	
-	public SettingsController(MainController mainController, Settings settings, ThemeLoader themeLoader) {		
+	public SettingsController(MainController mainController, ThemeLoader themeLoader) {
 		try {
 			dialog = new Dialog<ButtonType>();
 			dialog.setTitle("Einstellungen der Bewegung");
-			this.settingsObj = settings;
 			this.mainController = mainController;
 			FXMLLoader loader;
 			loader = new FXMLLoader(getClass().getResource("/fxml/Settings.fxml"));
@@ -89,29 +84,34 @@ public class SettingsController{
 	private void initMotions() {
 		motionController = new ArrayList<SettingsPaneController>();
 		motionController.add(new SettingsTranslationPaneController(this, "/fxml/SettingsTranslationPane.fxml"));
-		motionController.add(new SettingsCircPaneController(this, "/fxml/SettingsCircPane.fxml"));
+		motionController.add(new SettingsCircularPaneController(this, "/fxml/SettingsCircPane.fxml"));
 	}
 
-	private void saveSettings() {
-		motionController.get(currentMotion).saveSettings();
+	private MotionSettings saveSettings() {
+		return motionController.get(currentMotion).saveSettings();
 	}
 		
 	
-	public void showDialog() {
+	public MotionSettings showDialog() {
 		Optional<ButtonType> result = dialog.showAndWait();
 	    if (result.isPresent() && result != null && result.get() == ButtonType.APPLY) {
-			saveSettings();
+			MotionSettings settings = saveSettings();
 			mainController.getStateManager().setState(motionController.get(currentMotion).getReturnState());
+			mainController.getStateManager().getCurrentState().setStateData("settings", () -> settings);
+			//TODO: UI rausnehmen
 			mainController.restartBtn.setDisable(false);
 			mainController.fertigBtn.setDisable(false);
-			//mainController.getSlider().setMajorTickUnit(settingsObj.getSchrittweite());
-			mainController.getSlider().setMax(calcMaxSlider(settingsObj.getSchrittweite(), mainController.getPlayer().getTotalDuration().toMillis()));
+			mainController.getSlider().setMajorTickUnit(settings.getIncrement());
+			mainController.getSlider().setMax(calcMaxSlider(settings.getIncrement(), mainController.getPlayer().getTotalDuration().toMillis()));
+
+			return settings;
 	    } else {
 	    	//FIXEN//
-	    	reset();
+	    	//reset();
 	    	mainController.reset();
 	    }
 	    dialog.setResult(null);
+	    return null;
 	}
 
 	public static double calcMaxSlider(double schrittweite, double duration) {
@@ -150,49 +150,15 @@ public class SettingsController{
 		currentMotion = 0;
 	}
 	
-	public double getSCHRITTWEITE() {
-		return SCHRITTWEITE;
-	}
-
-	public double getLAENGENEINHEIT() {
-		return LAENGENEINHEIT;
-	}
-	
-	public boolean getSettingsComplete() {
-		return settingsComplete;
-	}
-	
-	public void reset() {
+/*	public void reset() {
 		LAENGENEINHEIT = 100;
 		SCHRITTWEITE = 1000;
-	}
-
-
-
+	}*/
 
 	public MainController getMainController() {
 		return mainController;
 	}
 
-
-	public Settings getSettingsObj() {
-		return settingsObj;
-	}
-
-
-	public static void setSCHRITTWEITE(double sCHRITTWEITE) {
-		SCHRITTWEITE = sCHRITTWEITE;
-	}
-
-
-	public static void setLAENGENEINHEIT(double lAENGENEINHEIT) {
-		LAENGENEINHEIT = lAENGENEINHEIT;
-	}
-
-
-	public void setSettingsComplete(boolean settingsComplete) {
-		this.settingsComplete = settingsComplete;
-	}
 	
 	public Button getApplyBtn() {
 		return (Button) dialog.getDialogPane().lookupButton(ButtonType.APPLY);

@@ -43,7 +43,8 @@ public class PixelManager {
 	private Point origin;
 	private Point[] calibratePoints;
 	private MainController mainController;
-	
+
+	//TODO: Move all the logic in MathUtils and just return the calculated values
 	public PixelManager(MainController mainController) {
 		this.mainController = mainController;
 		calibratePoints = new Point[2];
@@ -73,7 +74,6 @@ public class PixelManager {
 		LAENGEPIXEL = getDistance(calibratePoints[0].getX(), calibratePoints[0].getY(), calibratePoints[1].getX(), calibratePoints[1].getY());
 	}
 
-	//TODO: Nach Point refactor ist defect
 /*	public void calcMeter(ArrayList<Point> pointArray) {
 		double eichungMeter = mainController.getSettings().getEichung();
 		double tmp = eichungMeter/LAENGEPIXEL;
@@ -96,7 +96,6 @@ public class PixelManager {
 		}
 	}*/
 
-	//TODO: Nach Point refactor ist defect
 /*	*//**
 	 * Berechnet die Geschwindigkeit zwischen den Punkten in der y-Richtung. Dabei wird die Entfernung in Metern der Punkte-Objekte verwendet.
 	 * @param pointArray Punkte
@@ -117,7 +116,6 @@ public class PixelManager {
 		return velo;
 	}*/
 
-	//TODO: Nach Point refactor ist defect
 /*	*//**
 	 * Berechnet die Geschwindigkeit zwischen den Punkten in der x-Richtung. Dabei wird die Entfernung in Metern der Punkte-Objekte verwendet.
 	 * @param pointArray Punkte
@@ -149,8 +147,8 @@ public class PixelManager {
 		boolean a = MathFunctions.isAgainstClock(vectors);
 		System.out.println("Gegen Uhrzeigersinn: " + a);
 	}
-	
-	public void calcDeltaPhi() {
+
+/*	public void calcDeltaPhi() {
 		deltaPhi.clear();
 		double tNull = points.get(0).getTime();
 		double phi;
@@ -172,7 +170,7 @@ public class PixelManager {
 			
 			deltaPhi.add(new Vector2(phi, ((points.get(i).getTime() - tNull))/1000));
 		}	
-	}
+	}*/
 	
 	public double calcCircum() {
 		double eichungMeter = EICHUNG;
@@ -215,10 +213,7 @@ public class PixelManager {
 			circVelo.clear();
 			circFreq.clear();
 	}
-	
-	public Settings getSettings() {
-		return mainController.getSettings();
-	}
+
 	
 	public ArrayList<Point> getPoints() {
 		return points;

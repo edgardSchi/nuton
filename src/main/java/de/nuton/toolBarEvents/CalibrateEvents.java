@@ -56,7 +56,8 @@ public class CalibrateEvents {
 				VideoPainter.getInstance().drawCalibrationPoint(x2, y2);
 				VideoPainter.getInstance().drawDistance(x1, y1, x2, y2);
 
-				TextInputDialog dialog = createCalibWindow((int)mainController.getSettings().getEichung(), "Distanz für folgenen Wert speichern? (cm):");
+				//TODO: After fixing settings
+				//TextInputDialog dialog = createCalibWindow((int)mainController.getSettings().getEichung(), "Distanz für folgenen Wert speichern? (cm):");
 			}
 		}
 	}

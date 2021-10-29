@@ -17,7 +17,9 @@
  ******************************************************************************/
 package de.nuton.application;
 
-public class Point {
+import java.io.Serializable;
+
+public class Point implements Serializable {
 
 	//Normalized coordinates
 	private double x;
@@ -26,22 +28,6 @@ public class Point {
 	private double time;
 	private boolean highlight;
 
-	/*
-	private int x;
-	private int y;
-	private double time;
-	private double entfernungMeterX;
-	private double entfernungMeterY;
-	private double normX;
-	private double normY;
-	private int mediaX;
-	private int mediaY;
-	private int drawX;
-	private int drawY;
-	private double deltaTime;
-	private boolean highlight;
-	 */
-	
 	public Point(double x, double y, double time) {
 		this.x = x;
 		this.y = y;

@@ -75,7 +75,8 @@ public class TrackingSettingsController extends Dialog<ButtonType> {
 	}
 	
 	public void showDialog() {
-		Optional<ButtonType> result = showAndWait();
+		//TODO: After removing points from state manager
+/*		Optional<ButtonType> result = showAndWait();
 	    if (result.get() == ButtonType.APPLY) {
 	    	if(mainController.getStateManager().getPoints().size() != 0) {
 		    	TrackingManager tm = new TrackingManager(mainController, themeLoader, Integer.parseInt(radiusField.getText()),  Integer.parseInt(stepsizeField.getText()), multiThreadingBox.isSelected());
@@ -83,7 +84,7 @@ public class TrackingSettingsController extends Dialog<ButtonType> {
 	    	} else {
 	    		showErrorDialog();
 	    	}
-	    }
+	    }*/
 	}
 	
 	private void loadGUI() {

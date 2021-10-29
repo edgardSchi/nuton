@@ -17,6 +17,7 @@
  ******************************************************************************/
 package de.nuton.toolBar;
 
+import de.nuton.application.Point;
 import de.nuton.states.State;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.image.Image;
@@ -54,6 +55,6 @@ public abstract class ToolBarToggleButton extends ToolBarItem {
 		return button.isSelected();
 	}
 	
-	public abstract void addPoint(State state, MouseEvent e);
+	public abstract void getPoint(State state, MouseEvent e);
 
 }

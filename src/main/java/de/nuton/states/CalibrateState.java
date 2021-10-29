@@ -29,7 +29,7 @@ import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 
-public abstract class CalibrateState extends State{
+public abstract class CalibrateState extends State {
 
 	protected Point[] calibratePoints;
 	protected int clickCounter;
@@ -60,7 +60,8 @@ public abstract class CalibrateState extends State{
 	}
 	
 	protected TextInputDialog createDialog(String contentText, int lowerBound, int upperBound) {
-		TextInputDialog dialog = new TextInputDialog("" + (int)UnitsHandler.convertMetersToOtherUnit(mainController.getSettings().getEichung(), settings.getLengthUnit()));
+		//TODO: After fixing settings
+		TextInputDialog dialog = new TextInputDialog(""/* + (int)UnitsHandler.convertMetersToOtherUnit(mainController.getSettings().getEichung(), settings.getLengthUnit())*/);
 		dialog.setTitle("Bestätigen");
 		dialog.setHeaderText(null);
 		dialog.setContentText(contentText);

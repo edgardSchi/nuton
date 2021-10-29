@@ -53,7 +53,8 @@ public class CircExportHandler extends MotionExportHandler {
 	
 	public CircExportHandler(ArrayList<Point> points, PixelManager pManager) {
 		super(points, pManager);
-		eichung = pManager.getSettings().getEichung() / 100;
+		//TODO: After fixing settings
+		//eichung = pManager.getSettings().getEichung() / 100;
 		pixelLänge = pManager.getLAENGEPIXEL();
 	}
 

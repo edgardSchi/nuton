@@ -21,6 +21,8 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import de.nuton.application.settingsPane.SettingsController;
 import de.nuton.draw.VideoPainter;
@@ -32,6 +34,7 @@ import de.nuton.properties.PropertiesWriter;
 import de.nuton.savingFile.LoadHandler;
 import de.nuton.savingFile.SaveHandler;
 import de.nuton.settings.Settings;
+import de.nuton.states.State;
 import de.nuton.states.StateManager;
 import de.nuton.toolBar.ToolBarManager;
 import de.nuton.tracking.TrackingSettingsController;
@@ -116,7 +119,7 @@ public class MainController implements Initializable{
 	private ProgramSettingsController pSettings;
 	private PixelManager pManager;
 	private StateManager stateManager;
-	private Settings settings;
+	//private Settings settings;
 	private LoadHandler loadHandler;
 	private ScalingManager scalingManager;
 	private HostServices hostServices;
@@ -134,10 +137,10 @@ public class MainController implements Initializable{
 	private void initControllers() {
 		themeLoader = new ThemeLoader();
 		scalingManager = ScalingManager.getInstance();
-		settings = new Settings();
+		//settings = new Settings();
 		VideoPainter.init(canvas);
 		
-		settingsController = new SettingsController(this, settings, themeLoader);
+		settingsController = new SettingsController(this, themeLoader);
 		
 		trackingController = new TrackingSettingsController(this, themeLoader);
 		
@@ -185,7 +188,8 @@ public class MainController implements Initializable{
 
 		stateManager = new StateManager(this);
 		SaveHandler saveHandler = new SaveHandler(this);
-		loadHandler = new LoadHandler(this, settings);
+		//TODO: New Load Handler
+		//loadHandler = new LoadHandler(this, settings);
 		
 		einstellungenItem.setOnAction(event -> pSettings.showDialog());
 		
@@ -194,7 +198,7 @@ public class MainController implements Initializable{
 			FileChooser.ExtensionFilter filter = new FileChooser.ExtensionFilter("Nuton Datein (*.ntn)", "*.ntn");
 			chooser.getExtensionFilters().add(filter);
 			File file = chooser.showOpenDialog(MainFX.getStage());
-			//TODO: Nach Point refactor ist defect
+			//TODO: New Load Handler
 			//loadHandler.load(file);
 		});
 		
@@ -249,8 +253,9 @@ public class MainController implements Initializable{
 		
 		canvas.boundsInLocalProperty().addListener((observable, oldValue, newValue) -> {
 			scalingManager.setCanvasDimension(getCanvas().getWidth(), getCanvas().getHeight());
-			if (stateManager.getCurrentState().getPoints() != null) {
-/*				for (Point p : stateManager.getCurrentState().getPoints()) {
+			redraw();
+			/*			if (stateManager.getCurrentState().getPoints() != null) {
+*//*				for (Point p : stateManager.getCurrentState().getPoints()) {
 					System.out.println("X: " + p.getDrawX() + "Y: " + p.getDrawY());
 					scalingManager.updatePointPos(p);
 				}
@@ -261,9 +266,9 @@ public class MainController implements Initializable{
 				}
 				if(pManager.getOrigin() != null) {
 					scalingManager.updatePointPos(pManager.getOrigin());
-				}*/
+				}*//*
 				redraw();
-			}
+			}*/
 		});
 		
 		initTableView();
@@ -303,10 +308,6 @@ public class MainController implements Initializable{
 	 * Setzt den MainController auf den Anfangszustand zurück.
 	 */
 	public void reset() {
-		settings.setLengthUnit(LengthUnit.CM);
-		settings.setTimeUnit(TimeUnit.MS);
-		settings.setSchrittweite(1000);
-		settings.setEichung(100);
 		slider.setValue(0);
 		slider.setDisable(false);
 		slider.setSnapToTicks(false);
@@ -315,7 +316,13 @@ public class MainController implements Initializable{
 		pManager.reset();
 		stateManager.setState(StateManager.DEFAULT);
 	}
-	
+
+	public void resetSlider() {
+		slider.setValue(0);
+		slider.setDisable(false);
+		slider.setSnapToTicks(true);
+	}
+
 	/**
 	 * Initialisiert die Tastenkürzel für die MenuItems in der Menüleiste, sowie die Icons.
 	 */
@@ -363,17 +370,21 @@ public class MainController implements Initializable{
 		
 		tableView.getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) -> {
 			if (newValue.intValue() != -1) {
-				double t = stateManager.getPoints().get(newValue.intValue()).getTime();
-				slider.setValue(t);
+				//Hacky
+				Optional<List<Point>> oPoints = stateManager.getPoints();
+				if (oPoints.isPresent()) {
+					List<Point> points = oPoints.get();
+					slider.setValue(points.get(newValue.intValue()).getTime());
+				}
 			}
 		});
 	}
 	/**
 	 * Aktualisiert die TableView der ausgewählten Punkte.
 	 */
-	public void updateLists() {
+	public void updateLists(List<Point> points) {
 		tableView.getItems().clear();
-		for(Point p : stateManager.getPoints()) {
+		for (Point p : points) {
 			tableView.getItems().add(p);
 		}
 	}
@@ -408,7 +419,7 @@ public class MainController implements Initializable{
 			mv.setMediaPlayer(player);
 			player.setMute(true);
 
-			settingsController.reset();
+			//settingsController.reset();
 			//TODO: Wieso steht hier nochmal reset?
 			reset();
 			startBtn.setDisable(false);
@@ -539,33 +550,38 @@ public class MainController implements Initializable{
 		stateManager.getCurrentState().reset();
 		stateManager.setState(StateManager.DEFAULT);
 		de.nuton.toolBarEvents.AddPointEvents.reset();
-		updateLists();
+		//Hacky
+		updateLists(List.of());
 	}
 
+	//TODO: remove from main controller to somewhere else
 	public void backwardButton() {
-		ArrayList<Point> points = stateManager.getPoints();
-		double schrittweite = settings.getSchrittweite();
-		if (points != null) {
-			double time = 0;
-			if (points.size() - 1 > 0) {
-				time = points.get(points.size() - 1).getTime();
-			}
 
-			if (time == slider.getValue() - schrittweite
-					&& slider.getValue() - schrittweite >= 0) {
-				slider.setValue(slider.getValue() - schrittweite);
-			} else if (slider.getValue() - schrittweite >= 0) {
-				slider.setValue(slider.getValue() - schrittweite);
-			}
-		} else if (slider.getValue() - schrittweite >= 0) {
-			slider.setValue(slider.getValue() - schrittweite);
+		//TODO: After removing points from state manager
+		Optional<List<Point>> oPoints = stateManager.getPoints();
+		if (oPoints.isEmpty()) return;
+		List<Point> points = oPoints.get();
+		double increment = slider.getMajorTickUnit();
+
+		double time = 0;
+		if (points.size() - 1 > 0) {
+			time = points.get(points.size() - 1).getTime();
 		}
+
+		if (time == slider.getValue() - increment && slider.getValue() - increment >= 0) {
+			slider.setValue(slider.getValue() - increment);
+		} else if (slider.getValue() - increment >= 0) {
+			slider.setValue(slider.getValue() - increment);
+		}
+/*		if (slider.getValue() - increment >= 0) {
+			slider.setValue(slider.getValue() - increment);
+		}*/
 	}
 
-	
-/*	public void clearCanvas() {
-		gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
-	}*/
+	public void setIncrement(double increment) {
+		slider.setMajorTickUnit(increment);
+		slider.setBlockIncrement(increment);
+	}
 	
 	public Media getMedia() {
 		return media;
@@ -686,14 +702,15 @@ public class MainController implements Initializable{
 	public ToolBarManager getToolBarManager() {
 		return tbm;
 	}
-	
-	public Settings getSettings() {
+
+	//TODO: After fixing settings
+/*	public Settings getSettings() {
 		return settings;
 	}
 	
 	public void setSettings(Settings settings) {
 		this.settings = settings;
-	}
+	}*/
 	
 	public MenuItem getSaveFileMenu() {
 		return saveFileMenu;

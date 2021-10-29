@@ -21,6 +21,7 @@ import java.util.ArrayList;
 
 import de.nuton.application.MainController;
 import de.nuton.application.Point;
+import de.nuton.states.PointState;
 import de.nuton.states.State;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -44,7 +45,7 @@ public class ToolBarManager {
 	public ToolBarManager(ToolBar toolBar, MainController mainController) {
 		this.toolBar = toolBar;
 		this.mainController = mainController;
-		pointItems = new ArrayList<ToolBarToggleButton>();
+		pointItems = new ArrayList<>();
 		loadItems();
 		initGroup();
 	}
@@ -138,7 +139,7 @@ public class ToolBarManager {
 	public void pointButtonEvent(State state, MouseEvent e) {
 		for (ToolBarToggleButton p : pointItems) {
 			if (p.getToggleButton().isSelected()) {
-				p.addPoint(state, e);
+				p.getPoint(state, e);
 				break;
 			}
 		}		

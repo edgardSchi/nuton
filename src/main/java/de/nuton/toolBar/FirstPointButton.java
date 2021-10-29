@@ -33,10 +33,11 @@ public class FirstPointButton extends ToolBarButton {
 	
 	@Override
 	public void onClick() {
-		if (mainController.getStateManager().getPoints() != null && mainController.getStateManager().getPoints().size() != 0) {
+		//TODO: After removing points from state manager
+/*		if (mainController.getStateManager().getPoints() != null && mainController.getStateManager().getPoints().size() != 0) {
 			double time = mainController.getStateManager().getPoints().get(0).getTime();
 			mainController.getSlider().setValue(time);
-		}		
+		}	*/
 	}
 
 }

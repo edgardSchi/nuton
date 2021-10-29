@@ -33,8 +33,9 @@ public class ForwardButton extends ToolBarButton {
 	
 	@Override
 	public void onClick() {
-		double schrittweite = controller.getSettings().getSchrittweite();
-		controller.getSlider().setValue(controller.getSlider().getValue() + schrittweite);
+		//TODO: After fixing settings
+		/*double schrittweite = controller.getSettings().getSchrittweite();
+		controller.getSlider().setValue(controller.getSlider().getValue() + schrittweite);*/
 	}
 
 }

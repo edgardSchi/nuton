@@ -27,6 +27,7 @@ import javafx.scene.control.TextInputDialog;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 
+//TODO: New Pendel State
 public class CalibratePendelState extends CalibrateState{
 
 	/*
@@ -61,13 +62,8 @@ public class CalibratePendelState extends CalibrateState{
 				TextInputDialog dialog = createDialog("Mittelpunkt und Distanz mit folgendem Wert speichern? (cm):", 1, 0);
 				Optional<String> result = dialog.showAndWait();
 				if (result.isPresent()) {
-					pManager.setCalibratePoints(calibratePoints);
-					mainController.getSettings().setEichung(Double.parseDouble(result.get()));
-					pManager.setEichung(Double.parseDouble(result.get()));
-					pManager.setOrigin(calibratePoints[2]);
 					VideoPainter.getInstance().clearScreen();
 					clickCounter = 0;
-					mainController.getStateManager().getCurrentState().setCalibratePoints(calibratePoints);
 				} else {
 					resetCalibrate();
 				}

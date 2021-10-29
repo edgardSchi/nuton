@@ -44,8 +44,9 @@ public class TranslationExportHandler extends MotionExportHandler{
 	private double pixelLänge;
 
 	public TranslationExportHandler(ArrayList<Point> points, PixelManager pManager) {
-		super(points, pManager);	
-		eichung = pManager.getSettings().getEichung() / 100;
+		super(points, pManager);
+		//TODO: After fixing settings
+		//eichung = pManager.getSettings().getEichung() / 100;
 		pixelLänge = pManager.getLAENGEPIXEL();
 	}
 

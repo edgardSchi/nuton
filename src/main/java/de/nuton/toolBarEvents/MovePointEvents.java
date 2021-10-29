@@ -20,6 +20,8 @@ package de.nuton.toolBarEvents;
 import de.nuton.application.MainController;
 import de.nuton.application.ScalingManager;
 import de.nuton.application.Point;
+import de.nuton.math.MathUtils;
+import de.nuton.math.Vector2;
 import javafx.scene.input.MouseEvent;
 
 public class MovePointEvents {
@@ -28,6 +30,7 @@ public class MovePointEvents {
 	private static double y = 0;
 	private static double dragX = 0;
 	private static double dragY = 0;
+	//TODO: Fix dragPoint
 	public static void dragPoint(MainController mainController, MouseEvent e, Point p) {
 		
 		if (e.getEventType() == MouseEvent.MOUSE_PRESSED && e.isPrimaryButtonDown() && !e.isSecondaryButtonDown()) {
@@ -37,24 +40,19 @@ public class MovePointEvents {
 		
 		if (e.getEventType() == MouseEvent.MOUSE_DRAGGED && e.isPrimaryButtonDown()) {
 
-			//TODO: Nach Point refactor ist defect
-/*			x = p.getDrawX() - dragX + e.getX();
-			y = p.getDrawY() - dragY + e.getY();*/
+			Vector2 pDraw = MathUtils.toAbsoluteCoordinates(p, mainController.getCanvas().getWidth(), mainController.getCanvas().getHeight());
+			x = pDraw.getX() - dragX + e.getX();
+			y = pDraw.getY() - dragY + e.getY();
 
 			if(x >= 0 && x <= mainController.getCanvas().getWidth() && y >= 0 && y <= mainController.getCanvas().getHeight()) {
-				p.setX((int)x);
-				p.setY((int)y);
+				Vector2 normCord = MathUtils.toNormalizedCoordinates(x, y, mainController.getCanvas().getWidth(), mainController.getCanvas().getHeight());
+
+				p.setX(normCord.getX());
+				p.setY(normCord.getY());
 				
 				
 				dragX = e.getX();
 				dragY = e.getY();
-
-				//TODO: Nach Point refactor ist defect
-/*				ScalingManager.getInstance().normalizePoint(p);
-				ScalingManager.getInstance().updatePointPos(p);*/
-				mainController.redraw();
-				mainController.updateLists();
-				//System.out.println(p.toString());
 			}
 			
 

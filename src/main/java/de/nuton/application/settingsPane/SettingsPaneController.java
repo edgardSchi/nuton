@@ -22,6 +22,7 @@ import java.io.IOException;
 import de.nuton.math.UnitsHandler;
 import de.nuton.math.UnitsHandler.LengthUnit;
 import de.nuton.math.UnitsHandler.TimeUnit;
+import de.nuton.settings.MotionSettings;
 import de.nuton.settings.Settings;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -31,8 +32,9 @@ import javafx.scene.layout.Pane;
 public abstract class SettingsPaneController {
 
 	protected SettingsController settingsController;
-	protected Settings settingsObj;
+	//protected Settings settingsObj;
 	private String name;
+	private MotionSettings settings;
 	
 	@FXML protected Pane rootPane;
 	
@@ -40,7 +42,7 @@ public abstract class SettingsPaneController {
 	
 	public SettingsPaneController(SettingsController settingsController, String path, String name) {
 		this.settingsController = settingsController;
-		this.settingsObj = settingsController.getSettingsObj();
+		//this.settingsObj = settingsController.getSettingsObj();
 		try {
 			FXMLLoader loader;
 			loader = new FXMLLoader(getClass().getResource(path));
@@ -54,7 +56,7 @@ public abstract class SettingsPaneController {
 		returnState = -1;
 	}
 	
-	public abstract void saveSettings();
+	public abstract MotionSettings saveSettings();
 	public abstract void reset();
 	
 	public Pane getRootPane() {
@@ -80,54 +82,49 @@ public abstract class SettingsPaneController {
 		time.getItems().addAll("h", "m", "s", "ms");
 		time.setValue("ms");
 	}
-	
-	/**
-	 * Speichert die verwendete Einheit und den entsprechenden Wert in einem Settings-Objekt.
-	 * @param time ComboBox, die für die Schrittweite zuständig ist
-	 * @param length ComboBox, die für die Eichung zuständig ist
-	 */
-	protected void saveUnits(ComboBox<String> time, ComboBox<String> length) {
+
+	protected UnitsHandler.TimeUnit getTimeUnit(ComboBox<String> time) {
 		UnitsHandler.TimeUnit tUnit = TimeUnit.S;
 		switch (time.getValue()) {
-		case "h":
-			tUnit = TimeUnit.H;
-			break;
-		case "m":
-			tUnit = TimeUnit.M;
-			break;
-		case "s":
-			tUnit = TimeUnit.S;
-			break;
-		case "ms":
-			tUnit = TimeUnit.MS;
-			break;
+			case "h":
+				tUnit = TimeUnit.H;
+				break;
+			case "m":
+				tUnit = TimeUnit.M;
+				break;
+			case "s":
+				tUnit = TimeUnit.S;
+				break;
+			case "ms":
+				tUnit = TimeUnit.MS;
+				break;
 		}
-		settingsObj.setTimeUnit(tUnit);
-		
+		return tUnit;
+	}
+
+	protected UnitsHandler.LengthUnit getLengthUnit(ComboBox<String> length) {
 		LengthUnit lUnit = LengthUnit.M;
 		switch (length.getValue()) {
-		case "km":
-			lUnit = LengthUnit.KM;
-			break;
-		case "m":
-			lUnit = LengthUnit.M;
-			break;
-		case "dm":
-			lUnit = LengthUnit.DM;
-			break;
-		case "cm":
-			lUnit = LengthUnit.CM;
-			break;
-		case "mm":
-			lUnit = LengthUnit.MM;
-			break;
-		case "µm":
-			lUnit = LengthUnit.MIM;
-			break;
+			case "km":
+				lUnit = LengthUnit.KM;
+				break;
+			case "m":
+				lUnit = LengthUnit.M;
+				break;
+			case "dm":
+				lUnit = LengthUnit.DM;
+				break;
+			case "cm":
+				lUnit = LengthUnit.CM;
+				break;
+			case "mm":
+				lUnit = LengthUnit.MM;
+				break;
+			case "µm":
+				lUnit = LengthUnit.MIM;
+				break;
 		}
-		settingsObj.setLengthUnit(lUnit);
-		
-		System.out.println("Units: " + tUnit + " -- " + lUnit);
+		return lUnit;
 	}
 	
 	

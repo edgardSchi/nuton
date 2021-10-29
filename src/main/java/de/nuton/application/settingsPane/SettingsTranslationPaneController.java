@@ -17,8 +17,9 @@
  ******************************************************************************/
 package de.nuton.application.settingsPane;
 
-import de.nuton.math.UnitsHandler;
+import de.nuton.settings.MotionSettings;
 import de.nuton.settings.Settings;
+import de.nuton.settings.TranslationSettings;
 import de.nuton.states.StateManager;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -133,47 +134,48 @@ public class SettingsTranslationPaneController extends SettingsPaneController{
 	}
 	
 	@Override
-	public void saveSettings() {
-		if (schrittweiteField.getText() != "") {
-			saveUnits(zeitBox, laengeBox);
+	public MotionSettings saveSettings() {
+		if (!schrittweiteField.getText().equals("")) {
 			
 			String s = schrittweiteField.getText();
-			int t = Integer.parseInt(s);
-			settingsObj.setSchrittweite(t);
+			int increment = Integer.parseInt(s);
 			
 			String e = eichungsField.getText();
-			int i = Integer.parseInt(e);
-			settingsObj.setEichung(i);
-			
-			if (xFixed()) {
-				settingsObj.setxFixed(true);
+			int calibration = Integer.parseInt(e);
+
+			MotionSettings.ZeroX zeroX;
+			if (zeroXRight()) {
+				zeroX = MotionSettings.ZeroX.RIGHT;
 			} else {
-				settingsObj.setxFixed(false);
+				zeroX = MotionSettings.ZeroX.LEFT;
 			}
-			
-			if (yFixed()) {
-				settingsObj.setyFixed(true);
+
+			MotionSettings.ZeroY zeroY;
+			if (zeroYBottom()) {
+				zeroY = MotionSettings.ZeroY.BOTTOM;
 			} else {
-				settingsObj.setyFixed(false);
+				zeroY = MotionSettings.ZeroY.TOP;
 			}
-			
-			if (yNullUnten()) {
-				settingsObj.setyNull(Settings.NULL_Y_BOTTOM);
-			} else {
-				settingsObj.setyNull(Settings.NULL_Y_TOP);
-			}
-			
-			if (xNullRechts()) {
-				settingsObj.setxNull(Settings.NULL_X_RIGHT);
-			} else {
-				settingsObj.setxNull(Settings.NULL_X_LEFT);
-			}
-			
-			settingsController.getMainController().getSlider().setMajorTickUnit(settingsObj.getSchrittweite());
-			settingsController.getMainController().getSlider().setBlockIncrement(settingsObj.getSchrittweite());
+
+			//TODO: Wieso muss increment gesetzt werden?
+			settingsController.getMainController().setIncrement(increment);
+
+			return new TranslationSettings(increment, calibration, getTimeUnit(zeitBox), getLengthUnit(laengeBox), zeroX, zeroY, fixedAxis());
+		}
+		return null;
+	}
+
+
+	private TranslationSettings.FixedAxis fixedAxis() {
+		if (xFixed()) {
+			return TranslationSettings.FixedAxis.X;
+		} else if (yFixed()) {
+			return TranslationSettings.FixedAxis.Y;
+		} else {
+			return TranslationSettings.FixedAxis.NONE;
 		}
 	}
-	
+
 	private boolean xFixed() {
 		boolean choice = false;
 			if (achsenBox.getSelectionModel().getSelectedItem() == "X-Achse") {
@@ -190,24 +192,24 @@ public class SettingsTranslationPaneController extends SettingsPaneController{
 		return choice;
 	}
 	
-	private boolean xNullRechts() {
-		boolean xRechts = false;
+	private boolean zeroXRight() {
+		boolean xRight = false;
 		if (xNullPunktBox.getSelectionModel().getSelectedItem() == "Links") {
-			xRechts = false;
+			xRight = false;
 		} else if (xNullPunktBox.getSelectionModel().getSelectedItem() == "Rechts") {
-			xRechts = true;
+			xRight = true;
 		}
-		return xRechts;
+		return xRight;
 	}
 	
-	private boolean yNullUnten() {
-		boolean yUnten = false;
+	private boolean zeroYBottom() {
+		boolean yBottom = false;
 		if (yNullPunktBox.getSelectionModel().getSelectedItem() == "Oben") {
-			yUnten = false;
+			yBottom = false;
 		} else if (yNullPunktBox.getSelectionModel().getSelectedItem() == "Unten") {
-			yUnten = true;
+			yBottom = true;
 		}
-		return yUnten;
+		return yBottom;
 	}
 	
 	@Override

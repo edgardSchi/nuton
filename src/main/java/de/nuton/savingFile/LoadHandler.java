@@ -39,6 +39,7 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
 import javafx.scene.media.MediaPlayer;
 
+//TODO: New load handler
 public class LoadHandler {
 
 	private MainController mainController;
@@ -51,7 +52,6 @@ public class LoadHandler {
 		this.settings = settings;
 		points = new ArrayList<Point>();
 	}
-	//TODO: Nach Point refactor ist defect
 	/*public void load(File file) {
 		try {
 			FileInputStream fi = new FileInputStream(file);
@@ -68,10 +68,8 @@ public class LoadHandler {
 			
 			mainController.redraw();
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (ClassNotFoundException e) {
 			
@@ -103,7 +101,6 @@ public class LoadHandler {
 //		return false;
 	}
 
-	//TODO: Nach Point refactor ist defect
 	/*private void applySettings(SaveFile saveFile) {
 		TempSaving.withFfmpeg(saveFile.isWithFfmpeg());
 		File video = new File(saveFile.getVideoURL());
@@ -154,7 +151,7 @@ public class LoadHandler {
 			}
 		} else {
 			if(path.equals("")) {
-				//TODO: Wieso ist das ohne reset?
+				//Wieso ist das ohne reset?
 				//mainController.getMainEventHandler().openMediaDialogWithoutReset();
 				throw new Error("Das sollte nicht passieren, hier wurde was vergessen!");
 			} else {
@@ -164,7 +161,7 @@ public class LoadHandler {
 			
 		}
 	}
-	//TODO: Nach Point refactor ist defect
+
 /*	private Point[] convertCalibratePoints(SerializablePoint[] sPoints) {
 		Point[] points = new Point[2];
 		for(int i = 0; i < sPoints.length; i++) {
@@ -176,7 +173,7 @@ public class LoadHandler {
 		return points;
 	}*/
 
-	//TODO: Nach Point refactor ist defect
+
 /*	private ArrayList<Point> convertPoints(ArrayList<SerializablePoint> sPoints) {
 		ArrayList<Point> points = new ArrayList<Point>();
 		ScalingManager.getInstance().setMediaDimension(mainController.getPlayer().getMedia().getWidth(), mainController.getPlayer().getMedia().getHeight());
@@ -196,7 +193,7 @@ public class LoadHandler {
 		return points;
 	}*/
 
-	//TODO: Nach Point refactor ist defect
+
 /*	private Point convertOrigin(SerializablePoint sPoint) {
 		Point o = new Point(sPoint.getX(), sPoint.getY(), sPoint.getTime());
 		o.setNormX(sPoint.getNormX());
@@ -207,7 +204,7 @@ public class LoadHandler {
 		return o;
 	}*/
 
-	//TODO: Nach Point refactor ist defect
+
 /*	private void updatePoints() {
 		for(Point p : mainController.getStateManager().getPoints()) {
 			ScalingManager.getInstance().updatePointPos(p);

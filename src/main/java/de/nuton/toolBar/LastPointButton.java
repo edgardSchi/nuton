@@ -33,11 +33,12 @@ public class LastPointButton extends ToolBarButton {
 	
 	@Override
 	public void onClick() {
-		if (mainController.getStateManager().getPoints() != null && mainController.getStateManager().getPoints().size() != 0) {
+		//TODO: After removing points from state manager
+/*		if (mainController.getStateManager().getPoints() != null && mainController.getStateManager().getPoints().size() != 0) {
 			int index = mainController.getStateManager().getPoints().size();
 			double time = mainController.getStateManager().getPoints().get(index-1).getTime();
 			mainController.getSlider().setValue(time);
-		}
+		}*/
 	}
 
 }

@@ -31,12 +31,13 @@ public class CalibrateDistanceButton extends ToolBarButton{
 	
 	@Override
 	public void onClick() {
-		if (tbm.getMainController().getStateManager().getCurrentStateID() == StateManager.TRANSLATION) {
+		//TODO: After new state system
+/*		if (tbm.getMainController().getStateManager().getCurrentStateID() == StateManager.TRANSLATION) {
 			tbm.getMainController().getStateManager().pauseCurrentState(StateManager.TRANSLATION_CALIBRATION);
 		}
 		if (tbm.getMainController().getStateManager().getCurrentStateID() == StateManager.CIRCULAR) {
 			tbm.getMainController().getStateManager().pauseCurrentState(StateManager.CIRCULAR_CALIBRATION);
-		}
+		}*/
 	}
 
 }

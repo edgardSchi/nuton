@@ -21,8 +21,9 @@ import de.nuton.draw.VideoPainter;
 import de.nuton.application.FertigDialogController;
 import de.nuton.application.MainController;
 import de.nuton.application.Point;
+import de.nuton.math.Vector2;
 import de.nuton.savingFile.TempSaving;
-import de.nuton.settings.Settings;
+import de.nuton.settings.TranslationSettings;
 import de.nuton.states.Motion;
 import de.nuton.states.PointState;
 import javafx.scene.control.Alert;
@@ -30,9 +31,14 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
 import javafx.scene.input.MouseEvent;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 public class TranslationState extends PointState {
-	
-	
+
+	private TranslationSettings settings;
+	private Point[] calibrationPoints;
+
 	public TranslationState(MainController mainController) {
 		super(mainController);
 	}
@@ -41,6 +47,13 @@ public class TranslationState extends PointState {
 	public void init() {
 		this.defaultInit();
 		setHelpLabel();
+
+		try {
+			settings = (TranslationSettings) getStateData("settings");
+			calibrationPoints = (Point[]) getStateData("calibrationPoints");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override
@@ -66,7 +79,7 @@ public class TranslationState extends PointState {
 	
 	@Override
 	public void fertigBtnClick() {
-		if (points.size() < 2) {
+		if (getPoints().size() < 2) {
 			Alert alert = new Alert(AlertType.ERROR);
 			alert.setHeaderText("Bitte wählen Sie mindestens zwei Punke aus.");
 			alert.showAndWait().ifPresent(rs -> {
@@ -74,13 +87,9 @@ public class TranslationState extends PointState {
 					alert.close();
 				}
 			});
-		} else {		
-			pManager.setPoints(points);
-			pManager.getSettings().setMotion(Settings.TRANSLATION);
-			pManager.calcPixelLength();
-			//TODO: Pixelmanager refactor
-			//pManager.calcMeter(points);
-			FertigDialogController fController = new FertigDialogController(mainController, pManager, points, Motion.TRANSLATION);
+		} else {
+			//TODO: Give collected values for diagrams
+			FertigDialogController fController = new FertigDialogController(mainController, null, (ArrayList<Point>) getPoints(), Motion.TRANSLATION);
 			fController.showDialog();
 		}
 	}
@@ -89,12 +98,13 @@ public class TranslationState extends PointState {
 	public void redraw() {
 		VideoPainter.getInstance().clearScreen();
 		if(TempSaving.isShowPoints()) {
-			for(Point p : points) {
+			for(Point p : getPoints()) {
 				VideoPainter.getInstance().drawPoint(p);
 			}
 		}
 		if(TempSaving.isShowDistance()) {
-			VideoPainter.getInstance().drawCalibrationDistance(getCalibratePoints()[0], getCalibratePoints()[1], Double.toString(settings.getEichung()).concat(" cm"));
+			//TODO: After fixing settings
+			VideoPainter.getInstance().drawCalibrationDistance(calibrationPoints[0], calibrationPoints[1]/*, Double.toString(settings.getCalibration()).concat(" cm")*/);
 		}
 	}
 
@@ -111,8 +121,8 @@ public class TranslationState extends PointState {
 	@Override
 	public void onUnpause() {
 		mainController.getSlider().setSnapToTicks(true);
-		mainController.getSlider().setValue(slider.getValue());
-		mainController.setSettings(settings);
+		//TODO: Fix slider thingy
+		//mainController.getSlider().setValue(slider.getValue());
 		redraw();
 		mainController.getSlider().setSnapToTicks(true);
 		setHelpLabel();

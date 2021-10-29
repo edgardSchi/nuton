@@ -17,6 +17,7 @@
  ******************************************************************************/
 package de.nuton.toolBar;
 
+import de.nuton.application.Point;
 import de.nuton.states.State;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Tooltip;
@@ -35,7 +36,7 @@ public class RectangleButton extends ToolBarToggleButton {
 	
 
 	@Override
-	public void addPoint(State state, MouseEvent e) {
+	public void getPoint(State state, MouseEvent e) {
 		de.nuton.toolBarEvents.AddPointEvents.addRectangle(state, e);
 	}
 	

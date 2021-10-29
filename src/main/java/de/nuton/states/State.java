@@ -19,35 +19,43 @@ package de.nuton.states;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.Callable;
 
 import de.nuton.application.MainController;
-import de.nuton.application.PixelManager;
 import de.nuton.application.Point;
+import de.nuton.settings.MotionSettings;
 import de.nuton.settings.Settings;
 import javafx.scene.input.MouseEvent;
 
 
-public abstract class State implements Serializable{
+public abstract class State implements Serializable {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -6582087039792420458L;
 	protected ArrayList<Point> points;
-	protected Point[] calibratePoints;
+	//protected Point[] calibratePoints;
 	protected MainController mainController;
-	protected PixelManager pManager;
-	protected Settings settings;
+
+	private List<StateFinishedListener> listeners = new ArrayList<>();
+	private Map<String, Callable<Object>> stateData = new HashMap<String, Callable<Object>>();
 	
 	public State(MainController mainController) {
-		this.mainController = mainController;
-		this.pManager = mainController.getPManager();
-		this.settings = mainController.getSettings();
-		calibratePoints = new Point[2];
-		points = new ArrayList<Point>();
+		this(mainController,2);
 	}
-	
-	public abstract void init(); //Wieso ist das public?
+
+	public State(MainController mainController, int calibrationPoints) {
+		this.mainController = mainController;
+		//calibratePoints = new Point[calibrationPoints];
+		points = new ArrayList<>();
+	}
+
+	//TODO: Wieso ist init public?
+	public abstract void init();
 	public abstract void onClick(MouseEvent e);
 	public abstract void keyPressed(int k);
 	public abstract void keyReleased(int k);
@@ -61,20 +69,41 @@ public abstract class State implements Serializable{
 		this.points = points;
 	}
 	
-	public ArrayList<Point> getPoints() {
+/*	public ArrayList<Point> getPoints() {
 		return points;
-	}
+	}*/
 	
 	public MainController getMainController() {
 		return mainController;
 	}
 	
-	public void setCalibratePoints(Point[] points) {
+/*	public void setCalibratePoints(Point[] points) {
 		calibratePoints = points;
 	}
 	
 	public Point[] getCalibratePoints() {
 		return calibratePoints;
+	}*/
+
+	public void addStateFinishedListener(StateFinishedListener listener) {
+		this.listeners.add(listener);
 	}
-	
+
+	protected void finishState() {
+		for(StateFinishedListener l : listeners) {
+			l.onFinish(this);
+		}
+	}
+
+	public void setStateData(String key, Callable<Object> callable) {
+		stateData.put(key, callable);
+	}
+
+	public Object getStateData(String key) throws Exception {
+		Callable<Object> callable = stateData.get(key);
+		if (callable != null) {
+			return callable.call();
+		}
+		return null;
+	}
 }

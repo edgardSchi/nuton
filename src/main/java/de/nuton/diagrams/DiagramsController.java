@@ -139,13 +139,15 @@ public class DiagramsController {
 						diagram.getData().clear();
 						yAxis.setLabel("s[m]");
 						xAxis.setUpperBound(mainController.getMediaLength());
-						xAxis.setTickUnit(mainController.getSettings().getSchrittweite());
+						//TODO: After fixing settings
+						//xAxis.setTickUnit(mainController.getSettings().getSchrittweite());
 						diagram.getData().add(seriesArray[0]);
 					} else if (diagramBox.getSelectionModel().getSelectedItem() == "Zeit-Weg (Y)") {
 						diagram.getData().clear();
 						yAxis.setLabel("s[m]");
 						xAxis.setUpperBound(mainController.getMediaLength());
-						xAxis.setTickUnit(mainController.getSettings().getSchrittweite());
+						//TODO: After fixing settings
+						//xAxis.setTickUnit(mainController.getSettings().getSchrittweite());
 						diagram.getData().add(seriesArray[1]);
 					} else if (diagramBox.getSelectionModel().getSelectedItem() == "Zeit-Geschwindigkeit (X)") {
 						diagram.getData().clear();
@@ -176,13 +178,15 @@ public class DiagramsController {
 						diagram.getData().clear();
 						yAxis.setLabel("Winkel" + "[°]");
 						xAxis.setUpperBound(mainController.getMediaLength());
-						xAxis.setTickUnit(mainController.getSettings().getSchrittweite());
+						//TODO: After fixing settings
+						//xAxis.setTickUnit(mainController.getSettings().getSchrittweite());
 						diagram.getData().add(seriesArray[7]);
 					} else if (diagramBox.getSelectionModel().getSelectedItem() == "Zeit-Winkelgeschwindigkeit") {
 						diagram.getData().clear();
 						yAxis.setLabel("Winkelgeschwindigkeit" + "[1/s]");
 						xAxis.setUpperBound(mainController.getMediaLength());
-						xAxis.setTickUnit(mainController.getSettings().getSchrittweite());
+						//TODO: After fixing settings
+						//xAxis.setTickUnit(mainController.getSettings().getSchrittweite());
 						diagram.getData().add(seriesArray[8]);
 //					} else if (diagramBox.getSelectionModel().getSelectedItem() == "Zeit-Bahngeschwindigkeit") {
 //						diagram.getData().clear();
@@ -194,7 +198,8 @@ public class DiagramsController {
 						diagram.getData().clear();
 						yAxis.setLabel("f" + "[Hz]");
 						xAxis.setUpperBound(mainController.getMediaLength());
-						xAxis.setTickUnit(mainController.getSettings().getSchrittweite());
+						//TODO: After fixing settings
+						//xAxis.setTickUnit(mainController.getSettings().getSchrittweite());
 						diagram.getData().add(seriesArray[10]);
 					} else if(diagramBox.getSelectionModel().getSelectedItem() == "X-Y") {
 						diagram.getData().clear();

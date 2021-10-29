@@ -17,14 +17,12 @@
  ******************************************************************************/
 package de.nuton.toolBarEvents;
 
-import java.util.ArrayList;
-
 import de.nuton.draw.VideoPainter;
 import de.nuton.application.MainController;
-import de.nuton.application.ScalingManager;
 import de.nuton.application.Point;
 import de.nuton.math.MathUtils;
 import de.nuton.math.Vector2;
+import de.nuton.states.PointState;
 import de.nuton.states.State;
 import javafx.scene.control.Slider;
 import javafx.scene.input.MouseEvent;
@@ -34,11 +32,11 @@ public class AddPointEvents {
 	private static double yFix = 0;
 	private static double xFix = 0;
 	
-	public static void point(State state, MouseEvent e) {
-		if (e.getEventType() == MouseEvent.MOUSE_CLICKED) {
-			addPoint(state, e.getX(), e.getY());
+	public static void addPoint(State state, MouseEvent e) {
+		if (e.getEventType() == MouseEvent.MOUSE_CLICKED && state instanceof PointState) {
+			Point p = createPoint(state, e.getX(), e.getY());
+			((PointState) state).addPoint(p);
 		}
-		
 	}
 	
 	private static double x = 0;
@@ -49,8 +47,8 @@ public class AddPointEvents {
 	private static double y2 = 0;
 	private static boolean leftClicked = false;
 	
-	public static void addRectangle(State state, MouseEvent e) {
-		ArrayList<Point> points = state.getPoints();
+	public static Point addRectangle(State state, MouseEvent e) {
+		//ArrayList<Point> points = state.getPoints();
 		
 		if (e.getEventType() == MouseEvent.MOUSE_PRESSED && e.isPrimaryButtonDown() && !e.isSecondaryButtonDown()) {
 			x = e.getX();
@@ -59,10 +57,10 @@ public class AddPointEvents {
 		}		
 		
 		if (e.getEventType() == MouseEvent.MOUSE_DRAGGED && e.isPrimaryButtonDown()) {
-			VideoPainter.getInstance().clearScreen();
-			for(Point p : points) {
+			//VideoPainter.getInstance().clearScreen();
+/*			for(Point p : points) {
 				VideoPainter.getInstance().drawPoint(p);
-			}
+			}*/
 			
 			if (e.isSecondaryButtonDown()) {			
 				x = x - dragX + e.getX();
@@ -81,17 +79,19 @@ public class AddPointEvents {
 		}
 		
 		if (e.getEventType() == MouseEvent.MOUSE_RELEASED && !e.isPrimaryButtonDown() && leftClicked) {
-			addPoint(state, (x2 - x) / 2 + x, (y2 - y) / 2 + y);
+			Point point = createPoint(state, (x2 - x) / 2 + x, (y2 - y) / 2 + y);
 			VideoPainter.getInstance().clearScreen();
-			for(Point p : points) {
+/*			for(Point p : points) {
 				VideoPainter.getInstance().drawPoint(p);
-			}
+			}*/
 			leftClicked = false;
+			return point;
 		}
+		return null;
 	}
 	
-	public static void addEllipse(State state, MouseEvent e) {
-		ArrayList<Point> points = state.getPoints();
+	public static Point addEllipse(State state, MouseEvent e) {
+		//ArrayList<Point> points = state.getPoints();
 		
 		if (e.getEventType() == MouseEvent.MOUSE_PRESSED && e.isPrimaryButtonDown() && !e.isSecondaryButtonDown()) {
 			x = e.getX();
@@ -100,10 +100,10 @@ public class AddPointEvents {
 		}
 		
 		if (e.getEventType() == MouseEvent.MOUSE_DRAGGED && e.isPrimaryButtonDown()) {
-			VideoPainter.getInstance().clearScreen();
-			for(Point p : points) {
+			//VideoPainter.getInstance().clearScreen();
+/*			for(Point p : points) {
 				VideoPainter.getInstance().drawPoint(p);
-			}
+			}*/
 			
 			if (e.isSecondaryButtonDown()) {
 				x = x - dragX + e.getX();
@@ -125,23 +125,27 @@ public class AddPointEvents {
 		}
 		
 		if (e.getEventType() == MouseEvent.MOUSE_RELEASED && !e.isPrimaryButtonDown() && leftClicked) {
-			addPoint(state, (x2 - x) / 2 + x, (y2 - y) / 2 + y);
-			VideoPainter.getInstance().clearScreen();
+			Point point = createPoint(state, (x2 - x) / 2 + x, (y2 - y) / 2 + y);
+/*			VideoPainter.getInstance().clearScreen();
 			for(Point p : points) {
 				VideoPainter.getInstance().drawPoint(p);
-			}
+			}*/
 			leftClicked = false;
+			return point;
 		}
+		return null;
 	}
-	
-	public static void addPoint(State state, double x, double y) {
+
+	//TODO: Just return a point, don't add it automatically
+	public static Point createPoint(State state, double x, double y) {
 		Slider slider = state.getMainController().getSlider();
 		MainController mainController = state.getMainController();
-		ArrayList<Point> points = state.getPoints();
 		double newX = x;
 		double newY = y;
+		//TODO: Diese Logik mit dem Slider sollte eigentlich nicht hier drin sein
 		if (slider.getValue() < slider.getMax()) {
-			if (mainController.getSettings().isyFixed() && yFix == 0) {
+			//TODO: After fixing settings
+/*			if (mainController.getSettings().isyFixed() && yFix == 0) {
 				yFix = y;
 			} else if (mainController.getSettings().isyFixed()) {
 				newY = yFix;
@@ -155,17 +159,27 @@ public class AddPointEvents {
 			} else {
 				newX = x;
 				newY = y;
-			}
+			}*/
 			Vector2 normCord = MathUtils.toNormalizedCoordinates(newX, newY, mainController.getCanvas().getWidth(), mainController.getCanvas().getHeight());
 			Point p = new Point(normCord.getX(), normCord.getY(), slider.getValue());
-			points.add(p);
-			state.getMainController().updateLists();
+			//points.add(p);
+			//state.getMainController().updateLists();
 			//TODO: Vielleicht den state manager notifien fürs redraw
-			for (Point po : points) {
+/*			for (Point po : points) {
 				VideoPainter.getInstance().drawPoint(po);
-			}
-			slider.setValue(slider.getValue() + mainController.getSettings().getSchrittweite());
-		}		
+			}*/
+			//TODO: After fixing settings
+/*			try {
+				double increment = ((MotionSettings) state.getStateData("settings")).getIncrement();
+				slider.setValue(slider.getValue() + increment);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}*/
+			//TODO: increment
+			slider.setValue(slider.getValue() + 1000);
+			return p;
+		}
+		return null;
 	}
 
 	//Deprecated

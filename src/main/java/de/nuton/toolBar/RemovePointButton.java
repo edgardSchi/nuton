@@ -36,9 +36,9 @@ public class RemovePointButton extends ToolBarButton {
 		if (tbm.getMainController().getStateManager().getCurrentState() instanceof de.nuton.states.PointState) {
 			p = tbm.getSelectedPoint();
 			if (p != null) {
-				tbm.getMainController().getStateManager().getCurrentState().getPoints().remove(p);
+				//tbm.getMainController().getStateManager().getCurrentState().getPoints().remove(p);
 				tbm.getMainController().redraw();
-				tbm.getMainController().updateLists();
+				//tbm.getMainController().updateLists();
 				tbm.setSelectedPoint(null);
 				double value = tbm.getMainController().getSlider().getValue();
 				tbm.getMainController().getSlider().setValue(0);

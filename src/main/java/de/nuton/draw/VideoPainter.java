@@ -161,15 +161,15 @@ public class VideoPainter {
        this.drawPoint(p, p.isHighlight());
     }
 
+
+
     /**
      * Draws a rectangle on the canvas above the video player, typically used for calibrations
      * @param color Color of the rectangle
      * @param x X Coordinate
      * @param y Y Coordinate
-     * @param width Width
-     * @param height Height
      */
-    public void drawCalibrationPoint(Color color, double x, double y, double width, double height) {
+    public void drawCalibrationPoint(double x, double y, Color color) {
         drawHandler.drawCalibrationPoint(color, x, y);
     }
 

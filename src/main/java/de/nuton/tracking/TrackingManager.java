@@ -49,6 +49,7 @@ import javafx.scene.image.WritableImage;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
+//TODO: New Tracking Manager
 public class TrackingManager extends Dialog<String> implements Runnable {
 	
 	private MainController mainController;
@@ -105,7 +106,6 @@ public class TrackingManager extends Dialog<String> implements Runnable {
 
 			@Override
 			public void handle(ActionEvent event) {
-				//TODO: Nach Point refactor ist defect
 				//selectTrackingPoint(calibratePoint.getDrawX(), calibratePoint.getDrawY());
 			}
 			
@@ -116,7 +116,7 @@ public class TrackingManager extends Dialog<String> implements Runnable {
 
 			@Override
 			public void handle(ActionEvent event) {
-				mainController.getSlider().setValue(mainController.getSlider().getValue() - mainController.getSettings().getSchrittweite());
+				//mainController.getSlider().setValue(mainController.getSlider().getValue() - mainController.getSettings().getSchrittweite());
 			}
 			
 		});
@@ -125,11 +125,10 @@ public class TrackingManager extends Dialog<String> implements Runnable {
 
 			@Override
 			public void handle(ActionEvent event) {
-				mainController.getSlider().setValue(mainController.getSlider().getValue() + mainController.getSettings().getSchrittweite());
+				//mainController.getSlider().setValue(mainController.getSlider().getValue() + mainController.getSettings().getSchrittweite());
 			}
 			
 		});
-		//TODO: Nach Point refactor ist defect
 /*		seekBtn.setOnAction(new EventHandler<ActionEvent>() {
 
 			@Override
@@ -144,7 +143,7 @@ public class TrackingManager extends Dialog<String> implements Runnable {
 	}
 	
 	private void loadBox() {
-		if(mainController.getStateManager().getPoints() != null) {
+/*		if(mainController.getStateManager().getPoints() != null) {
 			for(Point p : mainController.getStateManager().getPoints()) {
 				String t = "Punkt bei " + p.getTime() + " ms";
 				pointBox.getItems().add(t);
@@ -160,7 +159,7 @@ public class TrackingManager extends Dialog<String> implements Runnable {
 			
 		});
 		pointBox.getSelectionModel().selectFirst();
-		}
+		}*/
 	}
 	
 //	public void calibrateKernel(int width, int height) {
@@ -180,15 +179,15 @@ public class TrackingManager extends Dialog<String> implements Runnable {
 
 	public void trackFfmpeg() {
 		double max = mainController.getSlider().getMax();
-		double delta = mainController.getSettings().getSchrittweite();
-		int frames = (int)(max / delta) - (int)(mainController.getStateManager().getPoints().get(0).getTime() / mainController.getSettings().getSchrittweite());
-		for(int i = 1; i < frames; i++) {
-			BufferedImage image = loadFrame(i);
+		//double delta = mainController.getSettings().getSchrittweite();
+		//int frames = (int)(max / delta) - (int)(mainController.getStateManager().getPoints().get(0).getTime() / mainController.getSettings().getSchrittweite());
+		//for(int i = 1; i < frames; i++) {
+			//BufferedImage image = loadFrame(i);
 			//int[] cords = kernel.feed(image);
 //			mainController.getGc().fillRect(cords[0]-5, cords[1]-5, 10, 10);
 //			double time = mainController.getStateManager().getPoints().get(0).getTime() + i * mainController.getSettings().getSchrittweite();
 //			AddPointEvents.addTrackingPoint(mainController.getStateManager().getCurrentState(), null, cords[0], cords[1], time);
-		}		
+		//}
 	}
 	
 	public void selectTrackingPoint(int x, int y) {
@@ -209,7 +208,6 @@ public class TrackingManager extends Dialog<String> implements Runnable {
 		imageView.setImage(kernelImage);
 	}
 
-	//TODO: Nach Point refactor ist defect
 /*	public void track() {
 		for(Point p : mainController.getStateManager().getPoints()) {
 			if(p.getTime() == mainController.getSlider().getValue()) {
@@ -270,7 +268,9 @@ public class TrackingManager extends Dialog<String> implements Runnable {
 			frame.delete();
 		}
 		BufferedImage in = null;
-		double time = mainController.getStateManager().getPoints().get(0).getTime() + n * mainController.getSettings().getSchrittweite();
+		//TODO: After fixing settings
+		//double time = mainController.getStateManager().getPoints().get(0).getTime() + n * mainController.getSettings().getSchrittweite();
+		double time = 1;
 		FfmpegHandler.getFrame("\"" + TempSaving.getVideoURL() + "\"", time);
 		try {
 			if(frame.exists()) {
