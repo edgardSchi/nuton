@@ -25,7 +25,6 @@ public class PendelState extends PointState{
 
 	public PendelState(MainController mainController) {
 		super(mainController);
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override

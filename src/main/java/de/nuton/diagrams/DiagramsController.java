@@ -19,12 +19,17 @@ package de.nuton.diagrams;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 import de.nuton.application.MainController;
 import de.nuton.application.PixelManager;
 import de.nuton.application.Point;
 import de.nuton.io.Exporter;
+import de.nuton.math.MathUtils;
+import de.nuton.math.MotionCalculator;
 import de.nuton.math.Vector2;
+import de.nuton.math.Vector3;
+import de.nuton.settings.MotionSettings;
 import de.nuton.states.Motion;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -48,7 +53,7 @@ public class DiagramsController {
 	private LineChart<Double, Double> diagram; 
 	@FXML private LineChart<NumberAxis, NumberAxis> aDiagram;
 	public static Stage stage;
-	private ArrayList<Point> points;
+	private List<Point> points;
 	private PixelManager pManager;
 	@FXML private AnchorPane anchorPane;
 	@FXML private ComboBox<String> diagramBox;
@@ -56,9 +61,11 @@ public class DiagramsController {
 	@FXML private Button exportButton;
 	
 	private ArrayList<Vector2> deltaPhi;
+	private Point[] calibrationPoints;
 	
 	private NumberAxis xAxis;
 	private NumberAxis yAxis;
+	private MotionSettings settings;
 
 	/*
 	 * seriesArray
@@ -80,10 +87,13 @@ public class DiagramsController {
 	private Motion motion;
 
 	@SuppressWarnings({ "unchecked", "static-access" })
-	public DiagramsController(MainController mainController, PixelManager pManager, Motion m) {
+	public DiagramsController(MainController mainController, List<Point> points, Motion m, MotionSettings settings, Point[] calibrationPoints) {
 		try {
 			this.motion = m;
-			this.pManager = pManager;
+			this.points = points;
+			this.settings = settings;
+			this.calibrationPoints = calibrationPoints;
+			//this.pManager = pManager;
 			seriesArray = new XYChart.Series[11];
 			//settings = mainController.getSettings();
 			FXMLLoader loader;
@@ -102,7 +112,7 @@ public class DiagramsController {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
+
 		points = new ArrayList<Point>();
 		xAxis = new NumberAxis();
 		yAxis = new NumberAxis();
@@ -137,10 +147,10 @@ public class DiagramsController {
 				if (motion == Motion.TRANSLATION) {
 					if (diagramBox.getSelectionModel().getSelectedItem() == "Zeit-Weg (X)") {		
 						diagram.getData().clear();
-						yAxis.setLabel("s[m]");
+						yAxis.setLabel("s[" + settings.getLengthUnit().toString() + "]");
 						xAxis.setUpperBound(mainController.getMediaLength());
 						//TODO: After fixing settings
-						//xAxis.setTickUnit(mainController.getSettings().getSchrittweite());
+						xAxis.setTickUnit(settings.getIncrement());
 						diagram.getData().add(seriesArray[0]);
 					} else if (diagramBox.getSelectionModel().getSelectedItem() == "Zeit-Weg (Y)") {
 						diagram.getData().clear();
@@ -219,8 +229,9 @@ public class DiagramsController {
 
 			@Override
 			public void handle(ActionEvent arg0) {
-				exporter = new Exporter(points, pManager);
-				exporter.exportData();
+				//TODO: New Exporter
+/*				exporter = new Exporter(points, pManager);
+				exporter.exportData();*/
 			}
 			
 		});
@@ -228,8 +239,11 @@ public class DiagramsController {
 
 	public void timePathX() {
 		XYChart.Series<Double, Double> series = new XYChart.Series<>();
-		for(Point p : points) {
-			series.getData().add(new XYChart.Data<Double, Double>(p.getTime() / 1000, p.getX()));
+		double calibLength = Vector2.distance(Vector2.fromPoint(calibrationPoints[0]), Vector2.fromPoint(calibrationPoints[1]));
+		List<Vector3> m = MotionCalculator.convertToMeter(points, settings.getCalibration(), calibLength);
+		for(Vector3 v : m) {
+			//TODO: Change 1000 to a variable
+			series.getData().add(new XYChart.Data<>(v.getZ() / 1000, v.getX()));
 		}
 		seriesArray[0] = series;
 	}

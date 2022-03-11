@@ -22,6 +22,7 @@ import de.nuton.application.MainController;
 import de.nuton.application.Point;
 import de.nuton.math.MathUtils;
 import de.nuton.math.Vector2;
+import de.nuton.settings.MotionSettings;
 import de.nuton.states.PointState;
 import de.nuton.states.State;
 import javafx.scene.control.Slider;
@@ -168,15 +169,14 @@ public class AddPointEvents {
 /*			for (Point po : points) {
 				VideoPainter.getInstance().drawPoint(po);
 			}*/
-			//TODO: After fixing settings
-/*			try {
-				double increment = ((MotionSettings) state.getStateData("settings")).getIncrement();
+			//TODO: Slider Logik auslagern
+			double increment = 0;
+			try {
+				increment = ((MotionSettings) state.getStateData("settings")).getIncrement();
 				slider.setValue(slider.getValue() + increment);
 			} catch (Exception e) {
 				e.printStackTrace();
-			}*/
-			//TODO: increment
-			slider.setValue(slider.getValue() + 1000);
+			}
 			return p;
 		}
 		return null;

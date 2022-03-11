@@ -18,12 +18,12 @@
 package de.nuton.states.circl;
 
 import de.nuton.draw.VideoPainter;
-import de.nuton.application.FertigDialogController;
+import de.nuton.application.FinishedDialogController;
 import de.nuton.application.MainController;
 import de.nuton.application.Point;
-import de.nuton.math.Vector2;
 import de.nuton.savingFile.TempSaving;
-import de.nuton.settings.Settings;
+import de.nuton.settings.CircularSettings;
+import de.nuton.settings.TranslationSettings;
 import de.nuton.states.Motion;
 import de.nuton.states.PointState;
 import javafx.scene.control.Alert;
@@ -37,6 +37,7 @@ public class CircularState extends PointState {
 
 	private Point origin;
 	private Point[] calibrationPoints;
+	private CircularSettings settings;
 	
 	public CircularState(MainController mainController) {
 		super(mainController);
@@ -47,6 +48,7 @@ public class CircularState extends PointState {
 		defaultInit();
 		onUnpause();
 		try {
+			settings = (CircularSettings) getStateData("settings");
 			origin = (Point) getStateData("calibrationPoint");
 			calibrationPoints = (Point[]) getStateData("calibrationPoints");
 			System.out.println("Origin Punkt: " + origin);
@@ -85,7 +87,7 @@ public class CircularState extends PointState {
 			});
 		} else {
 			//TODO: Give collected values for diagrams
-			FertigDialogController fController = new FertigDialogController(mainController, null, (ArrayList<Point>) getPoints(), Motion.CIRCULAR);
+			FinishedDialogController fController = new FinishedDialogController(mainController, (ArrayList<Point>) getPoints(), settings, Motion.CIRCULAR, calibrationPoints);
 			fController.showDialog();
 		}
 	}

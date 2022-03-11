@@ -4,6 +4,7 @@ import de.nuton.application.MainController;
 import javafx.scene.input.MouseEvent;
 
 import java.util.ArrayList;
+import java.util.concurrent.Callable;
 
 public abstract class StateChain extends State {
 
@@ -53,6 +54,11 @@ public abstract class StateChain extends State {
     @Override
     public Object getStateData(String key) throws Exception {
         return currentState.getStateData(key);
+    }
+
+    @Override
+    public void setStateData(String key, Callable<Object> callable) {
+        currentState.setStateData(key, callable);
     }
 
     @Override

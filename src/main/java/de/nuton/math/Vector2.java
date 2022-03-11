@@ -38,6 +38,26 @@ public class Vector2 {
 		this.x = p2.getX() - p1.getX();
 		this.y = p2.getY() - p1.getY();
 	}
+
+	/**
+	 * Creates a vector from a point
+	 * @param p
+	 * @return
+	 */
+	public static Vector2 fromPoint(Point p) {
+		return new Vector2(p.getX(), p.getY());
+	}
+
+	/**
+	 * Calculates the distance between two vectors
+	 * @param v1
+	 * @param v2
+	 * @return
+	 */
+	public static double distance(Vector2 v1, Vector2 v2) {
+		double temp = ((v1.getY() - v2.getY()) * (v1.getY() - v2.getY())) + ((v2.getX() - v1.getX()) * (v2.getX() - v1.getX()));
+		return Math.sqrt(temp);
+	}
 	
 	public double length() {
 		return Math.sqrt(x*x + y * y);

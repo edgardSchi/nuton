@@ -19,4 +19,6 @@ public class MathUtils {
     public static Vector2 toNormalizedCoordinates(double x, double y, double width, double height) {
         return new Vector2(x / width, y / height);
     }
+
+
 }

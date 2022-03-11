@@ -702,15 +702,6 @@ public class MainController implements Initializable{
 	public ToolBarManager getToolBarManager() {
 		return tbm;
 	}
-
-	//TODO: After fixing settings
-/*	public Settings getSettings() {
-		return settings;
-	}
-	
-	public void setSettings(Settings settings) {
-		this.settings = settings;
-	}*/
 	
 	public MenuItem getSaveFileMenu() {
 		return saveFileMenu;

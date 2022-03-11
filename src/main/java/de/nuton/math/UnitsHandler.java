@@ -25,7 +25,24 @@ import de.nuton.settings.Settings;
 public class UnitsHandler {
 	
 	public enum TimeUnit {MYS, MS, S, M, H};
-	public enum LengthUnit {MIM, MM, CM, DM, M, KM};
+	public enum LengthUnit {
+		MIM ("µm"),
+		MM ("mm"),
+		CM ("cm"),
+		DM ("dm"),
+		M  ("m"),
+		KM ("km");
+
+		private final String abr;
+		LengthUnit(String abr) {
+			this.abr = abr;
+		}
+
+		@Override
+		public String toString() {
+			return abr;
+		}
+	};
 
 	public static double convertTimeToMilliseconds(double time, TimeUnit unit) {
 		double newTime = 0;

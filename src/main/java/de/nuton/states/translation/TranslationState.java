@@ -18,9 +18,10 @@
 package de.nuton.states.translation;
 
 import de.nuton.draw.VideoPainter;
-import de.nuton.application.FertigDialogController;
+import de.nuton.application.FinishedDialogController;
 import de.nuton.application.MainController;
 import de.nuton.application.Point;
+import de.nuton.math.MotionCalculator;
 import de.nuton.math.Vector2;
 import de.nuton.savingFile.TempSaving;
 import de.nuton.settings.TranslationSettings;
@@ -32,7 +33,7 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.input.MouseEvent;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.List;
 
 public class TranslationState extends PointState {
 
@@ -88,8 +89,12 @@ public class TranslationState extends PointState {
 				}
 			});
 		} else {
+			MotionCalculator mc = new MotionCalculator((ArrayList<Point>) getPoints(), calibrationPoints, settings);
+			List<Double> speeds = mc.getXSpeeds();
+			System.out.println("Points: " + getPoints().toString());
+			System.out.println("Speeds: " + speeds.toString());
 			//TODO: Give collected values for diagrams
-			FertigDialogController fController = new FertigDialogController(mainController, null, (ArrayList<Point>) getPoints(), Motion.TRANSLATION);
+			FinishedDialogController fController = new FinishedDialogController(mainController, (ArrayList<Point>) getPoints(), settings, Motion.TRANSLATION, calibrationPoints);
 			fController.showDialog();
 		}
 	}

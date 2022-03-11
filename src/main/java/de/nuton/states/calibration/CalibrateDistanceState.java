@@ -56,11 +56,9 @@ public class CalibrateDistanceState extends State {
 
                 Optional<String> result = dialog.showAndWait();
                 if (result.isPresent()){
-                    //TODO: After fixing settings
 
                     resetCalibrate();
 
-                    //Überprüfen, ob ein State pausiert ist
                     if (mainController.getStateManager().statePaused()) {
                         mainController.getStateManager().unpauseState();
                     } else {
